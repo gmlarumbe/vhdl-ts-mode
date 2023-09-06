@@ -886,21 +886,21 @@ If optional arg BWD is non-nil, search backwards."
   "Search backwards for a VHDL block regexp."
   (vhdl-ts-find-block :bwd))
 
-(defun vhdl-ts-find-module-instance (&optional bwd)
+(defun vhdl-ts-find-entity-instance (&optional bwd)
   "Search for a VHDL module/instance.
 
 If optional arg BWD is non-nil, search backwards."
   (treesit-search-forward-goto (vhdl-ts--node-at-point) vhdl-ts-instance-re t bwd))
 
-(defun vhdl-ts-find-module-instance-fwd ()
+(defun vhdl-ts-find-entity-instance-fwd ()
   "Search forwards for a VHDL module/instance."
   (interactive)
-  (vhdl-ts-find-module-instance))
+  (vhdl-ts-find-entity-instance))
 
-(defun vhdl-ts-find-module-instance-bwd ()
+(defun vhdl-ts-find-entity-instance-bwd ()
   "Search backwards for a VHDL module/instance."
   (interactive)
-  (vhdl-ts-find-module-instance :bwd))
+  (vhdl-ts-find-entity-instance :bwd))
 
 (defun vhdl-ts-goto-next-error ()
   "Move point to next tree-sitter parsing error."
@@ -961,8 +961,8 @@ and the linker to be installed and on PATH."
   "C-M-e"   #'end-of-defun
   "C-M-f"   #'vhdl-ts-forward-sexp
   "C-M-b"   #'vhdl-ts-backward-sexp
-  "C-M-d"   #'vhdl-ts-find-module-instance-fwd
-  "C-M-u"   #'vhdl-ts-find-module-instance-bwd
+  "C-M-d"   #'vhdl-ts-find-entity-instance-fwd
+  "C-M-u"   #'vhdl-ts-find-entity-instance-bwd
   "C-c e n" #'vhdl-ts-goto-next-error
   "C-c e p" #'vhdl-ts-goto-prev-error)
 
