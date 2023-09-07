@@ -3,7 +3,7 @@
 ;; Copyright (C) 2022-2023 Gonzalo Larumbe
 
 ;; Author: Gonzalo Larumbe <gonzalomlarumbe@gmail.com>
-;; URL: https://github.com/gmlarumbe/vhdl-ext
+;; URL: https://github.com/gmlarumbe/vhdl-ts-mode
 ;; Version: 0.0.0
 ;; Keywords: VHDL, IDE, Tools
 ;; Package-Requires: ((emacs "29.1"))
