@@ -9,11 +9,15 @@
 # vhdl-ts-mode.el - VHDL Tree-sitter mode for Emacs #
 
 The package `vhdl-ts-mode` provides syntax highlighting,
-indentation, imenu and navigation features.
+indentation, `imenu`, `which-func`, navigation and basic beautify and completion features.
 
 `vhdl-ts-mode` is derived from `vhdl-mode` making beautify and other utilities still available.
 
-<!-- For more information see the [wiki](https://github.com/gmlarumbe/vhdl-ts-mode/wiki/Tree-sitter). -->
+
+## Requirements ##
+
+- Emacs 29.1+
+- VHDL tree-sitter grammar
 
 
 ## Installation ##
@@ -29,6 +33,24 @@ To install it via [straight](https://github.com/radian-software/straight.el) wit
 ```emacs-lisp
 (straight-use-package 'use-package)
 (use-package vhdl-ts-mode)
+```
+
+### Tree-sitter grammar ###
+
+The package provides an interactive command to simplify the installation of the grammar:
+
+- `M-x RET vhdl-ts-install-grammar RET`
+
+This command requires Git, a C compiler and (sometimes) a C++ compiler,
+and the linker to be installed and on the PATH.
+
+
+## Setup ##
+
+To open VHDL files with `vhdl-ts-mode` simply add this line to your init file:
+
+``` elisp
+(add-to-list 'auto-mode-alist '("\\.vhdl?\\'" . vhdl-ts-mode))
 ```
 
 # Contributing #
