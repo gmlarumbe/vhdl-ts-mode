@@ -612,11 +612,15 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
 
 
 ;;;; Rules
+(defconst vhdl-ts--indent-zero-parent-node-re
+  (eval-when-compile
+    (regexp-opt '("design_file" "context_clause" "design_unit"))))
+
 ;; INFO: Do not use siblings as anchors, since comments could be wrongly detected as siblings!
 (defvar vhdl-ts--indent-rules
   `((vhdl
      ;; Comments
-     ((and (node-is "comment") (parent-is "design_unit")) parent-bol 0)
+     ((and (node-is "comment") (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
      ((node-is "comment") grand-parent ,vhdl-ts-indent-level)
      ;; Zero-indent
      ((node-is "library_clause") parent-bol 0)
@@ -671,6 +675,7 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      ((node-is "end") parent-bol 0)
      ((node-is ")") parent-bol 0)
      ;; Fallbacks/default
+     ((and vhdl-ts--matcher-blank-line (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
      (vhdl-ts--matcher-blank-line parent-bol ,vhdl-ts-indent-level) ; Blank lines
      ((or vhdl-ts--matcher-keyword vhdl-ts--matcher-punctuation) parent-bol ,vhdl-ts-indent-level)
      (vhdl-ts--matcher-default parent 0))))
