@@ -491,10 +491,19 @@ portB => signalB
        formal_part:
        (ambiguous_name
         (simple_name) @vhdl-ts-font-lock-port-connection-face)))
+     (association_list
+      (named_association_element
+       formal_part:
+       (slice_name
+        (simple_name) @vhdl-ts-font-lock-port-connection-face)))
      ;; Ranges
      (descending_range
       high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
      (descending_range
+      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
+     (ascending_range
+      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
+     (ascending_range
       low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
      (expression_list
       (expression (integer_decimal) @vhdl-ts-font-lock-brackets-content-face))
