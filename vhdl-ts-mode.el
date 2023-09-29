@@ -408,7 +408,7 @@ portB => signalB
                                          ":=")) ; Not an operator, but falls better here
 (defconst vhdl-ts-operators-arithmetic '("+" "-" "*" "/" "**" "&"))
 (defconst vhdl-ts-punctuation '(";" ":" "," "'" "|" "." "!" "?"))
-(defconst vhdl-ts-parenthesis '("(" ")"))
+(defconst vhdl-ts-parenthesis '("(" ")" "[" "]"))
 
 ;;;; Treesit-settings
 (defvar vhdl-ts--treesit-settings
@@ -513,6 +513,9 @@ portB => signalB
      ;; Constants
      (constant_declaration
       (identifier_list (identifier) @font-lock-constant-face))
+     ;; Alias
+     (alias_declaration
+      designator : (identifier) @font-lock-constant-face)
      ;; Enum labels
      (enumeration_type_definition
       literal: (identifier) @font-lock-constant-face)
@@ -543,6 +546,8 @@ portB => signalB
    :language 'vhdl
    `((full_type_declaration
       name: (identifier) @font-lock-type-face)
+     (subtype_declaration
+      name: (identifier) @font-lock-type-face)
      ((ambiguous_name
        prefix: (simple_name) @font-lock-type-face)
       (:match ,vhdl-ts-types-regexp @font-lock-type-face))
@@ -552,13 +557,13 @@ portB => signalB
 
    :feature 'function
    :language 'vhdl
-   '(;; Procedure
-     (procedure_declaration
-      (identifier) @font-lock-function-name-face)
-     (procedure_body
-      (identifier) @font-lock-function-name-face)
-     ;; Function
-     (function_body (identifier) @font-lock-function-name-face))
+   '((procedure_declaration (identifier) @font-lock-function-name-face)
+     (procedure_body (identifier) @font-lock-function-name-face)
+     (function_declaration (identifier) @font-lock-function-name-face)
+     (function_body (identifier) @font-lock-function-name-face)
+     ;; Overloading
+     (function_declaration (operator_symbol) @font-lock-function-name-face)
+     (function_body (operator_symbol) @font-lock-function-name-face))
 
    :feature 'builtin
    :language 'vhdl
