@@ -534,7 +534,7 @@ portB => signalB
 
    :feature 'operator
    :language 'vhdl
-   `(([,@vhdl-ts-operators-relational] @vhdl-ts-font-lock-operator-face)
+   `(([,@vhdl-ts-operators-relational] @vhdl-ts-font-lock-punctuation-face)
      ([,@vhdl-ts-operators-arithmetic] @vhdl-ts-font-lock-operator-face))
 
    :feature 'punctuation
