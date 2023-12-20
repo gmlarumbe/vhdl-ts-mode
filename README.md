@@ -1,8 +1,8 @@
 [![MELPA](https://melpa.org/packages/vhdl-ts-mode-badge.svg)](https://melpa.org/#/vhdl-ts-mode)
 [![MELPA Stable](https://stable.melpa.org/packages/vhdl-ts-mode-badge.svg)](https://stable.melpa.org/#/vhdl-ts-mode)
-[![Build Status](https://github.com/gmlarumbe/vhdl-ts-mode/workflows/ERT-straight/badge.svg)](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_straight.yml)
-[![Build Status](https://github.com/gmlarumbe/vhdl-ts-mode/workflows/package-el-basic/badge.svg)](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_package_melpa_basic.yml)
-[![Build Status](https://github.com/gmlarumbe/vhdl-ts-mode/workflows/ERT-MELPA-Stable/badge.svg)](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_package_melpa_stable.yml)
+[![Build Status](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_straight.yml/badge.svg)](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_straight.yml)
+[![Build Status](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_package_melpa_basic.yml/badge.svg)](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_package_melpa_basic.yml)
+[![Build Status](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_package_melpa_stable.yml/badge.svg)](https://github.com/gmlarumbe/vhdl-ts-mode/actions/workflows/build_package_melpa_stable.yml)
 
 
 # vhdl-ts-mode.el - VHDL Tree-sitter mode for Emacs #
