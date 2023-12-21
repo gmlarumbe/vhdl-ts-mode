@@ -930,6 +930,53 @@ If optional arg BWD is non-nil, search backwards."
   (interactive)
   (treesit-search-forward-goto (vhdl-ts--node-at-point) "ERROR" t :bwd))
 
+;;; Beautify
+(defun vhdl-ts-beautify-block-at-point ()
+  "Beautify/indent block at point.
+
+If block is an instance, also align parameters and ports."
+  (interactive)
+  (let ((node (vhdl-ts-block-at-point))
+        start end type name)
+    (unless node
+      (user-error "Not inside a block"))
+    (setq start (treesit-node-start node))
+    (setq end (treesit-node-end node))
+    (setq type (treesit-node-type node))
+    (setq name (vhdl-ts--node-identifier-name node))
+    (indent-region start end)
+    ;; Instance: also align ports and params
+    (when (string-match vhdl-ts-instance-re type)
+      (let ((re "\\(\\s-*\\)=>")
+            params-node ports-node)
+        (setq node (vhdl-ts-block-at-point)) ; Refresh outdated node after `indent-region'
+        (when (setq params-node (vhdl-ts--node-has-child-recursive node "generic_map_aspect"))
+          (align-regexp (treesit-node-start params-node) (treesit-node-end params-node) re 1 1 nil))
+        (setq node (vhdl-ts-block-at-point)) ; Refresh outdated node after `align-regexp' for parameter list
+        (when (setq ports-node (vhdl-ts--node-has-child-recursive node "port_map_aspect"))
+          (align-regexp (treesit-node-start ports-node) (treesit-node-end ports-node) re 1 1 nil))))
+    (message "%s : %s" type name)))
+
+(defun vhdl-ts-beautify-buffer ()
+  "Beautify current buffer:
+- Indent whole buffer
+- Beautify every instantiated entity
+- Untabify and delete trailing whitespace"
+  (interactive)
+  (let (node)
+    (indent-region (point-min) (point-max))
+    (save-excursion
+      (goto-char (point-min))
+      (while (setq node (treesit-search-forward (vhdl-ts--node-at-point) vhdl-ts-instance-re))
+        (goto-char (treesit-node-start node))
+        (vhdl-ts-beautify-block-at-point)
+        (setq node (treesit-search-forward (vhdl-ts--node-at-point) vhdl-ts-instance-re))
+        (goto-char (treesit-node-end node))
+        (when (not (eobp))
+          (forward-char))))
+    (untabify (point-min) (point-max))
+    (delete-trailing-whitespace (point-min) (point-max))
+    (message "Beautified: %s" buffer-file-name)))
 
 ;;; Completion
 (defun vhdl-ts-completion-at-point ()
@@ -981,6 +1028,7 @@ and the linker to be installed and on PATH."
   "C-M-b"   #'vhdl-ts-backward-sexp
   "C-M-d"   #'vhdl-ts-find-entity-instance-fwd
   "C-M-u"   #'vhdl-ts-find-entity-instance-bwd
+  "C-c C-b" #'vhdl-ts-beautify-buffer
   "C-c e n" #'vhdl-ts-goto-next-error
   "C-c e p" #'vhdl-ts-goto-prev-error)
 
