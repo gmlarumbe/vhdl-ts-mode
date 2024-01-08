@@ -188,6 +188,7 @@ and end position."
        "procedure_body"
        "function_body"
        "generate_statement_body"
+       "block_statement_body"
        "component_instantiation_statement"))))
 
 (defun vhdl-ts-entity-at-point ()
@@ -458,6 +459,9 @@ portB => signalB
       (label (identifier) @font-lock-constant-face))
      (for_generate_statement
       (label (identifier) @font-lock-constant-face))
+     ;; Block
+     (block_statement
+      (label (identifier) @font-lock-constant-face))
      ;; Process
      (process_statement
       (label (identifier) @font-lock-constant-face))
@@ -627,6 +631,10 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
   (let ((gen-node (vhdl-ts--node-has-parent-recursive node "\\(for\\|if\\)_generate_statement")))
     (if gen-node
         (treesit-node-start gen-node)
+      (treesit-node-start (treesit-node-parent parent))))
+  (let ((blk-node (vhdl-ts--node-has-parent-recursive node "block_statement")))
+    (if blk-node
+        (treesit-node-start blk-node)
       (treesit-node-start (treesit-node-parent parent)))))
 
 
@@ -667,6 +675,7 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      ((node-is "procedure_body") grand-parent vhdl-ts-indent-level)
      ;; Concurrent & generate
      ((node-is "concurrent_statement_part") parent-bol vhdl-ts-indent-level) ; First signal declaration of a declarative part
+     ((node-is "block_statement_body") grand-parent vhdl-ts-indent-level)
      ((node-is "generate_statement_body") parent-bol vhdl-ts-indent-level)
      ((node-is "for_generate_statement") grand-parent vhdl-ts-indent-level)
      ((node-is "if_generate_statement") grand-parent vhdl-ts-indent-level)
@@ -709,6 +718,7 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
        "process_statement"
        "procedure_body"
        "function_body"
+       "block_statement_body"
        "generate_statement_body"
        "component_instantiation_statement"))))
 
@@ -777,6 +787,7 @@ VHDL parser."
                  ("process_statement"                 'proc)
                  ("procedure_body"                    'pcd)
                  ("function_body"                     'fun)
+                 ("block_statement_body"              'blk)
                  ("generate_statement_body"           'gen)
                  ("component_instantiation_statement" 'cmp)))
          ;; The root of the tree could have a nil ts-node.
@@ -837,6 +848,7 @@ Return nil if there is no name or if NODE is not a defun node."
         ((string= "process_statement"                 block-type) "proc")
         ((string= "procedure_body"                    block-type) "pcd")
         ((string= "function_body"                     block-type) "fun")
+        ((string= "block_statement_body"              block-type) "blk")
         ((string= "generate_statement_body"           block-type) "gen")
         ((string= "component_instantiation_statement" block-type) "cmp")
         (t block-type)))
