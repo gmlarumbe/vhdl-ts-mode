@@ -631,10 +631,6 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
   (let ((gen-node (vhdl-ts--node-has-parent-recursive node "\\(for\\|if\\)_generate_statement")))
     (if gen-node
         (treesit-node-start gen-node)
-      (treesit-node-start (treesit-node-parent parent))))
-  (let ((blk-node (vhdl-ts--node-has-parent-recursive node "block_statement")))
-    (if blk-node
-        (treesit-node-start blk-node)
       (treesit-node-start (treesit-node-parent parent)))))
 
 
