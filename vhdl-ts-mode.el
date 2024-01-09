@@ -189,7 +189,8 @@ and end position."
        "function_body"
        "generate_statement_body"
        "block_statement"
-       "component_instantiation_statement"))))
+       "component_instantiation_statement")
+     'symbols)))
 
 (defun vhdl-ts-entity-at-point ()
   "Return node of entity at point."
@@ -637,7 +638,7 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
 ;;;; Rules
 (defconst vhdl-ts--indent-zero-parent-node-re
   (eval-when-compile
-    (regexp-opt '("design_file" "context_clause" "design_unit"))))
+    (regexp-opt '("design_file" "context_clause" "design_unit") 'symbols)))
 
 ;; INFO: Do not use siblings as anchors, since comments could be wrongly detected as siblings!
 (defvar vhdl-ts--indent-rules
@@ -719,7 +720,8 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
        "function_body"
        "block_statement"
        "generate_statement_body"
-       "component_instantiation_statement"))))
+       "component_instantiation_statement")
+     'symbols)))
 
 (defvar vhdl-ts-imenu-format-item-label-function
   'vhdl-ts-imenu-format-item-label
@@ -885,7 +887,8 @@ Return nil if there is no name or if NODE is not a defun node."
        "process_statement"
        "procedure_declaration"
        "procedure_body"
-       "function_body"))))
+       "function_body")
+     'symbols)))
 
 (defun vhdl-ts-find-function-procedure (&optional bwd)
   "Search for a VHDL function/procedure declaration or definition.
