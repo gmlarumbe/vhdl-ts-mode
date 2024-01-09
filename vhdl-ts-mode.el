@@ -188,6 +188,7 @@ and end position."
        "procedure_body"
        "function_body"
        "generate_statement_body"
+       "block_statement"
        "component_instantiation_statement"))))
 
 (defun vhdl-ts-entity-at-point ()
@@ -458,6 +459,9 @@ portB => signalB
       (label (identifier) @font-lock-constant-face))
      (for_generate_statement
       (label (identifier) @font-lock-constant-face))
+     ;; Block
+     (block_statement
+      (label (identifier) @font-lock-constant-face))
      ;; Process
      (process_statement
       (label (identifier) @font-lock-constant-face))
@@ -665,6 +669,10 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      ((node-is "function_declaration") grand-parent vhdl-ts-indent-level)
      ((node-is "function_body") grand-parent vhdl-ts-indent-level)
      ((node-is "procedure_body") grand-parent vhdl-ts-indent-level)
+     ;; Block
+     ((node-is "block_statement") grand-parent vhdl-ts-indent-level)
+     ((node-is "block_header") parent-bol vhdl-ts-indent-level)
+     ((parent-is "block_header") grand-parent vhdl-ts-indent-level)
      ;; Concurrent & generate
      ((node-is "concurrent_statement_part") parent-bol vhdl-ts-indent-level) ; First signal declaration of a declarative part
      ((node-is "generate_statement_body") parent-bol vhdl-ts-indent-level)
@@ -709,6 +717,7 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
        "process_statement"
        "procedure_body"
        "function_body"
+       "block_statement"
        "generate_statement_body"
        "component_instantiation_statement"))))
 
@@ -777,6 +786,7 @@ VHDL parser."
                  ("process_statement"                 'proc)
                  ("procedure_body"                    'pcd)
                  ("function_body"                     'fun)
+                 ("block_statement"                   'blk)
                  ("generate_statement_body"           'gen)
                  ("component_instantiation_statement" 'cmp)))
          ;; The root of the tree could have a nil ts-node.
@@ -837,6 +847,7 @@ Return nil if there is no name or if NODE is not a defun node."
         ((string= "process_statement"                 block-type) "proc")
         ((string= "procedure_body"                    block-type) "pcd")
         ((string= "function_body"                     block-type) "fun")
+        ((string= "block_statement"                   block-type) "blk")
         ((string= "generate_statement_body"           block-type) "gen")
         ((string= "component_instantiation_statement" block-type) "cmp")
         (t block-type)))
