@@ -655,10 +655,11 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      ((node-is "architecture_body") parent-bol 0)
      ((node-is "package_declaration") parent-bol 0)
      ((node-is "package_body") parent-bol 0)
-     ;; Generics and ports
+     ;; Procedure parameter types
      (vhdl-ts--matcher-generic-or-port grand-parent vhdl-ts-indent-level)
-     ((node-is "constant_interface_declaration") parent-bol vhdl-ts-indent-level) ; Generic ports
-     ((node-is "signal_interface_declaration") parent-bol vhdl-ts-indent-level) ; Signal ports
+     ((node-is "constant_interface_declaration") parent-bol vhdl-ts-indent-level) ; Constant parameter
+     ((node-is "variable_interface_declaration") parent-bol vhdl-ts-indent-level) ; Variable parameter
+     ((node-is "signal_interface_declaration") parent-bol vhdl-ts-indent-level) ; Signal parameter
      ;; Declarations
      ((node-is "declarative_part") parent-bol vhdl-ts-indent-level) ; First declaration of the declarative part
      ((node-is "component_declaration") grand-parent vhdl-ts-indent-level)
@@ -682,13 +683,22 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      ((node-is "if_generate_statement") grand-parent vhdl-ts-indent-level)
      ((node-is "simple_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level) ; Parent is (concurrent_statement_part)
      ((node-is "conditional_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level)
-     ((node-is "alternative_conditional_waveforms") parent-bol vhdl-ts-indent-level) ; Each of the else clases in conditional concurrent assignment
+     ((and
+       (node-is "waveforms")
+       (or
+        (parent-is "alternative_conditional_waveforms")
+        (parent-is "alternative_selected_waveforms")))
+      grand-parent 0) ; when else on next line or select multiple lines
      ((node-is "process_statement") grand-parent vhdl-ts-indent-level) ; Grandparent is architecture_body
+     ((node-is "selected_waveforms") parent-bol vhdl-ts-indent-level)
+     ((and (node-is "simple_name")
+           (parent-is "selected_concurrent_signal_assignment"))
+      parent-bol vhdl-ts-indent-level)
      ;; Instances
      ((node-is "component_instantiation_statement") grand-parent vhdl-ts-indent-level)
-     ((node-is "component_map_aspect") grand-parent 0) ; Generic map if present, otherwise port map
+     ((node-is "component_map_aspect") grand-parent vhdl-ts-indent-level) ; Generic map if present, otherwise port map
      ((node-is "port_map_aspect") parent-bol 0) ; Port map only when there are generics
-     ((node-is "association_list") vhdl-ts--anchor-instance-port vhdl-ts-indent-level)
+     ((node-is "association_list") parent-bol vhdl-ts-indent-level)
      ((node-is "named_association_element") parent-bol 0)
      ;; Procedural
      ((node-is "sequence_of_statements") parent-bol vhdl-ts-indent-level) ; Statements inside process
@@ -708,7 +718,6 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      (vhdl-ts--matcher-blank-line parent-bol vhdl-ts-indent-level) ; Blank lines
      ((or vhdl-ts--matcher-keyword vhdl-ts--matcher-punctuation) parent-bol vhdl-ts-indent-level)
      (vhdl-ts--matcher-default parent 0))))
-
 
 ;;; Imenu
 (defconst vhdl-ts-imenu-create-index-re
