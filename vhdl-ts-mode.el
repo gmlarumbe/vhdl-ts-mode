@@ -955,6 +955,36 @@ If optional arg BWD is non-nil, search backwards."
   (treesit-search-forward-goto (vhdl-ts--node-at-point) "ERROR" t :bwd))
 
 ;;; Beautify
+(setq vhdl-align-alist
+  (append vhdl-align-alist
+    '(
+      ;; after some keywords
+      (vhdl-ts-mode "^\\s-*\\(across\\|constant\\|quantity\\|signal\\|subtype\\|terminal\\|through\\|type\\|variable\\)[ \t]"
+          "^\\s-*\\(across\\|constant\\|quantity\\|signal\\|subtype\\|terminal\\|through\\|type\\|variable\\)\\([ \t]+\\)" 2)
+      ;; before ':'
+      (vhdl-ts-mode ":[^=]" "\\([ \t]*\\):[^=]")
+      ;; after direction specifications
+      (vhdl-ts-mode ":[ \t]*\\(in\\|out\\|inout\\|buffer\\|\\)\\>"
+          ":[ \t]*\\(in\\|out\\|inout\\|buffer\\|\\)\\([ \t]+\\)" 2)
+      ;; before "==", ":=", "=>", and "<="
+      (vhdl-ts-mode "[<:=]=" "\\([ \t]*\\)\\??[<:=]=" 1) ; since "<= ... =>" can occur
+      (vhdl-ts-mode "=>" "\\([ \t]*\\)=>" 1)
+      (vhdl-ts-mode "[<:=]=" "\\([ \t]*\\)\\??[<:=]=" 1) ; since "=> ... <=" can occur
+      ;; before some keywords
+      (vhdl-ts-mode "[ \t]after\\>" "[^ \t]\\([ \t]+\\)after\\>" 1)
+      (vhdl-ts-mode "[ \t]when\\>" "[^ \t]\\([ \t]+\\)when\\>" 1)
+      (vhdl-ts-mode "[ \t]else\\>" "[^ \t]\\([ \t]+\\)else\\>" 1)
+      (vhdl-ts-mode "[ \t]across\\>" "[^ \t]\\([ \t]+\\)across\\>" 1)
+      (vhdl-ts-mode "[ \t]through\\>" "[^ \t]\\([ \t]+\\)through\\>" 1)
+      ;; before "=>" since "when/else ... =>" can occur
+      (vhdl-ts-mode "=>" "\\([ \t]*\\)=>" 1)
+      )))
+
+(defcustom vhdl-ts-auto-align-ports-and-params t
+  "Auto align ports and params as part of vhdl-ts-beautify-block-at-point."
+  :type 'boolean
+  :group 'vhdl-ts)
+
 (defun vhdl-ts-beautify-block-at-point ()
   "Beautify/indent block at point.
 
@@ -970,7 +1000,7 @@ If block is an instance, also align parameters and ports."
     (setq name (vhdl-ts--node-identifier-name node))
     (indent-region start end)
     ;; Instance: also align ports and params
-    (when (string-match vhdl-ts-instance-re type)
+    (when (and vhdl-ts-auto-align-ports-and-params (string-match vhdl-ts-instance-re type))
       (let ((re "\\(\\s-*\\)=>")
             params-node ports-node)
         (setq node (vhdl-ts-block-at-point)) ; Refresh outdated node after `indent-region'
