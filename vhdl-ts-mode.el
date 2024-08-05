@@ -74,6 +74,12 @@ Defaults to .vhd and .vhdl."
   :group 'vhdl-ts
   :type 'string)
 
+(defcustom vhdl-ts-beautify-align-ports-and-params nil
+  "Align all ports and params of instances when beautifying."
+  :type 'boolean
+  :group 'vhdl-ts)
+
+
 ;;; Utils
 ;;;; Core
 (defconst vhdl-ts-identifier-re "\\(identifier\\|simple_name\\)")
@@ -955,35 +961,38 @@ If optional arg BWD is non-nil, search backwards."
   (treesit-search-forward-goto (vhdl-ts--node-at-point) "ERROR" t :bwd))
 
 ;;; Beautify
-(setq vhdl-align-alist
-  (append vhdl-align-alist
-    '(
-      ;; after some keywords
-      (vhdl-ts-mode "^\\s-*\\(across\\|constant\\|quantity\\|signal\\|subtype\\|terminal\\|through\\|type\\|variable\\)[ \t]"
-          "^\\s-*\\(across\\|constant\\|quantity\\|signal\\|subtype\\|terminal\\|through\\|type\\|variable\\)\\([ \t]+\\)" 2)
-      ;; before ':'
-      (vhdl-ts-mode ":[^=]" "\\([ \t]*\\):[^=]")
-      ;; after direction specifications
-      (vhdl-ts-mode ":[ \t]*\\(in\\|out\\|inout\\|buffer\\|\\)\\>"
-          ":[ \t]*\\(in\\|out\\|inout\\|buffer\\|\\)\\([ \t]+\\)" 2)
-      ;; before "==", ":=", "=>", and "<="
-      (vhdl-ts-mode "[<:=]=" "\\([ \t]*\\)\\??[<:=]=" 1) ; since "<= ... =>" can occur
-      (vhdl-ts-mode "=>" "\\([ \t]*\\)=>" 1)
-      (vhdl-ts-mode "[<:=]=" "\\([ \t]*\\)\\??[<:=]=" 1) ; since "=> ... <=" can occur
-      ;; before some keywords
-      (vhdl-ts-mode "[ \t]after\\>" "[^ \t]\\([ \t]+\\)after\\>" 1)
-      (vhdl-ts-mode "[ \t]when\\>" "[^ \t]\\([ \t]+\\)when\\>" 1)
-      (vhdl-ts-mode "[ \t]else\\>" "[^ \t]\\([ \t]+\\)else\\>" 1)
-      (vhdl-ts-mode "[ \t]across\\>" "[^ \t]\\([ \t]+\\)across\\>" 1)
-      (vhdl-ts-mode "[ \t]through\\>" "[^ \t]\\([ \t]+\\)through\\>" 1)
-      ;; before "=>" since "when/else ... =>" can occur
-      (vhdl-ts-mode "=>" "\\([ \t]*\\)=>" 1)
-      )))
+(defconst vhdl-ts-align-alist
+  '(;; after some keywords
+    (vhdl-ts-mode "^\\s-*\\(across\\|constant\\|quantity\\|signal\\|subtype\\|terminal\\|through\\|type\\|variable\\)[ \t]"
+                  "^\\s-*\\(across\\|constant\\|quantity\\|signal\\|subtype\\|terminal\\|through\\|type\\|variable\\)\\([ \t]+\\)" 2)
+    ;; before ':'
+    (vhdl-ts-mode ":[^=]" "\\([ \t]*\\):[^=]")
+    ;; after direction specifications
+    (vhdl-ts-mode ":[ \t]*\\(in\\|out\\|inout\\|buffer\\|\\)\\>"
+                  ":[ \t]*\\(in\\|out\\|inout\\|buffer\\|\\)\\([ \t]+\\)" 2)
+    ;; before "==", ":=", "=>", and "<="
+    (vhdl-ts-mode "[<:=]=" "\\([ \t]*\\)\\??[<:=]=" 1) ; since "<= ... =>" can occur
+    (vhdl-ts-mode "=>" "\\([ \t]*\\)=>" 1)
+    (vhdl-ts-mode "[<:=]=" "\\([ \t]*\\)\\??[<:=]=" 1) ; since "=> ... <=" can occur
+    ;; before some keywords
+    (vhdl-ts-mode "[ \t]after\\>" "[^ \t]\\([ \t]+\\)after\\>" 1)
+    (vhdl-ts-mode "[ \t]when\\>" "[^ \t]\\([ \t]+\\)when\\>" 1)
+    (vhdl-ts-mode "[ \t]else\\>" "[^ \t]\\([ \t]+\\)else\\>" 1)
+    (vhdl-ts-mode "[ \t]across\\>" "[^ \t]\\([ \t]+\\)across\\>" 1)
+    (vhdl-ts-mode "[ \t]through\\>" "[^ \t]\\([ \t]+\\)through\\>" 1)
+    ;; before "=>" since "when/else ... =>" can occur
+    (vhdl-ts-mode "=>" "\\([ \t]*\\)=>" 1)))
 
-(defcustom vhdl-ts-auto-align-ports-and-params t
-  "Auto align ports and params as part of vhdl-ts-beautify-block-at-point."
-  :type 'boolean
-  :group 'vhdl-ts)
+(defun vhdl-ts-beautify--align-params-ports-nap ()
+  "Align ports and params of instance of node at point."
+  (let* ((re "\\(\\s-*\\)=>")
+         (node (vhdl-ts-block-at-point))
+         params-node ports-node)
+    (when (setq params-node (vhdl-ts--node-has-child-recursive node "generic_map_aspect"))
+      (align-regexp (treesit-node-start params-node) (treesit-node-end params-node) re 1 1 nil))
+    (setq node (vhdl-ts-block-at-point)) ; Refresh outdated node after `align-regexp' for parameter list
+    (when (setq ports-node (vhdl-ts--node-has-child-recursive node "port_map_aspect"))
+      (align-regexp (treesit-node-start ports-node) (treesit-node-end ports-node) re 1 1 nil))))
 
 (defun vhdl-ts-beautify-block-at-point ()
   "Beautify/indent block at point.
@@ -999,37 +1008,37 @@ If block is an instance, also align parameters and ports."
     (setq type (treesit-node-type node))
     (setq name (vhdl-ts--node-identifier-name node))
     (indent-region start end)
-    ;; Instance: also align ports and params
-    (when (and vhdl-ts-auto-align-ports-and-params (string-match vhdl-ts-instance-re type))
-      (let ((re "\\(\\s-*\\)=>")
-            params-node ports-node)
-        (setq node (vhdl-ts-block-at-point)) ; Refresh outdated node after `indent-region'
-        (when (setq params-node (vhdl-ts--node-has-child-recursive node "generic_map_aspect"))
-          (align-regexp (treesit-node-start params-node) (treesit-node-end params-node) re 1 1 nil))
-        (setq node (vhdl-ts-block-at-point)) ; Refresh outdated node after `align-regexp' for parameter list
-        (when (setq ports-node (vhdl-ts--node-has-child-recursive node "port_map_aspect"))
-          (align-regexp (treesit-node-start ports-node) (treesit-node-end ports-node) re 1 1 nil))))
+    ;; Refresh outdated node after `indent-region'
+    (setq node (vhdl-ts-block-at-point))
+    (setq start (treesit-node-start node))
+    (setq end (treesit-node-end node))
+    (vhdl-align-region start end)
+    (when (and vhdl-ts-beautify-align-ports-and-params
+               (string-match vhdl-ts-instance-re type))
+      (vhdl-ts-beautify--align-params-ports-nap))
     (message "%s : %s" type name)))
 
 (defun vhdl-ts-beautify-buffer ()
   "Beautify current buffer:
 - Indent whole buffer
-- Beautify every instantiated entity
-- Untabify and delete trailing whitespace"
+- Untabify and delete trailing whitespace
+- Align"
   (interactive)
   (let (node)
     (indent-region (point-min) (point-max))
-    (save-excursion
-      (goto-char (point-min))
-      (while (setq node (treesit-search-forward (vhdl-ts--node-at-point) vhdl-ts-instance-re))
-        (goto-char (treesit-node-start node))
-        (vhdl-ts-beautify-block-at-point)
-        (setq node (treesit-search-forward (vhdl-ts--node-at-point) vhdl-ts-instance-re))
-        (goto-char (treesit-node-end node))
-        (when (not (eobp))
-          (forward-char))))
     (untabify (point-min) (point-max))
     (delete-trailing-whitespace (point-min) (point-max))
+    (vhdl-align-buffer)
+    (when vhdl-ts-beautify-align-ports-and-params
+      (save-excursion
+        (goto-char (point-min))
+        (while (setq node (treesit-search-forward (vhdl-ts--node-at-point) vhdl-ts-instance-re))
+          (goto-char (treesit-node-start node))
+          (vhdl-ts-beautify--align-params-ports-nap)
+          (setq node (treesit-search-forward (vhdl-ts--node-at-point) vhdl-ts-instance-re))
+          (goto-char (treesit-node-end node))
+          (when (not (eobp))
+            (forward-char)))))
     (message "Beautified: %s" buffer-file-name)))
 
 ;;; Completion
@@ -1133,6 +1142,8 @@ and the linker to be installed and on PATH."
     (vhdl-ts-which-func)
     ;; Completion
     (add-hook 'completion-at-point-functions #'vhdl-ts-completion-at-point nil 'local)
+    ;; Beautify
+    (setq-local vhdl-align-alist vhdl-ts-align-alist)
     ;; Setup
     (treesit-major-mode-setup)))
 
