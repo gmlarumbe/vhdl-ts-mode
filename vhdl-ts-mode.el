@@ -184,6 +184,7 @@ and end position."
                     :end-pos ,(treesit-node-end node)))
           (vhdl-ts-nodes pred start)))
 
+
 ;;;; Context
 (defconst vhdl-ts-block-at-point-re
   (eval-when-compile
@@ -1146,6 +1147,58 @@ and the linker to be installed and on PATH."
     (setq-local vhdl-align-alist vhdl-ts-align-alist)
     ;; Setup
     (treesit-major-mode-setup)))
+
+
+;;; Syntactic support overrides for compatibility with `vhdl-mode'
+(defun vhdl-ts-in-comment-p (&optional pos)
+  "Check if point is in a comment (include multi-line comments)."
+  (let* ((node (if pos
+                   (treesit-node-at pos 'vhdl)
+                 (vhdl-ts--node-at-point)))
+         (pos (or pos (point)))
+         (type (treesit-node-type node))
+         (start (treesit-node-start node))
+         (end (treesit-node-end node)))
+    (and (string= type "comment")
+         (>= pos start)
+         (<= pos end))))
+
+(defun vhdl-ts-in-comment-advice (fun &rest args)
+  "Advice for `vhdl-in-comment-p' for `vhdl-ts-mode'."
+  (if (eq major-mode 'vhdl-ts-mode)
+      (apply #'vhdl-ts-in-comment-p args)
+    (apply fun args)))
+
+(defun vhdl-ts-in-literal ()
+  "Determine if point is in a VHDL literal."
+  (let* ((node (vhdl-ts--node-at-point))
+         (pos (point))
+         (type (treesit-node-type node))
+         (start (treesit-node-start node))
+         (end (treesit-node-end node)))
+    ;; INFO: `vhdl-in-literal' also supports cpp macros (see `vhdl-beginning-of-macro')
+    (and (>= pos start)
+         (<= pos end)
+         (cond ((or (string= type "character_literal")
+                    (string= type "string_literal")
+                    (string= type "bit_string_literal"))
+                'string)
+               ((string= type "comment")
+                'comment)
+               ((string= type "tool_directive")
+                'directive)
+               (t
+                nil)))))
+
+(defun vhdl-ts-in-literal-advice (fun &rest args)
+  "Advice for `vhdl-in-literal' for `vhdl-ts-mode'."
+  (if (eq major-mode 'vhdl-ts-mode)
+      (apply #'vhdl-ts-in-literal args)
+    (apply fun args)))
+
+;;;; Advice overrides
+(advice-add 'vhdl-in-comment-p :around #'vhdl-ts-in-comment-advice)
+(advice-add 'vhdl-in-literal   :around #'vhdl-ts-in-literal-advice)
 
 
 ;;; Provide
