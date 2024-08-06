@@ -740,14 +740,108 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
 (defconst vhdl-ts-imenu-create-index-re
   (eval-when-compile
     (regexp-opt
-     '("entity_declaration"
+     '(;; 3.2 Entity declarations
+       "entity_declaration"
+       ;; 3.3 Architecture bodies
        "architecture_body"
-       "process_statement"
+       ;; 3.4 Configuration declarations
+       "configuration_declaration"
+       ;; 3.4.3 Component configuration
+       "component_configuration"
+       ;; 4.2.1 Subprogram declarations
+       "procedure_declaration"
+       "function_declaration"
+       ;; 4.3 Subprogram bodies
        "procedure_body"
        "function_body"
+       ;; 4.4 Subprogram instantiation declarations
+       "procedure_instantiation_declaration"
+       "function_instantiation_declaration"
+       ;; 4.7 Package declarations
+       "package_declaration"
+       ;; 4.8 Package bodies
+       "package_body"
+       ;; 4.9 Package instantiation declarations
+       "package_instantiation_declaration"
+       ;; 5.2.1 Scalar types
+       "numeric_type_definition"
+       ;; 5.2.2 Enumeration types
+       "enumeration_type_definition"
+       ;; 5.2.4 Physical types
+       "physical_type_definition"
+       ;; 5.3 Composite types
+       "unbounded_array_definition"
+       "constrained_array_definition"
+       "record_type_definition"
+       ;; 5.4 Access types
+       "access_type_definition"
+       "incomplete_type_declaration"
+       ;; 5.5 File types
+       "file_type_definition"
+       ;; 5.6.2 Protected type declarations / Protected type bodies
+       "protected_type_declaration"
+       "protected_type_body"
+       ;; 6.2 Type declarations
+       "full_type_declaration"
+       ;; 6.3 Subtype declaration
+       "subtype_declaration"
+       ;; 6.4.2 Object declarations
+       "constant_declaration"
+       "signal_declaration"
+       "variable_declaration"
+       "shared_variable_declaration"
+       "file_declaration"
+       ;; 6.5.2 Interface object declarations
+       "constant_interface_declaration"
+       "signal_interface_declaration"
+       "variable_interface_declaration"
+       "file_interface_declaration"
+       ;; 6.5.3 Interface type declarations
+       "type_interface_declaration"
+       ;; 6.5.4 Interface subprogram declarations
+       "procedure_interface_declaration"
+       "function_interface_declaration"
+       ;; 6.5.5 Interface package declarations
+       "package_interface_declaration"
+       ;; 6.6 Alias declarations
+       "alias_declaration"
+       ;; 6.7 Attribute declarations
+       "attribute_declaration"
+       ;; 6.8 Component declarations
+       "component_declaration"
+       ;; 6.9 Group template declarations
+       "group_template_declaration"
+       ;; 6.10 Group declarations
+       "group_declaration"
+       ;; 7.2 Specifications
+       "attribute_specification"
+       "entity_specification"
+       ;; 7.3 Configuration specification
+       "configuration_specification"
+       ;; 7.4 Disconnection specification
+       "disconnection_specification"
+       ;; 10.1 Sequential statements
+       "process_statement"
+       "assertion_statement"
+       "report_statement"
+       ;; 11 Concurrent statements
        "block_statement"
-       "generate_statement_body"
-       "component_instantiation_statement")
+       "process_statement"
+       "component_instantiation_statement"
+       "assertion_statement"
+       "for_generate_statement"
+       "if_generate_statement"
+       "case_generate_statement"
+       ;; 12.4 Use clauses
+       "use_clause"
+       ;; 13.1 Design units
+       "design_unit"
+       ;; 13.2 Design libraries
+       "library_clause"
+       ;; 13.3 Context declarations
+       "context_declaration"
+       ;; 13.4 Context clauses
+       "context_clause")
      'symbols)))
 
 (defvar vhdl-ts-imenu-format-item-label-function
