@@ -1160,7 +1160,7 @@ and the linker to be installed and on PATH."
          (start (treesit-node-start node))
          (end (treesit-node-end node)))
     (and (string= type "comment")
-         (>= pos start)
+         (>= pos (+ 2 start)) ; `vhdl-in-comment-p' returns non-nil when point is after the --
          (<= pos end))))
 
 (defun vhdl-ts-in-comment-advice (fun &rest args)
@@ -1177,18 +1177,22 @@ and the linker to be installed and on PATH."
          (start (treesit-node-start node))
          (end (treesit-node-end node)))
     ;; INFO: `vhdl-in-literal' also supports cpp macros (see `vhdl-beginning-of-macro')
-    (and (>= pos start)
-         (<= pos end)
-         (cond ((or (string= type "character_literal")
+    (cond ((and (>= pos (1+ start)) ; `vhdl-in-literal' returns non-nil when point is after the ' or "
+                (<= pos end)
+                (or (string= type "character_literal")
                     (string= type "string_literal")
-                    (string= type "bit_string_literal"))
-                'string)
-               ((string= type "comment")
-                'comment)
-               ((string= type "tool_directive")
-                'directive)
-               (t
-                nil)))))
+                    (string= type "bit_string_literal")))
+           'string)
+          ((and (>= pos (+ 2 start)) ; `vhdl-in-comment-p' returns non-nil when point is after the --
+                (<= pos end)
+                (string= type "comment"))
+           'comment)
+          ((and (>= pos start)
+                (<= pos end)
+                (string= type "tool_directive"))
+           'directive)
+          (t
+           nil))))
 
 (defun vhdl-ts-in-literal-advice (fun &rest args)
   "Advice for `vhdl-in-literal' for `vhdl-ts-mode'."
