@@ -46,7 +46,7 @@
                                :fn #'test-hdl-indent-buffer
                                :args '(vhdl-ts-mode vhdl-ts-mode-test-indent-fn :no-deindent)))
 
-(ert-deftest vhdl-ts-mode::indent ()
+(ert-deftest indent ()
   (dolist (file vhdl-ts-mode-test-indent-file-list)
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
                                                          :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-indent (test-hdl-basename file))

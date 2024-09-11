@@ -98,7 +98,7 @@
                                        :start-pos-max t)))
 
 
-(ert-deftest vhdl-ts-mode::navigation::instances ()
+(ert-deftest navigation::instances ()
   (dolist (file vhdl-ts-mode-test-navigation-rtl-file-list)
     ;; Forward
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
@@ -119,7 +119,7 @@
                                   (file-name-concat vhdl-ts-mode-test-ref-dir-navigation (test-hdl-basename file "inst.bwd.el"))))))
 
 
-(ert-deftest vhdl-ts-mode::navigation::procedure-functions ()
+(ert-deftest navigation::procedure-functions ()
   (dolist (file vhdl-ts-mode-test-navigation-tb-file-list)
     ;; Forward
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
@@ -140,7 +140,7 @@
                                   (file-name-concat vhdl-ts-mode-test-ref-dir-navigation (test-hdl-basename file "pf.bwd.el"))))))
 
 
-(ert-deftest vhdl-ts-mode::navigation::blocks ()
+(ert-deftest navigation::blocks ()
   (dolist (file vhdl-ts-mode-test-navigation-block-nav-file-list)
     ;; Forward
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file

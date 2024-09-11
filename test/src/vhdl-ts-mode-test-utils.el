@@ -126,7 +126,7 @@
                                            :pos-list ,pos-list)))))
 
 
-(ert-deftest vhdl-ts-mode::utils::block-at-point ()
+(ert-deftest utils::block-at-point ()
   (dolist (file-and-pos vhdl-ts-mode-test-utils-block-at-point-file-and-pos)
     (let ((file (car file-and-pos))
           (pos-list (cdr file-and-pos)))
@@ -139,7 +139,7 @@
                                                                    :pos-list ,pos-list))
                                     (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "block.at.point.el")))))))
 
-(ert-deftest vhdl-ts-mode::utils::instance-at-point ()
+(ert-deftest utils::instance-at-point ()
   (dolist (file-and-pos vhdl-ts-mode-test-utils-instance-at-point-file-and-pos)
     (let ((file (car file-and-pos))
           (pos-list (cdr file-and-pos)))
@@ -153,7 +153,7 @@
                                     (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "inst.point.el")))))))
 
 
-(ert-deftest vhdl-ts-mode::utils::entity-at-point ()
+(ert-deftest utils::entity-at-point ()
   (dolist (file-and-pos vhdl-ts-mode-test-utils-entity-at-point-file-and-pos)
     (let ((file (car file-and-pos))
           (pos-list (cdr file-and-pos)))
@@ -167,7 +167,7 @@
                                     (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "ent.point.el")))))))
 
 
-(ert-deftest vhdl-ts-mode::utils::forward-sexp ()
+(ert-deftest utils::forward-sexp ()
   (dolist (file-and-pos vhdl-ts-mode-test-utils-forward-sexp-file-and-pos)
     (let ((file (car file-and-pos))
           (pos-list (cdr file-and-pos)))
@@ -181,7 +181,7 @@
                                     (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "fwd.sexp.el")))))))
 
 
-(ert-deftest vhdl-ts-mode::utils::backward-sexp ()
+(ert-deftest utils::backward-sexp ()
   (dolist (file-and-pos vhdl-ts-mode-test-utils-backward-sexp-file-and-pos)
     (let ((file (car file-and-pos))
           (pos-list (cdr file-and-pos)))

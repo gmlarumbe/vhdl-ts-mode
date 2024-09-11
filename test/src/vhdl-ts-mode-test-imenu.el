@@ -38,7 +38,7 @@
                                :fn #'test-hdl-imenu-test-file
                                :args '(vhdl-ts-mode)))
 
-(ert-deftest vhdl-ts-mode::imenu ()
+(ert-deftest imenu ()
   (dolist (file vhdl-ts-mode-test-imenu-file-list)
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
                                                          :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-imenu (test-hdl-basename file "el"))

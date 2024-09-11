@@ -38,7 +38,7 @@
                                :fn #'test-hdl-faceup-test-file
                                :args '(vhdl-ts-mode)))
 
-(ert-deftest vhdl-ts-mode::faceup ()
+(ert-deftest faceup ()
   (dolist (file vhdl-ts-mode-test-faceup-file-list)
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
                                                          :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-faceup (test-hdl-basename file "faceup"))

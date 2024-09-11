@@ -81,14 +81,14 @@
                                  :fn #'vhdl-ts-mode-test-beautify-block-at-point-fn)))
 
 
-(ert-deftest vhdl-ts-mode::beautify-buffer ()
+(ert-deftest beautify-buffer ()
   (dolist (file vhdl-ts-mode-test-beautify-file-list)
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
                                                          :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-beautify (test-hdl-basename file "beauty.vhd"))
                                                          :fn #'vhdl-ts-mode-test-beautify-file)
                                   (file-name-concat vhdl-ts-mode-test-ref-dir-beautify (test-hdl-basename file "beauty.vhd"))))))
 
-(ert-deftest vhdl-ts-mode::beautify-buffer-align-ports-params ()
+(ert-deftest beautify-buffer-align-ports-params ()
   (let ((vhdl-ts-beautify-align-ports-and-params t))
     (dolist (file vhdl-ts-mode-test-beautify-file-list)
       (should (test-hdl-files-equal (test-hdl-process-file :test-file file
@@ -96,14 +96,14 @@
                                                            :fn #'vhdl-ts-mode-test-beautify-file)
                                     (file-name-concat vhdl-ts-mode-test-ref-dir-beautify (test-hdl-basename file "beauty.app.vhd")))))))
 
-(ert-deftest vhdl-ts-mode::beautify-block-at-point ()
+(ert-deftest beautify-block-at-point ()
   (dolist (file vhdl-ts-mode-test-beautify-file-list)
     (should (test-hdl-files-equal (test-hdl-process-file :test-file file
                                                          :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-beautify (test-hdl-basename file "beauty.block.vhd"))
                                                          :fn #'vhdl-ts-mode-test-beautify-block-at-point-fn)
                                   (file-name-concat vhdl-ts-mode-test-ref-dir-beautify (test-hdl-basename file "beauty.block.vhd"))))))
 
-(ert-deftest vhdl-ts-mode::beautify-block-at-point-align-ports-params ()
+(ert-deftest beautify-block-at-point-align-ports-params ()
   (let ((vhdl-ts-beautify-align-ports-and-params t))
     (dolist (file vhdl-ts-mode-test-beautify-file-list)
       (should (test-hdl-files-equal (test-hdl-process-file :test-file file
