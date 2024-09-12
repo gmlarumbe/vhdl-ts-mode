@@ -478,18 +478,23 @@ portB => signalB
       (sensitivity_list (simple_name) @font-lock-constant-face))
      ;; Instances
      (component_instantiation_statement
-      (label
-       (identifier) @vhdl-ts-font-lock-instance-face)
+      (label (identifier) @vhdl-ts-font-lock-instance-face)
       (entity_instantiation
        (selected_name
         prefix: (simple_name) @vhdl-ts-font-lock-instance-lib-face
         suffix: (simple_name) @vhdl-ts-font-lock-entity-face)))
      (component_instantiation_statement
       (label (identifier) @vhdl-ts-font-lock-instance-face)
-      (component_instantiation (simple_name) @vhdl-ts-font-lock-entity-face))
+      (component_instantiation
+       (selected_name
+        prefix: (selected_name) @vhdl-ts-font-lock-instance-lib-face
+        suffix: (simple_name) @vhdl-ts-font-lock-entity-face)))
      (component_instantiation_statement
       (label (identifier) @vhdl-ts-font-lock-instance-face)
       (entity_instantiation (simple_name) @vhdl-ts-font-lock-entity-face))
+     (component_instantiation_statement
+      (label (identifier) @vhdl-ts-font-lock-instance-face)
+      (component_instantiation (simple_name) @vhdl-ts-font-lock-entity-face))
      ;; Port connections
      (association_list
       (named_association_element
