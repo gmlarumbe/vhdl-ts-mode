@@ -727,7 +727,12 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      ((node-is ")") parent-bol 0)
      ;; Fallbacks/default
      ((and vhdl-ts--matcher-blank-line (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
-     (vhdl-ts--matcher-blank-line parent-bol vhdl-ts-indent-level) ; Blank lines
+     ((and
+       vhdl-ts--matcher-blank-line
+       (not (parent-is "concurrent_statement_part"))
+       (not (parent-is "declarative_part"))
+       (not (parent-is "association_list")))
+      parent-bol vhdl-ts-indent-level) ; Blank lines
      ((or vhdl-ts--matcher-keyword vhdl-ts--matcher-punctuation) parent-bol vhdl-ts-indent-level)
      (vhdl-ts--matcher-default parent 0))))
 
