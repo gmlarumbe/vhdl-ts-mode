@@ -37,7 +37,7 @@
 ;; Contributions:
 ;;   This major mode is still under active development!
 ;;   Check contributing guidelines:
-;;     - https://github.com/gmlarumbe/vhdl-ext#contributing
+;;     - https://github.com/gmlarumbe/vhdl-ts-mode#contributing
 ;;
 ;;   For some highlight queries examples, check the link below:
 ;;    - https://github.com/alemuller/tree-sitter-vhdl/blob/main/queries/highlights.scm
@@ -73,6 +73,19 @@
 Defaults to .vhd and .vhdl."
   :group 'vhdl-ts
   :type 'string)
+
+(defcustom vhdl-ts-imenu-style 'tree
+  "Style of generated Imenu index for current VHDL buffer.
+
+- Simple: default basic grouping into categories.
+- Tree: tree-like structure without further processing.
+- Tree-group: tree-like structure with some processing to group same type
+              elements into subcategories (useful for display with third party
+              packages such as `imenu-list')."
+  :type '(choice (const :tag "simple" simple)
+                 (const :tag "tree" tree)
+                 (const :tag "tree-group" tree-group))
+  :group 'vhdl-ts)
 
 (defcustom vhdl-ts-beautify-align-ports-and-params nil
   "Align all ports and params of instances when beautifying."
@@ -112,6 +125,8 @@ If none is found, return nil."
                     (treesit-search-subtree node "entity_instantiation")
                     (treesit-node-text (treesit-node-child-by-field-name (treesit-node-child temp-node 1) "suffix") :no-props))
                    (t (error "Unexpected component_instantiation_statement subnode!"))))
+            ((string-match "function_\\(declaration\\|body\\)" (treesit-node-type node))
+             (treesit-node-text (treesit-search-subtree node (concat "\\(operator_symbol\\|" vhdl-ts-identifier-re "\\)")) :no-prop)) ; Overloaded functions
             (t
              (treesit-node-text (treesit-search-subtree node vhdl-ts-identifier-re) :no-prop))))))
 
@@ -763,85 +778,17 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
        "package_body"
        ;; 4.9 Package instantiation declarations
        "package_instantiation_declaration"
-       ;; 5.2.1 Scalar types
-       "numeric_type_definition"
-       ;; 5.2.2 Enumeration types
-       "enumeration_type_definition"
-       ;; 5.2.4 Physical types
-       "physical_type_definition"
-       ;; 5.3 Composite types
-       "unbounded_array_definition"
-       "constrained_array_definition"
-       "record_type_definition"
-       ;; 5.4 Access types
-       "access_type_definition"
-       "incomplete_type_declaration"
-       ;; 5.5 File types
-       "file_type_definition"
-       ;; 5.6.2 Protected type declarations / Protected type bodies
-       "protected_type_declaration"
-       "protected_type_body"
-       ;; 6.2 Type declarations
-       "full_type_declaration"
-       ;; 6.3 Subtype declaration
-       "subtype_declaration"
-       ;; 6.4.2 Object declarations
-       "constant_declaration"
-       "signal_declaration"
-       "variable_declaration"
-       "shared_variable_declaration"
-       "file_declaration"
-       ;; 6.5.2 Interface object declarations
-       "constant_interface_declaration"
-       "signal_interface_declaration"
-       "variable_interface_declaration"
-       "file_interface_declaration"
-       ;; 6.5.3 Interface type declarations
-       "type_interface_declaration"
-       ;; 6.5.4 Interface subprogram declarations
-       "procedure_interface_declaration"
-       "function_interface_declaration"
-       ;; 6.5.5 Interface package declarations
-       "package_interface_declaration"
-       ;; 6.6 Alias declarations
-       "alias_declaration"
-       ;; 6.7 Attribute declarations
-       "attribute_declaration"
        ;; 6.8 Component declarations
        "component_declaration"
-       ;; 6.9 Group template declarations
-       "group_template_declaration"
-       ;; 6.10 Group declarations
-       "group_declaration"
-       ;; 7.2 Specifications
-       "attribute_specification"
-       "entity_specification"
-       ;; 7.3 Configuration specification
-       "configuration_specification"
-       ;; 7.4 Disconnection specification
-       "disconnection_specification"
        ;; 10.1 Sequential statements
        "process_statement"
-       "assertion_statement"
-       "report_statement"
        ;; 11 Concurrent statements
        "block_statement"
        "process_statement"
        "component_instantiation_statement"
-       "assertion_statement"
        "for_generate_statement"
        "if_generate_statement"
-       "case_generate_statement"
-       ;; 12.4 Use clauses
-       "use_clause"
-       ;; 13.1 Design units
-       "design_unit"
-       ;; 13.2 Design libraries
-       "library_clause"
-       ;; 13.3 Context declarations
-       "context_declaration"
-       ;; 13.4 Context clauses
-       "context_clause")
+       "case_generate_statement")
      'symbols)))
 
 (defvar vhdl-ts-imenu-format-item-label-function
@@ -859,28 +806,19 @@ It must be a function with two arguments: TYPE and NAME.")
   "Imenu function used to format a parent jump item label.
 It must be a function with two arguments: TYPE and NAME.")
 
-(defun vhdl-ts-imenu-format-item-label (type name)
+(defun vhdl-ts-imenu-format-item-label (_type name)
   "Return Imenu label for single node using TYPE and NAME."
-  (format "%s (%s)" name type))
+  (format "%s" name))
 
-(defun vhdl-ts-imenu-format-parent-item-label (type name)
+(defun vhdl-ts-imenu-format-parent-item-label (_type name)
   "Return Imenu label for parent node using TYPE and NAME."
-  (format "%s..." (vhdl-ts-imenu-format-item-label type name)))
+  (format "%s" name))
 
 (defun vhdl-ts-imenu-format-parent-item-jump-label (type _name)
   "Return Imenu label for parent node jump using TYPE and NAME."
-  (cond ((eq type 'ent)
-         "*entity declaration*")
-        ((eq type 'arch)
-         "*architecture declaration*")
-        ((eq type 'fun)
-         "*function definition*")
-        ((eq type 'pcd)
-         "*procedure body*")
-        (t
-         (format "*%s*" type))))
+  (format "*%s*" type))
 
-(defun vhdl-ts-imenu-treesit-create-index-1 (node)
+(defun vhdl-ts-imenu-treesit-create-index-tree (node)
   "Given a sparse tree, create an imenu alist.
 
 NODE is the root node of the tree returned by
@@ -901,17 +839,9 @@ Copied from Python's `python--imenu-treesit-create-index-1' and adapted to
 VHDL parser."
   (let* ((ts-node (car node))
          (children (cdr node))
-         (subtrees (mapcan #'vhdl-ts-imenu-treesit-create-index-1
+         (subtrees (mapcan #'vhdl-ts-imenu-treesit-create-index-tree
                            children))
-         (type (pcase (treesit-node-type ts-node)
-                 ("entity_declaration"                'ent)
-                 ("architecture_body"                 'arch)
-                 ("process_statement"                 'proc)
-                 ("procedure_body"                    'pcd)
-                 ("function_body"                     'fun)
-                 ("block_statement"                   'blk)
-                 ("generate_statement_body"           'gen)
-                 ("component_instantiation_statement" 'cmp)))
+         (type (treesit-node-type ts-node))
          ;; The root of the tree could have a nil ts-node.
          (name (when ts-node
                  (or (vhdl-ts--node-identifier-name ts-node)
@@ -920,25 +850,118 @@ VHDL parser."
                    (set-marker (make-marker)
                                (treesit-node-start ts-node)))))
     (cond
+     ;; Root node
      ((null ts-node)
       subtrees)
+     ;; Non-leaf node
      (subtrees
-      (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function
-                                   type
-                                   name))
-            (jump-label (funcall vhdl-ts-imenu-format-parent-item-jump-label-function
-                                 type
-                                 name)))
+      (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function type name))
+            (jump-label (funcall vhdl-ts-imenu-format-parent-item-jump-label-function type name)))
         `((,parent-label
            ,(cons jump-label marker)
            ,@subtrees))))
-     (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function
-                              type
-                              name)))
+     ;; Leaf node
+     (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function type name)))
           (list (cons label marker)))))))
 
-(defun vhdl-ts-imenu-create-index (&optional node)
+(defun vhdl-ts--imenu-treesit-create-index-tree-group-process (subtree)
+  "Utility function to process SUBTREE and group leaves into categories."
+  (let (instances processes procedures functions components default)
+    (mapc
+     (lambda (elm)
+       (if (and (listp elm) (listp (cdr elm)) (listp (cddr elm)) ; Basic checks due to custom imenu entry format for grouping
+                (markerp (cadr elm))   ; Element can be grouped because it was added ...
+                (stringp (caddr elm))) ; ... a third field, indicating tree-sitter type
+           (let ((type (caddr elm))
+                 (entry (cons (car elm) (cadr elm))))
+             (pcase type
+               ("component_instantiation_statement" (push entry instances))
+               ("process_statement" (push entry processes))
+               ((or "procedure_declaration" "procedure_body") (push entry procedures))
+               ((or "function_declaration" "function_body") (push entry functions))
+               ("component_declaration" (push entry components))
+               (_ (push entry default))))
+         ;; Otherwise entry cannot be grouped because it already was, or because it was a leaf node
+         (push elm default)))
+     subtree)
+    ;; Populate return value
+    (when (or processes instances procedures functions components) ; Avoid processing when no grouping is required
+      (when instances
+        (setq instances (nreverse instances))
+        (setq default `(("Instances" ,@instances) ,@default)))
+      (when processes
+        (setq processes (nreverse processes))
+        (setq default `(("Processes" ,@processes) ,@default)))
+      (when procedures
+        (setq procedures (nreverse procedures))
+        (setq default `(("Procedures" ,@procedures) ,@default)))
+      (when functions
+        (setq functions (nreverse functions))
+        (setq default `(("Functions" ,@functions) ,@default)))
+      (when components
+        (setq components (nreverse components))
+        (setq default `(("Components" ,@components) ,@default))))
+    default))
+
+(defun vhdl-ts-imenu-treesit-create-index-tree-group (node)
+  "Given a sparse tree, create an imenu alist.
+
+NODE is the root node of the tree returned by
+`treesit-induce-sparse-tree' (not a tree-sitter node, its car is
+a tree-sitter node).  Walk that tree and return an imenu alist.
+
+Return a list of ENTRY where
+
+ENTRY := (NAME . MARKER)
+       | (NAME . ((JUMP-LABEL . MARKER)
+                  ENTRY
+                  ...)
+
+NAME is the function/class's name, JUMP-LABEL is like \"*function
+definition*\".
+
+Copied from Python's `python--imenu-treesit-create-index-1' and adapted to
+VHDL parser."
+  (let* ((ts-node (car node))
+         (children (cdr node))
+         (subtrees (mapcan #'vhdl-ts-imenu-treesit-create-index-tree-group
+                           children))
+         (type (treesit-node-type ts-node))
+         ;; The root of the tree could have a nil ts-node.
+         (name (when ts-node
+                 (or (vhdl-ts--node-identifier-name ts-node)
+                     "Anonymous")))
+         (marker (when ts-node
+                   (set-marker (make-marker)
+                               (treesit-node-start ts-node)))))
+    (cond
+     ;; Root node
+     ((null ts-node)
+      subtrees)
+     ;; Non-leaf node
+     (subtrees
+      (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function type name))
+            (jump-label (funcall vhdl-ts-imenu-format-parent-item-jump-label-function type name)))
+        `((,parent-label
+           ,(cons jump-label marker)
+           ,@(vhdl-ts--imenu-treesit-create-index-tree-group-process subtrees)))))
+     ;; Leaf node
+     (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function type name)))
+          (if (member type '("component_instantiation_statement"
+                             "process_statement"
+                             "procedure_declaration"
+                             "function_declaration"
+                             "procedure_body"
+                             "function_body"
+                             "component_declaration"))
+              (list (list label marker type))
+            (list (cons label marker))))))))
+
+(defun vhdl-ts--imenu-create-index (func &optional node)
   "Imenu index builder function for `vhdl-ts-mode'.
+
+FUNC is the function that traverses the syntax tree and builds the index suited
+for Imenu.
 
 NODE is the root node of the subtree you want to build an index
 of.  If nil, use the root node of the whole parse tree.
@@ -950,13 +973,37 @@ to VHDL parser."
                 node
                 vhdl-ts-imenu-create-index-re
                 nil 1000)))
-    (vhdl-ts-imenu-treesit-create-index-1 tree)))
+    (funcall func tree)))
 
-(defun vhdl-ts--defun-name (node)
-  "Return the defun name of NODE.
+(defun vhdl-ts-imenu-create-index-tree ()
+  "Create `imenu' index alist with a tree structure."
+  (vhdl-ts--imenu-create-index #'vhdl-ts-imenu-treesit-create-index-tree))
 
-Return nil if there is no name or if NODE is not a defun node."
-  (vhdl-ts--node-identifier-name node))
+(defun vhdl-ts-imenu-create-index-tree-group ()
+  "Create `imenu' index alist with a tree structure with subgroups."
+  (vhdl-ts--imenu-create-index #'vhdl-ts-imenu-treesit-create-index-tree-group))
+
+(defun vhdl-ts-imenu-setup ()
+  "Setup `imenu' based on value of `vhdl-ts-imenu-style'."
+  (pcase vhdl-ts-imenu-style
+    ('simple
+     (setq-local treesit-simple-imenu-settings
+                 `(("Entity" "\\`entity_declaration\\'" nil nil)
+                   ("Architecture" "\\`architecture_body\\'" nil nil)
+                   ("Package" "\\`package_\\(declaration\\|body\\)\\'" nil nil)
+                   ("Component" "\\`component_declaration\\'" nil nil)
+                   ("Process" "\\`process_statement\\'" nil nil)
+                   ("Procedure" "\\`procedure_body\\'" nil nil)
+                   ("Function" "\\`function_body\\'" nil nil)
+                   ("Block" "\\`block_statement\\'" nil nil)
+                   ("Generate" "\\`generate_statement_body\\'" nil nil)
+                   ("Instance" "\\`component_instantiation_statement\\'" nil)))
+     (setq-local treesit-defun-name-function #'vhdl-ts--node-identifier-name))
+    ('tree
+     (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index-tree))
+    ('tree-group
+     (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index-tree-group))
+    (_ (error "Wrong value for `vhdl-ts-imenu-style': set to simple/tree/tree-group"))))
 
 
 ;;; Which-func
@@ -1242,7 +1289,7 @@ and the linker to be installed and on PATH."
     ;; Navigation
     (setq-local treesit-defun-type-regexp vhdl-ts--defun-type-regexp)
     ;; Imenu.
-    (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index)
+    (vhdl-ts-imenu-setup)
     ;; Which-func
     (vhdl-ts-which-func)
     ;; Completion
