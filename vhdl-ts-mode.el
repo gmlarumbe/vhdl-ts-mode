@@ -37,7 +37,7 @@
 ;; Contributions:
 ;;   This major mode is still under active development!
 ;;   Check contributing guidelines:
-;;     - https://github.com/gmlarumbe/vhdl-ext#contributing
+;;     - https://github.com/gmlarumbe/vhdl-ts-mode#contributing
 ;;
 ;;   For some highlight queries examples, check the link below:
 ;;    - https://github.com/alemuller/tree-sitter-vhdl/blob/main/queries/highlights.scm
@@ -73,6 +73,33 @@
 Defaults to .vhd and .vhdl."
   :group 'vhdl-ts
   :type 'string)
+
+(defcustom vhdl-ts-imenu-style 'tree
+  "Style of generated Imenu index for current VHDL buffer.
+
+- Simple: default basic grouping into categories.
+- Tree: tree-like structure without further processing.
+- Tree-group: tree-like structure with some processing to group same type
+              elements into subcategories (useful for display with third party
+              packages such as `imenu-list')."
+  :type '(choice (const :tag "simple" simple)
+                 (const :tag "tree" tree)
+                 (const :tag "tree-group" tree-group))
+  :group 'vhdl-ts)
+
+(defcustom vhdl-ts-which-func-style 'custom
+  "Style of `which-func' display for current VHDL buffer.
+
+- Simple: show last element of current Imenu entry
+- Breadcrumb: display hierarchy of current Imenu entry
+- Custom: use custom `vhdl-ts-mode' implementation for `which-func':
+    - Format A:B
+    - A represents the type of current node, B its name
+    - For instances, A is the instance name and B the instance type."
+  :type '(choice (const :tag "simple" simple)
+                 (const :tag "breadcrumb" breadcrumb)
+                 (const :tag "custom" custom))
+  :group 'vhdl-ts)
 
 (defcustom vhdl-ts-beautify-align-ports-and-params nil
   "Align all ports and params of instances when beautifying."
@@ -112,6 +139,8 @@ If none is found, return nil."
                     (treesit-search-subtree node "entity_instantiation")
                     (treesit-node-text (treesit-node-child-by-field-name (treesit-node-child temp-node 1) "suffix") :no-props))
                    (t (error "Unexpected component_instantiation_statement subnode!"))))
+            ((string-match "function_\\(declaration\\|body\\)" (treesit-node-type node))
+             (treesit-node-text (treesit-search-subtree node (concat "\\(operator_symbol\\|" vhdl-ts-identifier-re "\\)")) :no-prop)) ; Overloaded functions
             (t
              (treesit-node-text (treesit-search-subtree node vhdl-ts-identifier-re) :no-prop))))))
 
@@ -740,14 +769,38 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
 (defconst vhdl-ts-imenu-create-index-re
   (eval-when-compile
     (regexp-opt
-     '("entity_declaration"
+     '(;; 3.2 Entity declarations
+       "entity_declaration"
+       ;; 3.3 Architecture bodies
        "architecture_body"
-       "process_statement"
+       ;; 3.4 Configuration declarations
+       "configuration_declaration"
+       ;; 3.4.3 Component configuration
+       "component_configuration"
+       ;; 4.2.1 Subprogram declarations
+       "procedure_declaration"
+       "function_declaration"
+       ;; 4.3 Subprogram bodies
        "procedure_body"
        "function_body"
+       ;; 4.4 Subprogram instantiation declarations
+       "procedure_instantiation_declaration"
+       "function_instantiation_declaration"
+       ;; 4.7 Package declarations
+       "package_declaration"
+       ;; 4.8 Package bodies
+       "package_body"
+       ;; 4.9 Package instantiation declarations
+       "package_instantiation_declaration"
+       ;; 6.8 Component declarations
+       "component_declaration"
+       ;; 11 Concurrent statements
        "block_statement"
-       "generate_statement_body"
-       "component_instantiation_statement")
+       "process_statement"
+       "component_instantiation_statement"
+       "for_generate_statement"
+       "if_generate_statement"
+       "case_generate_statement")
      'symbols)))
 
 (defvar vhdl-ts-imenu-format-item-label-function
@@ -765,28 +818,19 @@ It must be a function with two arguments: TYPE and NAME.")
   "Imenu function used to format a parent jump item label.
 It must be a function with two arguments: TYPE and NAME.")
 
-(defun vhdl-ts-imenu-format-item-label (type name)
+(defun vhdl-ts-imenu-format-item-label (_type name)
   "Return Imenu label for single node using TYPE and NAME."
-  (format "%s (%s)" name type))
+  (format "%s" name))
 
-(defun vhdl-ts-imenu-format-parent-item-label (type name)
+(defun vhdl-ts-imenu-format-parent-item-label (_type name)
   "Return Imenu label for parent node using TYPE and NAME."
-  (format "%s..." (vhdl-ts-imenu-format-item-label type name)))
+  (format "%s" name))
 
 (defun vhdl-ts-imenu-format-parent-item-jump-label (type _name)
   "Return Imenu label for parent node jump using TYPE and NAME."
-  (cond ((eq type 'ent)
-         "*entity declaration*")
-        ((eq type 'arch)
-         "*architecture declaration*")
-        ((eq type 'fun)
-         "*function definition*")
-        ((eq type 'pcd)
-         "*procedure body*")
-        (t
-         (format "*%s*" type))))
+  (format "*%s*" type))
 
-(defun vhdl-ts-imenu-treesit-create-index-1 (node)
+(defun vhdl-ts-imenu-treesit-create-index-tree (node)
   "Given a sparse tree, create an imenu alist.
 
 NODE is the root node of the tree returned by
@@ -807,17 +851,9 @@ Copied from Python's `python--imenu-treesit-create-index-1' and adapted to
 VHDL parser."
   (let* ((ts-node (car node))
          (children (cdr node))
-         (subtrees (mapcan #'vhdl-ts-imenu-treesit-create-index-1
+         (subtrees (mapcan #'vhdl-ts-imenu-treesit-create-index-tree
                            children))
-         (type (pcase (treesit-node-type ts-node)
-                 ("entity_declaration"                'ent)
-                 ("architecture_body"                 'arch)
-                 ("process_statement"                 'proc)
-                 ("procedure_body"                    'pcd)
-                 ("function_body"                     'fun)
-                 ("block_statement"                   'blk)
-                 ("generate_statement_body"           'gen)
-                 ("component_instantiation_statement" 'cmp)))
+         (type (treesit-node-type ts-node))
          ;; The root of the tree could have a nil ts-node.
          (name (when ts-node
                  (or (vhdl-ts--node-identifier-name ts-node)
@@ -826,25 +862,118 @@ VHDL parser."
                    (set-marker (make-marker)
                                (treesit-node-start ts-node)))))
     (cond
+     ;; Root node
      ((null ts-node)
       subtrees)
+     ;; Non-leaf node
      (subtrees
-      (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function
-                                   type
-                                   name))
-            (jump-label (funcall vhdl-ts-imenu-format-parent-item-jump-label-function
-                                 type
-                                 name)))
+      (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function type name))
+            (jump-label (funcall vhdl-ts-imenu-format-parent-item-jump-label-function type name)))
         `((,parent-label
            ,(cons jump-label marker)
            ,@subtrees))))
-     (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function
-                              type
-                              name)))
+     ;; Leaf node
+     (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function type name)))
           (list (cons label marker)))))))
 
-(defun vhdl-ts-imenu-create-index (&optional node)
+(defun vhdl-ts--imenu-treesit-create-index-tree-group-process (subtree)
+  "Utility function to process SUBTREE and group leaves into categories."
+  (let (instances processes procedures functions components default)
+    (mapc
+     (lambda (elm)
+       (if (and (listp elm) (listp (cdr elm)) (listp (cddr elm)) ; Basic checks due to custom imenu entry format for grouping
+                (markerp (cadr elm))   ; Element can be grouped because it was added ...
+                (stringp (caddr elm))) ; ... a third field, indicating tree-sitter type
+           (let ((type (caddr elm))
+                 (entry (cons (car elm) (cadr elm))))
+             (pcase type
+               ("component_instantiation_statement" (push entry instances))
+               ("process_statement" (push entry processes))
+               ((or "procedure_declaration" "procedure_body") (push entry procedures))
+               ((or "function_declaration" "function_body") (push entry functions))
+               ("component_declaration" (push entry components))
+               (_ (push entry default))))
+         ;; Otherwise entry cannot be grouped because it already was, or because it was a leaf node
+         (push elm default)))
+     subtree)
+    ;; Populate return value
+    (when (or processes instances procedures functions components) ; Avoid processing when no grouping is required
+      (when instances
+        (setq instances (nreverse instances))
+        (setq default `(("Instances" ,@instances) ,@default)))
+      (when processes
+        (setq processes (nreverse processes))
+        (setq default `(("Processes" ,@processes) ,@default)))
+      (when procedures
+        (setq procedures (nreverse procedures))
+        (setq default `(("Procedures" ,@procedures) ,@default)))
+      (when functions
+        (setq functions (nreverse functions))
+        (setq default `(("Functions" ,@functions) ,@default)))
+      (when components
+        (setq components (nreverse components))
+        (setq default `(("Components" ,@components) ,@default))))
+    default))
+
+(defun vhdl-ts-imenu-treesit-create-index-tree-group (node)
+  "Given a sparse tree, create an imenu alist.
+
+NODE is the root node of the tree returned by
+`treesit-induce-sparse-tree' (not a tree-sitter node, its car is
+a tree-sitter node).  Walk that tree and return an imenu alist.
+
+Return a list of ENTRY where
+
+ENTRY := (NAME . MARKER)
+       | (NAME . ((JUMP-LABEL . MARKER)
+                  ENTRY
+                  ...)
+
+NAME is the function/class's name, JUMP-LABEL is like \"*function
+definition*\".
+
+Copied from Python's `python--imenu-treesit-create-index-1' and adapted to
+VHDL parser."
+  (let* ((ts-node (car node))
+         (children (cdr node))
+         (subtrees (mapcan #'vhdl-ts-imenu-treesit-create-index-tree-group
+                           children))
+         (type (treesit-node-type ts-node))
+         ;; The root of the tree could have a nil ts-node.
+         (name (when ts-node
+                 (or (vhdl-ts--node-identifier-name ts-node)
+                     "Anonymous")))
+         (marker (when ts-node
+                   (set-marker (make-marker)
+                               (treesit-node-start ts-node)))))
+    (cond
+     ;; Root node
+     ((null ts-node)
+      subtrees)
+     ;; Non-leaf node
+     (subtrees
+      (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function type name))
+            (jump-label (funcall vhdl-ts-imenu-format-parent-item-jump-label-function type name)))
+        `((,parent-label
+           ,(cons jump-label marker)
+           ,@(vhdl-ts--imenu-treesit-create-index-tree-group-process subtrees)))))
+     ;; Leaf node
+     (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function type name)))
+          (if (member type '("component_instantiation_statement"
+                             "process_statement"
+                             "procedure_declaration"
+                             "function_declaration"
+                             "procedure_body"
+                             "function_body"
+                             "component_declaration"))
+              (list (list label marker type))
+            (list (cons label marker))))))))
+
+(defun vhdl-ts--imenu-create-index (func &optional node)
   "Imenu index builder function for `vhdl-ts-mode'.
+
+FUNC is the function that traverses the syntax tree and builds the index suited
+for Imenu.
 
 NODE is the root node of the subtree you want to build an index
 of.  If nil, use the root node of the whole parse tree.
@@ -856,51 +985,95 @@ to VHDL parser."
                 node
                 vhdl-ts-imenu-create-index-re
                 nil 1000)))
-    (vhdl-ts-imenu-treesit-create-index-1 tree)))
+    (funcall func tree)))
 
-(defun vhdl-ts--defun-name (node)
-  "Return the defun name of NODE.
+(defun vhdl-ts-imenu-create-index-tree ()
+  "Create `imenu' index alist with a tree structure."
+  (vhdl-ts--imenu-create-index #'vhdl-ts-imenu-treesit-create-index-tree))
 
-Return nil if there is no name or if NODE is not a defun node."
-  (vhdl-ts--node-identifier-name node))
+(defun vhdl-ts-imenu-create-index-tree-group ()
+  "Create `imenu' index alist with a tree structure with subgroups."
+  (vhdl-ts--imenu-create-index #'vhdl-ts-imenu-treesit-create-index-tree-group))
+
+(defun vhdl-ts-imenu-setup ()
+  "Setup `imenu' based on value of `vhdl-ts-imenu-style'."
+  (pcase vhdl-ts-imenu-style
+    ('simple
+     (setq-local treesit-simple-imenu-settings
+                 `(("Entity" "\\`entity_declaration\\'" nil nil)
+                   ("Architecture" "\\`architecture_body\\'" nil nil)
+                   ("Package" "\\`package_\\(declaration\\|body\\)\\'" nil nil)
+                   ("Component" "\\`component_declaration\\'" nil nil)
+                   ("Process" "\\`process_statement\\'" nil nil)
+                   ("Procedure" "\\`procedure_body\\'" nil nil)
+                   ("Function" "\\`function_body\\'" nil nil)
+                   ("Block" "\\`block_statement\\'" nil nil)
+                   ("Generate" "\\`generate_statement_body\\'" nil nil)
+                   ("Instance" "\\`component_instantiation_statement\\'" nil)))
+     (setq-local treesit-defun-name-function #'vhdl-ts--node-identifier-name))
+    ('tree
+     (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index-tree))
+    ('tree-group
+     (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index-tree-group))
+    (_ (error "Wrong value for `vhdl-ts-imenu-style': set to simple/tree/tree-group"))))
 
 
 ;;; Which-func
 (defvar-local vhdl-ts-which-func-extra nil
   "Variable to hold extra information for `which-func'.")
 
-(defun vhdl-ts-which-func-shorten-block (block-type)
-  "Return shortened name of BLOCK-TYPE, if possible."
-  (cond ((string= "entity_declaration"                block-type) "ent")
-        ((string= "architecture_body"                 block-type) "arch")
-        ((string= "process_statement"                 block-type) "proc")
-        ((string= "procedure_body"                    block-type) "pcd")
-        ((string= "function_body"                     block-type) "fun")
-        ((string= "block_statement"                   block-type) "blk")
-        ((string= "generate_statement_body"           block-type) "gen")
-        ((string= "component_instantiation_statement" block-type) "cmp")
-        (t block-type)))
+(defvar vhdl-ts-which-func-format-function 'vhdl-ts-which-func-format-shorten
+  "Variable of the function to be called to return the type in `which-func'.
+
+It must have one argument (tree-sitter node) and must return a string with the
+type.")
+
+(defun vhdl-ts-which-func-format-simple (node)
+  "Return tree-sitter type of current NODE."
+  (treesit-node-type node))
+
+(defun vhdl-ts-which-func-format-shorten (node)
+  "Return shortened name of NODE if possible."
+  (pcase (treesit-node-type node)
+    ("entity_declaration"                "ent")
+    ("architecture_body"                 "arch")
+    ("process_statement"                 "proc")
+    ("procedure_body"                    "pcd")
+    ("function_body"                     "fun")
+    ("block_statement"                   "blk")
+    ("generate_statement_body"           "gen")
+    ("component_instantiation_statement" (vhdl-ts--node-instance-name node))
+    (_                                   (treesit-node-type node))))
 
 (defun vhdl-ts-which-func-function ()
   "Retrieve `which-func' candidates."
   (let ((node (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) vhdl-ts-imenu-create-index-re)))
     (when node
       (setq vhdl-ts-which-func-extra (vhdl-ts--node-identifier-name node))
-      (vhdl-ts-which-func-shorten-block (treesit-node-type node)))))
+      (funcall vhdl-ts-which-func-format-function node))))
 
-(defun vhdl-ts-which-func ()
+(defun vhdl-ts-which-func-setup ()
   "Hook for `vhdl-ts-mode' to enable `which-func'."
-  (setq-local which-func-functions '(vhdl-ts-which-func-function))
-  (setq-local which-func-format
-              `("["
-                (:propertize which-func-current
-                 face (which-func :weight bold)
-                 mouse-face mode-line-highlight)
-                ":"
-                (:propertize vhdl-ts-which-func-extra
-                 face which-func
-                 mouse-face mode-line-highlight)
-                "]")))
+  (pcase vhdl-ts-which-func-style
+    ('simple
+      (setq-local which-func-functions nil)
+      (setq-local which-func-imenu-joiner-function (lambda (x) (car (last x)))))
+    ('breadcrumb
+     (setq-local which-func-functions nil)
+     (setq-local which-func-imenu-joiner-function (lambda (x) (string-join x "."))))
+    ('custom
+     (setq-local which-func-functions '(vhdl-ts-which-func-function))
+     (setq-local which-func-format
+                 `("["
+                   (:propertize which-func-current
+                    face (which-func :weight bold)
+                    mouse-face mode-line-highlight)
+                   ":"
+                   (:propertize vhdl-ts-which-func-extra
+                    face which-func
+                    mouse-face mode-line-highlight)
+                   "]")))
+    (_ (error "Wrong value for `vhdl-ts-which-func-style': set to default/breadcrumb/custom"))))
 
 
 ;;; Navigation
@@ -914,6 +1087,7 @@ Return nil if there is no name or if NODE is not a defun node."
        "process_statement"
        "procedure_declaration"
        "procedure_body"
+       "function_declaration"
        "function_body")
      'symbols)))
 
@@ -1148,9 +1322,9 @@ and the linker to be installed and on PATH."
     ;; Navigation
     (setq-local treesit-defun-type-regexp vhdl-ts--defun-type-regexp)
     ;; Imenu.
-    (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index)
+    (vhdl-ts-imenu-setup)
     ;; Which-func
-    (vhdl-ts-which-func)
+    (vhdl-ts-which-func-setup)
     ;; Completion
     (add-hook 'completion-at-point-functions #'vhdl-ts-completion-at-point nil 'local)
     ;; Beautify

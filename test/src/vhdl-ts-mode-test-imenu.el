@@ -31,21 +31,61 @@
 
 
 (defun vhdl-ts-mode-test-imenu-gen-expected-files ()
-  (test-hdl-gen-expected-files :file-list vhdl-ts-mode-test-imenu-file-list
-                               :dest-dir vhdl-ts-mode-test-ref-dir-imenu
-                               :out-file-ext "el"
-                               :process-fn 'eval-ff
-                               :fn #'test-hdl-imenu-test-file
-                               :args '(vhdl-ts-mode)))
+  ;; Simple
+  (let ((vhdl-ts-imenu-style 'simple))
+    (test-hdl-gen-expected-files :file-list vhdl-ts-mode-test-imenu-file-list
+                                 :dest-dir vhdl-ts-mode-test-ref-dir-imenu
+                                 :out-file-ext "simple.el"
+                                 :process-fn 'eval-ff
+                                 :fn #'test-hdl-imenu-test-file
+                                 :args '(vhdl-ts-mode)))
+  ;; Tree
+  (let ((vhdl-ts-imenu-style 'tree))
+    (test-hdl-gen-expected-files :file-list vhdl-ts-mode-test-imenu-file-list
+                                 :dest-dir vhdl-ts-mode-test-ref-dir-imenu
+                                 :out-file-ext "tree.el"
+                                 :process-fn 'eval-ff
+                                 :fn #'test-hdl-imenu-test-file
+                                 :args '(vhdl-ts-mode)))
 
-(ert-deftest imenu ()
-  (dolist (file vhdl-ts-mode-test-imenu-file-list)
-    (should (test-hdl-files-equal (test-hdl-process-file :test-file file
-                                                         :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-imenu (test-hdl-basename file "el"))
-                                                         :process-fn 'eval-ff
-                                                         :fn #'test-hdl-imenu-test-file
-                                                         :args '(vhdl-ts-mode))
-                                  (file-name-concat vhdl-ts-mode-test-ref-dir-imenu (test-hdl-basename file "el"))))))
+  ;; Tree-group
+  (let ((vhdl-ts-imenu-style 'tree-group))
+    (test-hdl-gen-expected-files :file-list vhdl-ts-mode-test-imenu-file-list
+                                 :dest-dir vhdl-ts-mode-test-ref-dir-imenu
+                                 :out-file-ext "tree.group.el"
+                                 :process-fn 'eval-ff
+                                 :fn #'test-hdl-imenu-test-file
+                                 :args '(vhdl-ts-mode))))
+
+(ert-deftest imenu::simple ()
+  (let ((vhdl-ts-imenu-style 'simple))
+    (dolist (file vhdl-ts-mode-test-imenu-file-list)
+      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
+                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-imenu (test-hdl-basename file "simple.el"))
+                                                           :process-fn 'eval-ff
+                                                           :fn #'test-hdl-imenu-test-file
+                                                           :args '(vhdl-ts-mode))
+                                    (file-name-concat vhdl-ts-mode-test-ref-dir-imenu (test-hdl-basename file "simple.el")))))))
+
+(ert-deftest imenu::tree ()
+  (let ((vhdl-ts-imenu-style 'tree))
+    (dolist (file vhdl-ts-mode-test-imenu-file-list)
+      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
+                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-imenu (test-hdl-basename file "tree.el"))
+                                                           :process-fn 'eval-ff
+                                                           :fn #'test-hdl-imenu-test-file
+                                                           :args '(vhdl-ts-mode))
+                                    (file-name-concat vhdl-ts-mode-test-ref-dir-imenu (test-hdl-basename file "tree.el")))))))
+
+(ert-deftest imenu::tree-group ()
+  (let ((vhdl-ts-imenu-style 'tree-group))
+    (dolist (file vhdl-ts-mode-test-imenu-file-list)
+      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
+                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-imenu (test-hdl-basename file "tree.group.el"))
+                                                           :process-fn 'eval-ff
+                                                           :fn #'test-hdl-imenu-test-file
+                                                           :args '(vhdl-ts-mode))
+                                    (file-name-concat vhdl-ts-mode-test-ref-dir-imenu (test-hdl-basename file "tree.group.el")))))))
 
 
 (provide 'vhdl-ts-mode-test-imenu)
