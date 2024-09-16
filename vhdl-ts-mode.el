@@ -87,6 +87,20 @@ Defaults to .vhd and .vhdl."
                  (const :tag "tree-group" tree-group))
   :group 'vhdl-ts)
 
+(defcustom vhdl-ts-which-func-style 'custom
+  "Style of `which-func' display for current VHDL buffer.
+
+- Default: show last element of current Imenu entry
+- Breadcrumb: display hierarchy of current Imenu entry
+- Custom: use custom `vhdl-ts-mode' implementation for `which-func':
+    - Format A:B
+    - A represents the type of current node, B its name
+    - For instances, A is the instance name and B the instance type."
+  :type '(choice (const :tag "default" default)
+                 (const :tag "breadcrumb" breadcrumb)
+                 (const :tag "custom" custom))
+  :group 'vhdl-ts)
+
 (defcustom vhdl-ts-beautify-align-ports-and-params nil
   "Align all ports and params of instances when beautifying."
   :type 'boolean
@@ -1010,38 +1024,58 @@ to VHDL parser."
 (defvar-local vhdl-ts-which-func-extra nil
   "Variable to hold extra information for `which-func'.")
 
-(defun vhdl-ts-which-func-shorten-block (block-type)
-  "Return shortened name of BLOCK-TYPE, if possible."
-  (cond ((string= "entity_declaration"                block-type) "ent")
-        ((string= "architecture_body"                 block-type) "arch")
-        ((string= "process_statement"                 block-type) "proc")
-        ((string= "procedure_body"                    block-type) "pcd")
-        ((string= "function_body"                     block-type) "fun")
-        ((string= "block_statement"                   block-type) "blk")
-        ((string= "generate_statement_body"           block-type) "gen")
-        ((string= "component_instantiation_statement" block-type) "cmp")
-        (t block-type)))
+(defvar vhdl-ts-which-func-format-function 'vhdl-ts-which-func-format-shorten
+  "Variable of the function to be called to return the type in `which-func'.
+
+It must have one argument (tree-sitter node) and must return a string with the
+type.")
+
+(defun vhdl-ts-which-func-format-simple (node)
+  "Return tree-sitter type of current NODE."
+  (treesit-node-type node))
+
+(defun vhdl-ts-which-func-format-shorten (node)
+  "Return shortened name of NODE if possible."
+  (pcase (treesit-node-type node)
+    ("entity_declaration"                "ent")
+    ("architecture_body"                 "arch")
+    ("process_statement"                 "proc")
+    ("procedure_body"                    "pcd")
+    ("function_body"                     "fun")
+    ("block_statement"                   "blk")
+    ("generate_statement_body"           "gen")
+    ("component_instantiation_statement" (vhdl-ts--node-instance-name node))
+    (_                                   (treesit-node-type node))))
 
 (defun vhdl-ts-which-func-function ()
   "Retrieve `which-func' candidates."
   (let ((node (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) vhdl-ts-imenu-create-index-re)))
     (when node
       (setq vhdl-ts-which-func-extra (vhdl-ts--node-identifier-name node))
-      (vhdl-ts-which-func-shorten-block (treesit-node-type node)))))
+      (funcall vhdl-ts-which-func-format-function node))))
 
-(defun vhdl-ts-which-func ()
+(defun vhdl-ts-which-func-setup ()
   "Hook for `vhdl-ts-mode' to enable `which-func'."
-  (setq-local which-func-functions '(vhdl-ts-which-func-function))
-  (setq-local which-func-format
-              `("["
-                (:propertize which-func-current
-                 face (which-func :weight bold)
-                 mouse-face mode-line-highlight)
-                ":"
-                (:propertize vhdl-ts-which-func-extra
-                 face which-func
-                 mouse-face mode-line-highlight)
-                "]")))
+  (pcase vhdl-ts-which-func-style
+    ('default
+      (setq-local which-func-functions nil)
+      (setq-local which-func-imenu-joiner-function (lambda (x) (car (last x)))))
+    ('breadcrumb
+     (setq-local which-func-functions nil)
+     (setq-local which-func-imenu-joiner-function (lambda (x) (string-join x "."))))
+    ('custom
+     (setq-local which-func-functions '(vhdl-ts-which-func-function))
+     (setq-local which-func-format
+                 `("["
+                   (:propertize which-func-current
+                    face (which-func :weight bold)
+                    mouse-face mode-line-highlight)
+                   ":"
+                   (:propertize vhdl-ts-which-func-extra
+                    face which-func
+                    mouse-face mode-line-highlight)
+                   "]")))
+    (_ (error "Wrong value for `vhdl-ts-which-func-style': set to default/breadcrumb/custom"))))
 
 
 ;;; Navigation
@@ -1055,6 +1089,7 @@ to VHDL parser."
        "process_statement"
        "procedure_declaration"
        "procedure_body"
+       "function_declaration"
        "function_body")
      'symbols)))
 
@@ -1291,7 +1326,7 @@ and the linker to be installed and on PATH."
     ;; Imenu.
     (vhdl-ts-imenu-setup)
     ;; Which-func
-    (vhdl-ts-which-func)
+    (vhdl-ts-which-func-setup)
     ;; Completion
     (add-hook 'completion-at-point-functions #'vhdl-ts-completion-at-point nil 'local)
     ;; Beautify
