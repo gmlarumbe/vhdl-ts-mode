@@ -627,34 +627,30 @@ portB => signalB
 
 ;;; Indent
 ;;;; Matchers
-(defun vhdl-ts--matcher-blank-line (&rest _)
-  "A tree-sitter simple indent matcher.
+(defun vhdl-ts--matcher-blank-line (node &rest _)
+  "A tree-sitter simple indent matcher for NODE.
 Matches if point is at a blank line."
-  (let ((node (vhdl-ts--node-at-bol)))
-    (unless node
-      t)))
+  (unless node
+    t))
 
-(defun vhdl-ts--matcher-generic-or-port (&rest _)
-  "A tree-sitter simple indent matcher.
+(defun vhdl-ts--matcher-generic-or-port (node &rest _)
+  "A tree-sitter simple indent matcher for NODE.
 Matches if point is at generic/port declaration."
-  (let* ((node (vhdl-ts--node-at-bol))
-         (node-type (treesit-node-type node))
+  (let* ((node-type (treesit-node-type node))
          (entity-or-comp-node (vhdl-ts--node-has-parent-recursive node "\\(entity\\|component\\)_declaration")))
     (when (and entity-or-comp-node
                (string-match "\\(\\(generic\\|port\\)_clause\\|\\(entity\\|component\\)_header\\)" node-type))
       (treesit-node-start entity-or-comp-node))))
 
-(defun vhdl-ts--matcher-keyword (&rest _)
-  "A tree-sitter simple indent matcher.
+(defun vhdl-ts--matcher-keyword (node &rest _)
+  "A tree-sitter simple indent matcher for NODE.
 Matches if point is at a VHDL keyword, somehow as a fallback."
-  (let ((node (vhdl-ts--node-at-bol)))
-    (member (treesit-node-type node) vhdl-ts-keywords)))
+  (member (treesit-node-type node) vhdl-ts-keywords))
 
-(defun vhdl-ts--matcher-punctuation (&rest _)
-  "A tree-sitter simple indent matcher.
+(defun vhdl-ts--matcher-punctuation (node &rest _)
+  "A tree-sitter simple indent matcher for NODE.
 Matches if point is at a punctuation/operator char, somehow as a fallback."
-  (let ((node (vhdl-ts--node-at-bol)))
-    (member (treesit-node-type node) `(,@vhdl-ts-punctuation ,@vhdl-ts-parenthesis))))
+  (member (treesit-node-type node) `(,@vhdl-ts-punctuation ,@vhdl-ts-parenthesis)))
 
 (defun vhdl-ts--matcher-default (&rest _)
   "A tree-sitter simple indent matcher."
