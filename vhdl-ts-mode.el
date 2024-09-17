@@ -450,7 +450,7 @@ portB => signalB
 (defconst vhdl-ts-parenthesis '("(" ")" "[" "]"))
 
 ;;;; Treesit-settings
-(defvar vhdl-ts--treesit-settings
+(defvar vhdl-ts--font-lock-settings
   (treesit-font-lock-rules
    :feature 'comment
    :language 'vhdl
@@ -641,10 +641,7 @@ Matches if point is at generic/port declaration."
          (node-type (treesit-node-type node))
          (entity-or-comp-node (vhdl-ts--node-has-parent-recursive node "\\(entity\\|component\\)_declaration")))
     (when (and entity-or-comp-node
-               (or (string= "generic_clause" node-type)
-                   (string= "port_clause" node-type)
-                   (string= "entity_header" node-type)
-                   (string= "component_header" node-type)))
+               (string-match "\\(\\(generic\\|port\\)_clause\\|\\(entity\\|component\\)_header\\)" node-type))
       (treesit-node-start entity-or-comp-node))))
 
 (defun vhdl-ts--matcher-keyword (&rest _)
@@ -688,53 +685,41 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
   (eval-when-compile
     (regexp-opt '("design_file" "context_clause" "design_unit") 'symbols)))
 
-;; INFO: Do not use siblings as anchors, since comments could be wrongly detected as siblings!
-(defvar vhdl-ts--indent-rules
+(defvar vhdl-ts--treesit-indent-rules
   `((vhdl
      ;; Comments
-     ((and (node-is "comment") (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
+     ((and (node-is "comment")
+           (parent-is ,vhdl-ts--indent-zero-parent-node-re))
+      parent-bol 0)
      ((node-is "comment") grand-parent vhdl-ts-indent-level)
      ;; Zero-indent
-     ((node-is "library_clause") parent-bol 0)
-     ((node-is "use_clause") parent-bol 0)
-     ((node-is "design_unit") parent-bol 0) ; architecture_body
-     ((node-is "entity_declaration") parent-bol 0)
-     ((node-is "architecture_body") parent-bol 0)
-     ((node-is "package_declaration") parent-bol 0)
-     ((node-is "package_body") parent-bol 0)
+     ((or (node-is "\\(library\\|use\\)_clause")
+          (node-is "design_unit") ; architecture_body
+          (node-is "entity_declaration")
+          (node-is "architecture_body")
+          (node-is "package_\\(declaration\\|body\\)"))
+      parent-bol 0)
      ;; Procedure parameter types
      (vhdl-ts--matcher-generic-or-port grand-parent vhdl-ts-indent-level)
-     ((node-is "constant_interface_declaration") parent-bol vhdl-ts-indent-level) ; Constant parameter
-     ((node-is "variable_interface_declaration") parent-bol vhdl-ts-indent-level) ; Variable parameter
-     ((node-is "signal_interface_declaration") parent-bol vhdl-ts-indent-level) ; Signal parameter
+     ((node-is "\\(constant\\|variable\\|signal\\)_interface_declaration") parent-bol vhdl-ts-indent-level)
      ;; Declarations
      ((node-is "declarative_part") parent-bol vhdl-ts-indent-level) ; First declaration of the declarative part
-     ((node-is "component_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "signal_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "constant_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "full_type_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "element_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "variable_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "procedure_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "function_declaration") grand-parent vhdl-ts-indent-level)
-     ((node-is "function_body") grand-parent vhdl-ts-indent-level)
-     ((node-is "procedure_body") grand-parent vhdl-ts-indent-level)
+     ((or (node-is "\\(component\\|signal\\|constant\\|full_type\\|element\\|variable\\|procedure\\|function\\)_declaration")
+          (node-is "\\(function\\|procedure\\)_body"))
+      grand-parent vhdl-ts-indent-level)
      ;; Block
-     ((node-is "block_statement") grand-parent vhdl-ts-indent-level)
      ((node-is "block_header") parent-bol vhdl-ts-indent-level)
-     ((parent-is "block_header") grand-parent vhdl-ts-indent-level)
+     ((or (node-is "block_statement")
+          (parent-is "block_header"))
+      grand-parent vhdl-ts-indent-level)
      ;; Concurrent & generate
-     ((node-is "concurrent_statement_part") parent-bol vhdl-ts-indent-level) ; First signal declaration of a declarative part
-     ((node-is "generate_statement_body") parent-bol vhdl-ts-indent-level)
-     ((node-is "for_generate_statement") grand-parent vhdl-ts-indent-level)
-     ((node-is "if_generate_statement") grand-parent vhdl-ts-indent-level)
-     ((node-is "simple_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level) ; Parent is (concurrent_statement_part)
-     ((node-is "conditional_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level)
-     ((and
-       (node-is "waveforms")
-       (or
-        (parent-is "alternative_conditional_waveforms")
-        (parent-is "alternative_selected_waveforms")))
+     ((or (node-is "concurrent_statement_part") ; First signal declaration of a declarative part
+          (node-is "generate_statement_body"))
+      parent-bol vhdl-ts-indent-level)
+     ((node-is "\\(for\\|if\\)_generate_statement") grand-parent vhdl-ts-indent-level)
+     ((node-is "\\(simple\\|conditional\\)_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level) ; Parent is (concurrent_statement_part)
+     ((and (node-is "waveforms")
+           (parent-is "alternative_\\(conditional\\|selected\\)_waveforms"))
       grand-parent 0) ; when else on next line or select multiple lines
      ((node-is "process_statement") grand-parent vhdl-ts-indent-level) ; Grandparent is architecture_body
      ((node-is "selected_waveforms") parent-bol vhdl-ts-indent-level)
@@ -742,32 +727,27 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
            (parent-is "selected_concurrent_signal_assignment"))
       parent-bol vhdl-ts-indent-level)
      ;; Instances
-     ((node-is "component_instantiation_statement") grand-parent vhdl-ts-indent-level)
-     ((node-is "component_map_aspect") grand-parent vhdl-ts-indent-level) ; Generic map if present, otherwise port map
+     ((node-is "component_\\(instantiation_statement\\|map_aspect\\)") grand-parent vhdl-ts-indent-level)
      ((node-is "port_map_aspect") parent-bol 0) ; Port map only when there are generics
      ((node-is "association_list") parent-bol vhdl-ts-indent-level)
      ((node-is "named_association_element") parent-bol 0)
      ;; Procedural
      ((node-is "sequence_of_statements") parent-bol vhdl-ts-indent-level) ; Statements inside process
      ((parent-is "sequence_of_statements") grand-parent vhdl-ts-indent-level)
-     ((or (node-is "if") (node-is "else") (node-is "elsif")) parent-bol 0)
+     ((node-is "\\(if\\|else\\|elsif\\)") parent-bol 0)
      ((node-is "case_statement") grand-parent vhdl-ts-indent-level)
      ((node-is "case_statement_alternative") parent-bol vhdl-ts-indent-level)
      ;; Others
      ((node-is "aggregate") grand-parent vhdl-ts-indent-level) ; Aggregates/array elements
-     ((node-is "positional_element_association") parent-bol 0)  ; Check test/files/indent/tree-sitter/indent_misc.vhd:42
+     ((node-is "positional_element_association") parent-bol 0) ; Check test/files/common/indent_misc.vhd:42
      ;; Opening & closing
-     ((node-is "begin") parent-bol 0)
-     ((node-is "end") parent-bol 0)
-     ((node-is ")") parent-bol 0)
+     ((node-is "\\(begin\\|end\\|)\\)") parent-bol 0)
      ;; Fallbacks/default
      ((and vhdl-ts--matcher-blank-line (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
-     ((and
-       vhdl-ts--matcher-blank-line
-       (not (parent-is "concurrent_statement_part"))
-       (not (parent-is "declarative_part"))
-       (not (parent-is "association_list")))
-      parent-bol vhdl-ts-indent-level) ; Blank lines
+     ((and vhdl-ts--matcher-blank-line
+           (not (parent-is "\\(concurrent_statement\\|declarative\\)_part"))
+           (not (parent-is "association_list")))
+      parent-bol vhdl-ts-indent-level)
      ((or vhdl-ts--matcher-keyword vhdl-ts--matcher-punctuation) parent-bol vhdl-ts-indent-level)
      (vhdl-ts--matcher-default parent 0))))
 
@@ -1320,11 +1300,11 @@ and the linker to be installed and on PATH."
                   (keyword operator)
                   (punctuation declaration type instance builtin array misc)
                   (error)))
-    (setq-local treesit-font-lock-settings vhdl-ts--treesit-settings)
+    (setq-local treesit-font-lock-settings vhdl-ts--font-lock-settings)
     ;; Indent.
     (setq-local indent-line-function nil)
     (setq-local comment-indent-function nil)
-    (setq-local treesit-simple-indent-rules vhdl-ts--indent-rules)
+    (setq-local treesit-simple-indent-rules vhdl-ts--treesit-indent-rules)
     ;; Navigation
     (setq-local treesit-defun-type-regexp vhdl-ts--defun-type-regexp)
     ;; Imenu.
