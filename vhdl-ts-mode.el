@@ -883,23 +883,26 @@ VHDL parser."
          (push elm default)))
      subtree)
     ;; Populate return value
-    (when (or processes instances procedures functions components) ; Avoid processing when no grouping is required
-      (when instances
-        (setq instances (nreverse instances))
-        (setq default `(("Instances" ,@instances) ,@default)))
-      (when processes
-        (setq processes (nreverse processes))
-        (setq default `(("Processes" ,@processes) ,@default)))
-      (when procedures
-        (setq procedures (nreverse procedures))
-        (setq default `(("Procedures" ,@procedures) ,@default)))
-      (when functions
-        (setq functions (nreverse functions))
-        (setq default `(("Functions" ,@functions) ,@default)))
-      (when components
-        (setq components (nreverse components))
-        (setq default `(("Components" ,@components) ,@default))))
-    default))
+    (if (or processes instances procedures functions components) ; Avoid processing when no grouping is required
+        (progn
+          (when instances
+            (setq instances (nreverse instances))
+            (setq default `(("Instances" ,@instances) ,@default)))
+          (when processes
+            (setq processes (nreverse processes))
+            (setq default `(("Processes" ,@processes) ,@default)))
+          (when procedures
+            (setq procedures (nreverse procedures))
+            (setq default `(("Procedures" ,@procedures) ,@default)))
+          (when functions
+            (setq functions (nreverse functions))
+            (setq default `(("Functions" ,@functions) ,@default)))
+          (when components
+            (setq components (nreverse components))
+            (setq default `(("Components" ,@components) ,@default)))
+          default)
+      ;; Else it might be processing of the leaf nodes of top subtree and reordering is required
+      (nreverse default))))
 
 (defun vhdl-ts-imenu-treesit-create-index-tree-group (node)
   "Given a sparse tree, create an imenu alist.
@@ -935,7 +938,7 @@ VHDL parser."
     (cond
      ;; Root node
      ((null ts-node)
-      subtrees)
+      (vhdl-ts--imenu-treesit-create-index-tree-group-process subtrees))
      ;; Non-leaf node
      (subtrees
       (let ((parent-label (funcall vhdl-ts-imenu-format-parent-item-label-function type name))
