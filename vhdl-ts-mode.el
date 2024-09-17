@@ -458,29 +458,33 @@ portB => signalB
 
    :feature 'string
    :language 'vhdl
-   '(((string_literal) @font-lock-string-face)
-     ((bit_string_literal) @font-lock-string-face)
-     ((character_literal) @font-lock-string-face))
+   '([(string_literal)
+      (bit_string_literal)
+      (character_literal)]
+     @font-lock-string-face)
 
-   :feature 'error
+   :feature 'keyword
    :language 'vhdl
-   '((ERROR) @vhdl-ts-font-lock-error-face)
+   `((["downto" "to"] @vhdl-ts-font-lock-instance-lib-face)
+     (["then"] @vhdl-ts-font-lock-then-face)
+     ([,@vhdl-ts-keywords] @font-lock-keyword-face)
+     (attribute_name ; clk'event / s'range
+      prefix: (simple_name) @font-lock-builtin-face
+      (predefined_designator) @font-lock-builtin-face))
 
-   ;; Place before 'keywords to override things like "downto" in ranges
-   :feature 'all
+   :feature 'punctuation
    :language 'vhdl
-   '(;; Library
-     (library_clause
-      (logical_name_list (simple_name) @font-lock-builtin-face))
-     (use_clause
-      (selected_name
-       (selected_name (simple_name) @font-lock-function-name-face)))
-     ;; Package
-     (package_declaration
-      (identifier) @font-lock-function-name-face)
-     (package_body
-      (simple_name) @font-lock-function-name-face)
-     ;; Entity
+   `(([,@vhdl-ts-punctuation] @vhdl-ts-font-lock-punctuation-face)
+     ([,@vhdl-ts-parenthesis] @vhdl-ts-font-lock-parenthesis-face))
+
+   :feature 'operator
+   :language 'vhdl
+   `(([,@vhdl-ts-operators-relational] @vhdl-ts-font-lock-punctuation-face)
+     ([,@vhdl-ts-operators-arithmetic] @vhdl-ts-font-lock-operator-face))
+
+   :feature 'declaration
+   :language 'vhdl
+   '(;; Entity
      (entity_declaration
       name: (identifier) @font-lock-function-name-face)
      (entity_declaration
@@ -492,21 +496,42 @@ portB => signalB
      ;; Component
      (component_declaration
       name: (identifier) @font-lock-function-name-face)
-     ;; Generate
-     (if_generate_statement
-      (label (identifier) @font-lock-constant-face))
-     (for_generate_statement
-      (label (identifier) @font-lock-constant-face))
-     ;; Block
-     (block_statement
-      (label (identifier) @font-lock-constant-face))
-     ;; Process
-     (process_statement
-      (label (identifier) @font-lock-constant-face))
-     (process_statement
-      (sensitivity_list (simple_name) @font-lock-constant-face))
-     ;; Instances
-     (component_instantiation_statement
+     ;; Package
+     (package_declaration
+      (identifier) @font-lock-function-name-face)
+     (package_body
+      (simple_name) @font-lock-function-name-face)
+     ;; Function
+     (procedure_declaration (identifier) @font-lock-function-name-face)
+     (procedure_body (identifier) @font-lock-function-name-face)
+     (function_declaration (identifier) @font-lock-function-name-face)
+     (function_body (identifier) @font-lock-function-name-face)
+     ;; Function Overloading
+     (function_declaration (operator_symbol) @font-lock-function-name-face)
+     (function_body (operator_symbol) @font-lock-function-name-face)
+     ;; Constants
+     (constant_declaration
+      (identifier_list (identifier) @font-lock-constant-face))
+     ;; Alias
+     (alias_declaration
+      designator : (identifier) @font-lock-constant-face))
+
+   :feature 'type
+   :language 'vhdl
+   `((full_type_declaration
+      name: (identifier) @font-lock-type-face)
+     (subtype_declaration
+      name: (identifier) @font-lock-type-face)
+     ((ambiguous_name
+       prefix: (simple_name) @font-lock-type-face)
+      (:match ,vhdl-ts-types-regexp @font-lock-type-face))
+     (subtype_indication
+      (type_mark
+       (simple_name) @font-lock-type-face)))
+
+   :feature 'instance
+   :language 'vhdl
+   '((component_instantiation_statement
       (label (identifier) @vhdl-ts-font-lock-instance-face)
       (entity_instantiation
        (selected_name
@@ -523,7 +548,51 @@ portB => signalB
       (entity_instantiation (simple_name) @vhdl-ts-font-lock-entity-face))
      (component_instantiation_statement
       (label (identifier) @vhdl-ts-font-lock-instance-face)
-      (component_instantiation (simple_name) @vhdl-ts-font-lock-entity-face))
+      (component_instantiation (simple_name) @vhdl-ts-font-lock-entity-face)))
+
+   :feature 'builtin
+   :language 'vhdl
+   `(((ambiguous_name
+       prefix: (simple_name) @font-lock-builtin-face)
+      (:match ,vhdl-ts-functions-regexp @font-lock-builtin-face)))
+
+   :feature 'array
+   :language 'vhdl
+   :override t
+   '((descending_range
+      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
+     (descending_range
+      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
+     (ascending_range
+      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
+     (ascending_range
+      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
+     (expression_list
+      (expression (integer_decimal) @vhdl-ts-font-lock-brackets-content-face))
+     (expression_list
+      (expression (simple_name) @vhdl-ts-font-lock-brackets-content-face)))
+
+   :feature 'misc
+   :language 'vhdl
+   '(;; Library
+     (library_clause
+      (logical_name_list (simple_name) @font-lock-builtin-face))
+     (use_clause
+      (selected_name
+       (selected_name (simple_name) @font-lock-function-name-face)))
+     ;; Generate
+     (if_generate_statement
+      (label (identifier) @font-lock-constant-face))
+     (for_generate_statement
+      (label (identifier) @font-lock-constant-face))
+     ;; Block
+     (block_statement
+      (label (identifier) @font-lock-constant-face))
+     ;; Process
+     (process_statement
+      (label (identifier) @font-lock-constant-face))
+     (process_statement
+      (sensitivity_list (simple_name) @font-lock-constant-face))
      ;; Port connections
      (association_list
       (named_association_element
@@ -543,80 +612,17 @@ portB => signalB
        formal_part:
        (slice_name
         (simple_name) @vhdl-ts-font-lock-port-connection-face)))
-     ;; Ranges
-     (descending_range
-      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (descending_range
-      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (ascending_range
-      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (ascending_range
-      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (expression_list
-      (expression (integer_decimal) @vhdl-ts-font-lock-brackets-content-face))
-     (expression_list
-      (expression (simple_name) @vhdl-ts-font-lock-brackets-content-face))
-     (["downto" "to"] @vhdl-ts-font-lock-instance-lib-face)
-     ;; Constants
-     (constant_declaration
-      (identifier_list (identifier) @font-lock-constant-face))
-     ;; Alias
-     (alias_declaration
-      designator : (identifier) @font-lock-constant-face)
      ;; Enum labels
      (enumeration_type_definition
       literal: (identifier) @font-lock-constant-face)
      ;; Record members
      (selected_name
-      prefix: (simple_name) @vhdl-ts-font-lock-instance-lib-face)
-     ;; clk'event
-     (attribute_name
-      prefix: (simple_name) @font-lock-builtin-face
-      (predefined_designator) @font-lock-builtin-face))
+      prefix: (simple_name) @vhdl-ts-font-lock-instance-lib-face))
 
-   :feature 'keyword
+   :feature 'error
    :language 'vhdl
-   `((["then"] @vhdl-ts-font-lock-then-face)
-     ([,@vhdl-ts-keywords] @font-lock-keyword-face))
-
-   :feature 'operator
-   :language 'vhdl
-   `(([,@vhdl-ts-operators-relational] @vhdl-ts-font-lock-punctuation-face)
-     ([,@vhdl-ts-operators-arithmetic] @vhdl-ts-font-lock-operator-face))
-
-   :feature 'punctuation
-   :language 'vhdl
-   `(([,@vhdl-ts-punctuation] @vhdl-ts-font-lock-punctuation-face)
-     ([,@vhdl-ts-parenthesis] @vhdl-ts-font-lock-parenthesis-face))
-
-   :feature 'types
-   :language 'vhdl
-   `((full_type_declaration
-      name: (identifier) @font-lock-type-face)
-     (subtype_declaration
-      name: (identifier) @font-lock-type-face)
-     ((ambiguous_name
-       prefix: (simple_name) @font-lock-type-face)
-      (:match ,vhdl-ts-types-regexp @font-lock-type-face))
-     (subtype_indication
-      (type_mark
-       (simple_name) @font-lock-type-face)))
-
-   :feature 'function
-   :language 'vhdl
-   '((procedure_declaration (identifier) @font-lock-function-name-face)
-     (procedure_body (identifier) @font-lock-function-name-face)
-     (function_declaration (identifier) @font-lock-function-name-face)
-     (function_body (identifier) @font-lock-function-name-face)
-     ;; Overloading
-     (function_declaration (operator_symbol) @font-lock-function-name-face)
-     (function_body (operator_symbol) @font-lock-function-name-face))
-
-   :feature 'builtin
-   :language 'vhdl
-   `(((ambiguous_name
-       prefix: (simple_name) @font-lock-builtin-face)
-      (:match ,vhdl-ts-functions-regexp @font-lock-builtin-face)))))
+   :override t
+   '((ERROR) @vhdl-ts-font-lock-error-face)))
 
 
 ;;; Indent
@@ -1311,8 +1317,8 @@ and the linker to be installed and on PATH."
     (setq font-lock-defaults nil) ; Disable `vhdl-mode' font-lock/indent config
     (setq-local treesit-font-lock-feature-list
                 '((comment string)
-                  (keyword operator punctuation function builtin types)
-                  (all)
+                  (keyword operator)
+                  (punctuation declaration type instance builtin array misc)
                   (error)))
     (setq-local treesit-font-lock-settings vhdl-ts--treesit-settings)
     ;; Indent.

@@ -94,10 +94,10 @@
   «x:-------------------------------------------------------------------»
   «x:-- common subtypes»
   «x:-------------------------------------------------------------------»
-  «k:subtype» «t:X01» «k:is» resolved «t:STD_ULOGIC» «k:range» «s:'X'» «:vhdl-ts-font-lock-instance-lib-face:to» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»    «x:-- ('X','0','1')»
-  «k:subtype» «t:X01Z» «k:is» resolved «t:STD_ULOGIC» «k:range» «s:'X'» «:vhdl-ts-font-lock-instance-lib-face:to» «s:'Z'»«:vhdl-ts-font-lock-punctuation-face:;»   «x:-- ('X','0','1','Z')»
-  «k:subtype» «t:UX01» «k:is» resolved «t:STD_ULOGIC» «k:range» «s:'U'» «:vhdl-ts-font-lock-instance-lib-face:to» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»   «x:-- ('U','X','0','1')»
-  «k:subtype» «t:UX01Z» «k:is» resolved «t:STD_ULOGIC» «k:range» «s:'U'» «:vhdl-ts-font-lock-instance-lib-face:to» «s:'Z'»«:vhdl-ts-font-lock-punctuation-face:;»  «x:-- ('U','X','0','1','Z')»
+  «k:subtype» «t:X01» «k:is» resolved «t:STD_ULOGIC» «k:range» «:vhdl-ts-font-lock-brackets-content-face:'X'» «:vhdl-ts-font-lock-instance-lib-face:to» «:vhdl-ts-font-lock-brackets-content-face:'1'»«:vhdl-ts-font-lock-punctuation-face:;»    «x:-- ('X','0','1')»
+  «k:subtype» «t:X01Z» «k:is» resolved «t:STD_ULOGIC» «k:range» «:vhdl-ts-font-lock-brackets-content-face:'X'» «:vhdl-ts-font-lock-instance-lib-face:to» «:vhdl-ts-font-lock-brackets-content-face:'Z'»«:vhdl-ts-font-lock-punctuation-face:;»   «x:-- ('X','0','1','Z')»
+  «k:subtype» «t:UX01» «k:is» resolved «t:STD_ULOGIC» «k:range» «:vhdl-ts-font-lock-brackets-content-face:'U'» «:vhdl-ts-font-lock-instance-lib-face:to» «:vhdl-ts-font-lock-brackets-content-face:'1'»«:vhdl-ts-font-lock-punctuation-face:;»   «x:-- ('U','X','0','1')»
+  «k:subtype» «t:UX01Z» «k:is» resolved «t:STD_ULOGIC» «k:range» «:vhdl-ts-font-lock-brackets-content-face:'U'» «:vhdl-ts-font-lock-instance-lib-face:to» «:vhdl-ts-font-lock-brackets-content-face:'Z'»«:vhdl-ts-font-lock-punctuation-face:;»  «x:-- ('U','X','0','1','Z')»
 
   «x:-------------------------------------------------------------------»
   «x:-- overloaded logical operators»
