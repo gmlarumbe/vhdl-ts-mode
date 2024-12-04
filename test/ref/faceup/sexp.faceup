@@ -84,7 +84,7 @@
     «k:begin»
     «k:end» «k:process» main«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «c:gen_mem_sel» «:vhdl-ts-font-lock-punctuation-face::» «k:if» «:vhdl-ts-font-lock-parenthesis-face:(»USER_NUM_MEM >= 1«:vhdl-ts-font-lock-parenthesis-face:)» «k:generate»
+    «c:gen_mem_sel» «:vhdl-ts-font-lock-punctuation-face::» «k:if» «:vhdl-ts-font-lock-parenthesis-face:(»USER_NUM_MEM «:vhdl-ts-font-lock-punctuation-face:>=» 1«:vhdl-ts-font-lock-parenthesis-face:)» «k:generate»
     «k:begin»
         mem_select  «:vhdl-ts-font-lock-punctuation-face:<=» «s:"1"»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:end» «k:generate» gen_mem_sel«:vhdl-ts-font-lock-punctuation-face:;»
@@ -131,7 +131,7 @@
     «k:begin»
     «k:end» «k:process» main«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «c:gen_mem_sel» «:vhdl-ts-font-lock-punctuation-face::» «k:if» «:vhdl-ts-font-lock-parenthesis-face:(»USER_NUM_MEM >= 1«:vhdl-ts-font-lock-parenthesis-face:)» «k:generate»
+    «c:gen_mem_sel» «:vhdl-ts-font-lock-punctuation-face::» «k:if» «:vhdl-ts-font-lock-parenthesis-face:(»USER_NUM_MEM «:vhdl-ts-font-lock-punctuation-face:>=» 1«:vhdl-ts-font-lock-parenthesis-face:)» «k:generate»
     «k:begin»
         mem_select  «:vhdl-ts-font-lock-punctuation-face:<=» «s:"1"»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:end» «k:generate»«:vhdl-ts-font-lock-punctuation-face:;»

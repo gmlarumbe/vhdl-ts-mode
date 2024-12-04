@@ -134,9 +134,10 @@ If none is found, return nil."
     (when node
       (cond ((string-match vhdl-ts-instance-re (treesit-node-type node))
              (cond ((setq temp-node (treesit-search-subtree node "\\_<component_instantiation\\_>"))
-                    (treesit-node-text (treesit-node-child-by-field-name temp-node "component") :no-prop))
+                    (treesit-node-text (or (treesit-node-child-by-field-name (treesit-search-subtree temp-node "selected_name") "suffix")
+                                           (treesit-node-child-by-field-name temp-node "component"))
+                                       :no-prop))
                    ((setq temp-node (treesit-search-subtree node "entity_instantiation"))
-                    (treesit-search-subtree node "entity_instantiation")
                     (treesit-node-text (treesit-node-child-by-field-name (treesit-node-child temp-node 1) "suffix") :no-props))
                    (t (error "Unexpected component_instantiation_statement subnode!"))))
             ((string-match "function_\\(declaration\\|body\\)" (treesit-node-type node))
@@ -433,18 +434,23 @@ portB => signalB
 ;;;; Keywords
 (defconst vhdl-ts-keywords (append vhdl-02-keywords vhdl-08-keywords))
 (defconst vhdl-ts-types (append vhdl-02-types vhdl-08-types vhdl-math-types))
-(defconst vhdl-ts-types-regexp (concat "\\<\\(" (regexp-opt vhdl-ts-types) "\\)\\>"))
+(defconst vhdl-ts-types-regexp
+  (eval-when-compile
+    (regexp-opt vhdl-ts-types 'symbols)))
 (defconst vhdl-ts-attributes (append vhdl-02-attributes vhdl-08-attributes))
 (defconst vhdl-ts-enum-values vhdl-02-enum-values)
 (defconst vhdl-ts-constants vhdl-math-constants)
 (defconst vhdl-ts-functions (append vhdl-02-functions vhdl-08-functions vhdl-math-functions))
-(defconst vhdl-ts-functions-regexp (concat "\\<\\(" (regexp-opt vhdl-ts-functions) "\\)\\>"))
+(defconst vhdl-ts-functions-regexp
+  (eval-when-compile
+    (regexp-opt vhdl-ts-functions 'symbols)))
 (defconst vhdl-ts-packages (append vhdl-02-packages vhdl-08-packages vhdl-math-packages))
 (defconst vhdl-ts-directives vhdl-08-directives)
 (defconst vhdl-ts-operators-relational '("=" "/=" "<" ">"
                                          "<=" ; Less or equal/signal assignment
-                                         "=>" ; Greater or equal/port connection
-                                         ":=")) ; Not an operator, but falls better here
+                                         ">=" ; Greater or equal
+                                         ":=" ; Variable assignment (not an operator, but falls better here)
+                                         "=>")) ; Port connection (not an operator, but falls better here)
 (defconst vhdl-ts-operators-arithmetic '("+" "-" "*" "/" "**" "&"))
 (defconst vhdl-ts-punctuation '(";" ":" "," "'" "|" "." "!" "?"))
 (defconst vhdl-ts-parenthesis '("(" ")" "[" "]"))

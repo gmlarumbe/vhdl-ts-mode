@@ -543,7 +543,7 @@
             tvalid «:vhdl-ts-font-lock-punctuation-face:<=» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»
             «k:wait» «k:for» AXI_CLK_T«:vhdl-ts-font-lock-punctuation-face:;»
             «k:for» i «k:in» «:vhdl-ts-font-lock-brackets-content-face:1» «:vhdl-ts-font-lock-instance-lib-face:to» «:vhdl-ts-font-lock-brackets-content-face:RX_DATA_AMOUNT» «k:loop»
-                tdata «:vhdl-ts-font-lock-punctuation-face:<=» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:tdata»«:vhdl-ts-font-lock-parenthesis-face:)» «:vhdl-ts-font-lock-operator-face:+» «t:to_unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:1»«:vhdl-ts-font-lock-punctuation-face:,» «:vhdl-ts-font-lock-brackets-content-face:64»«:vhdl-ts-font-lock-parenthesis-face:))»«:vhdl-ts-font-lock-punctuation-face:;»
+                tdata «:vhdl-ts-font-lock-punctuation-face:<=» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:tdata»«:vhdl-ts-font-lock-parenthesis-face:)» «:vhdl-ts-font-lock-operator-face:+» «b:to_unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:1»«:vhdl-ts-font-lock-punctuation-face:,» «:vhdl-ts-font-lock-brackets-content-face:64»«:vhdl-ts-font-lock-parenthesis-face:))»«:vhdl-ts-font-lock-punctuation-face:;»
                 «k:wait» «k:for» AXI_CLK_T«:vhdl-ts-font-lock-punctuation-face:;»
             «k:end» «k:loop»«:vhdl-ts-font-lock-punctuation-face:;»
             tvalid «:vhdl-ts-font-lock-punctuation-face:<=» «s:'0'»«:vhdl-ts-font-lock-punctuation-face:;»
