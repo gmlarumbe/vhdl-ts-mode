@@ -434,16 +434,12 @@ portB => signalB
 ;;;; Keywords
 (defconst vhdl-ts-keywords (append vhdl-02-keywords vhdl-08-keywords))
 (defconst vhdl-ts-types (append vhdl-02-types vhdl-08-types vhdl-math-types))
-(defconst vhdl-ts-types-regexp
-  (eval-when-compile
-    (regexp-opt vhdl-ts-types 'symbols)))
+(defconst vhdl-ts-types-regexp (regexp-opt vhdl-ts-types 'symbols))
 (defconst vhdl-ts-attributes (append vhdl-02-attributes vhdl-08-attributes))
 (defconst vhdl-ts-enum-values vhdl-02-enum-values)
 (defconst vhdl-ts-constants vhdl-math-constants)
 (defconst vhdl-ts-functions (append vhdl-02-functions vhdl-08-functions vhdl-math-functions))
-(defconst vhdl-ts-functions-regexp
-  (eval-when-compile
-    (regexp-opt vhdl-ts-functions 'symbols)))
+(defconst vhdl-ts-functions-regexp (regexp-opt vhdl-ts-functions 'symbols))
 (defconst vhdl-ts-packages (append vhdl-02-packages vhdl-08-packages vhdl-math-packages))
 (defconst vhdl-ts-directives vhdl-08-directives)
 (defconst vhdl-ts-operators-relational '("=" "/=" "<" ">"
