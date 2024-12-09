@@ -88,11 +88,11 @@ begin
     LEVEL1 : block
         -- local declaration of generic parameters
         generic (GB1, GB2 :    Time);
-            -- local binding of generic parameters
+        -- local binding of generic parameters
         generic map (GB1 => LongTime, GB2 => ShortTime);
-            -- local declaration of ports
+        -- local declaration of ports
         port (PB1         : in BIT; PB2 : inout BIT);
-            -- local binding of ports and signals
+        -- local binding of ports and signals
         port map (PB1    => P1, PB2 => B);
         -- local declarations:
         constant Delay    :    Time := 1 ms;
@@ -130,11 +130,11 @@ PB2 <= S1 after GB1, P1 after GB2;
     LEVEL1 : block
     -- local declaration of generic parameters
         generic (GB1, GB2 :    Time);
-            -- local binding of generic parameters
+        -- local binding of generic parameters
         generic map (GB1 => LongTime, GB2 => ShortTime);
-            -- local declaration of ports
+        -- local declaration of ports
         port (PB1         : in BIT; PB2 : inout BIT);
-            -- local binding of ports and signals
+        -- local binding of ports and signals
         port map (PB1    => P1, PB2 => B);
     -- local declarations:
         constant Delay    :    Time := 1 ms;
