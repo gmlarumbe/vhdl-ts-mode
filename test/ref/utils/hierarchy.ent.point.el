@@ -20,7 +20,7 @@
  ("axi_lite_regs" . 98573)
  (nil . 101108)
  (nil . 104204)
- ("axi_lite_master" . 123511)
+ (nil . 123511)
  ("axi_lite_master" . 123629)
  ("axi_lite_master" . 125243)
  (nil . 125535)

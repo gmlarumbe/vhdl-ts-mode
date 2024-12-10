@@ -192,6 +192,14 @@ Snippet fetched from `treesit--indent-1'."
                   (eq bol (treesit-node-start node))))))
     node))
 
+(defun vhdl-ts--node-parents-list (node node-type)
+  "Return NODE parents that match NODE-TYPE as a list of nodes."
+  (let (parent parent-list)
+    (while (setq parent (vhdl-ts--node-has-parent-recursive node node-type))
+      (push parent parent-list)
+      (setq node parent))
+    (nreverse parent-list)))
+
 (defun vhdl-ts-nodes (pred &optional start)
   "Return current buffer NODES that match PRED.
 
@@ -231,19 +239,47 @@ and end position."
 
 (defun vhdl-ts-entity-at-point ()
   "Return node of entity at point."
-  (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) "entity_declaration"))
+  (let ((entity (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) "entity_declaration"))
+        (pos (point)))
+    (when (and entity
+               (>= pos (treesit-node-start entity))
+               (<= pos (treesit-node-end entity)))
+      entity)))
 
 (defun vhdl-ts-arch-at-point ()
   "Return node of architectre body at point."
-  (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) "architecture_body"))
+  (let ((arch (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) "architecture_body"))
+        (pos (point)))
+    (when (and arch
+               (>= pos (treesit-node-start arch))
+               (<= pos (treesit-node-end arch)))
+      arch)))
 
 (defun vhdl-ts-instance-at-point ()
   "Return node of instance at point."
-  (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) vhdl-ts-instance-re))
+  (let ((instance (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) vhdl-ts-instance-re))
+        (pos (point)))
+    (when (and instance
+               (>= pos (treesit-node-start instance))
+               (<= pos (treesit-node-end instance)))
+      instance)))
+
+(defun vhdl-ts--block-at-point (regex)
+  "Return deepest node of block at point that matches REGEX."
+  (let ((blocks (vhdl-ts--node-parents-list (vhdl-ts--node-at-point) regex))
+        (pos (point)))
+    (catch 'block
+      (mapc (lambda (block)
+              (when (and block
+                         (>= pos (treesit-node-start block))
+                         (<= pos (treesit-node-end block)))
+                (throw 'block block)))
+            blocks)
+      nil)))
 
 (defun vhdl-ts-block-at-point ()
   "Return node of block at point."
-  (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) vhdl-ts-block-at-point-re))
+  (vhdl-ts--block-at-point vhdl-ts-block-at-point-re))
 
 (defun vhdl-ts-nodes-block-at-point (pred)
   "Return block at point NODES that match PRED."
@@ -1034,10 +1070,13 @@ type.")
 
 (defun vhdl-ts-which-func-function ()
   "Retrieve `which-func' candidates."
-  (let ((node (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) vhdl-ts-imenu-create-index-re)))
-    (when node
-      (setq vhdl-ts-which-func-extra (vhdl-ts--node-identifier-name node))
-      (funcall vhdl-ts-which-func-format-function node))))
+  (let ((node (vhdl-ts--block-at-point vhdl-ts-imenu-create-index-re)))
+    (if node
+        (progn
+          (setq vhdl-ts-which-func-extra (vhdl-ts--node-identifier-name node))
+          (funcall vhdl-ts-which-func-format-function node))
+      (setq vhdl-ts-which-func-extra nil)
+      "n/a")))
 
 (defun vhdl-ts-which-func-setup ()
   "Hook for `vhdl-ts-mode' to enable `which-func'."
@@ -1172,22 +1211,27 @@ If optional arg BWD is non-nil, search backwards."
 If block is an instance, also align parameters and ports."
   (interactive)
   (let ((node (vhdl-ts-block-at-point))
-        start end type name)
+        (start (make-marker))
+        (end (make-marker))
+        type name)
     (unless node
       (user-error "Not inside a block"))
-    (setq start (treesit-node-start node))
-    (setq end (treesit-node-end node))
-    (setq type (treesit-node-type node))
-    (setq name (vhdl-ts--node-identifier-name node))
-    (indent-region start end)
-    ;; Refresh outdated node after `indent-region'
-    (setq node (vhdl-ts-block-at-point))
-    (setq start (treesit-node-start node))
-    (setq end (treesit-node-end node))
-    (vhdl-align-region start end)
-    (when (and vhdl-ts-beautify-align-ports-and-params
-               (string-match vhdl-ts-instance-re type))
-      (vhdl-ts-beautify--align-params-ports-nap))
+    (save-excursion
+      (set-marker start (treesit-node-start node))
+      (set-marker end (treesit-node-end node))
+      (setq type (treesit-node-type node))
+      (setq name (vhdl-ts--node-identifier-name node))
+      (indent-region start end)
+      ;; Refresh outdated node after `indent-region'
+      (goto-char start)
+      (skip-chars-forward " \t")
+      (setq node (vhdl-ts-block-at-point))
+      (set-marker start (treesit-node-start node))
+      (set-marker end (treesit-node-end node))
+      (vhdl-align-region start end)
+      (when (and vhdl-ts-beautify-align-ports-and-params
+                 (string-match vhdl-ts-instance-re type))
+        (vhdl-ts-beautify--align-params-ports-nap)))
     (message "%s : %s" type name)))
 
 (defun vhdl-ts-beautify-buffer ()
