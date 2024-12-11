@@ -460,12 +460,16 @@ portB => signalB
 * translate_off / * translate_on"
   :group 'vhdl-ts-faces)
 
-(defvar vhdl-ts-font-lock-error-face 'vhdl-ts-font-lock-error-face)
-(defface vhdl-ts-font-lock-error-face
-  '((t (:underline (:style wave :color "Red1"))))
-  "Face for tree-sitter parsing errors."
-  :group 'vhdl-ts-faces)
+;;;; Functions
+(defun vhdl-ts--fontify-error (node _override start end &rest _)
+  "Fontify a syntax error with a red wavy underline.
 
+For NODE,OVERRIDE, START, END, and ARGS, see `treesit-font-lock-rules'."
+  (treesit-fontify-with-override (treesit-node-start node)
+                                 (treesit-node-end node)
+                                 '(:underline (:style wave :color "Red1"))
+                                 'append
+                                 start end))
 
 ;;;; Keywords
 (defconst vhdl-ts-keywords (append vhdl-02-keywords vhdl-08-keywords))
@@ -660,7 +664,7 @@ portB => signalB
    :feature 'error
    :language 'vhdl
    :override t
-   '((ERROR) @vhdl-ts-font-lock-error-face)))
+   '((ERROR) @vhdl-ts--fontify-error)))
 
 
 ;;; Indent
