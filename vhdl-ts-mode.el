@@ -1358,8 +1358,8 @@ and the linker to be installed and on PATH."
     (setq-local treesit-font-lock-feature-list
                 '((comment string)
                   (keyword operator)
-                  (punctuation declaration type instance builtin array misc)
-                  (error)))
+                  (type declaration instance builtin misc error)
+                  (punctuation array)))
     (setq-local treesit-font-lock-settings vhdl-ts--font-lock-settings)
     ;; Indent.
     (setq-local indent-line-function nil)
