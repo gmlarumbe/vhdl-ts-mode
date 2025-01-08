@@ -106,6 +106,11 @@ Defaults to .vhd and .vhdl."
   :type 'boolean
   :group 'vhdl-ts)
 
+(defcustom vhdl-ts-linter-enable t
+  "Non-nil means enable tree-sitter based linting."
+  :type 'boolean
+  :group 'vhdl-ts)
+
 
 ;;; Utils
 ;;;; Core
@@ -465,11 +470,12 @@ portB => signalB
   "Fontify a syntax error with a red wavy underline.
 
 For NODE,OVERRIDE, START, END, and ARGS, see `treesit-font-lock-rules'."
-  (treesit-fontify-with-override (treesit-node-start node)
-                                 (treesit-node-end node)
-                                 '(:underline (:style wave :color "Red1"))
-                                 'append
-                                 start end))
+  (when vhdl-ts-linter-enable
+    (treesit-fontify-with-override (treesit-node-start node)
+                                   (treesit-node-end node)
+                                   '(:underline (:style wave :color "Red1"))
+                                   'append
+                                   start end)))
 
 ;;;; Keywords
 (defconst vhdl-ts-keywords (append vhdl-02-keywords vhdl-08-keywords))
