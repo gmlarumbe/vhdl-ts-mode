@@ -1,10 +1,10 @@
-(("tb_axi_if_converter" . #<marker at 402 in tb_axi_if_converter.vhd>)
+(("tb_axi_if_converter" . 402)
  ("TB"
-  ("*architecture_body*" . #<marker at 587 in tb_axi_if_converter.vhd>)
-  ("axi_if_converter" . #<marker at 10497 in tb_axi_if_converter.vhd>)
-  ("s_axi_model" . #<marker at 18793 in tb_axi_if_converter.vhd>)
-  ("s_axi_model" . #<marker at 21096 in tb_axi_if_converter.vhd>)
+  ("*architecture_body*" . 587)
+  ("axi_if_converter" . 10497)
+  ("s_axi_model" . 18793)
+  ("s_axi_model" . 21096)
   ("main"
-   ("*process_statement*" . #<marker at 25070 in tb_axi_if_converter.vhd>)
-   ("init_values" . #<marker at 25093 in tb_axi_if_converter.vhd>)
-   ("rx_data" . #<marker at 25293 in tb_axi_if_converter.vhd>))))
+   ("*process_statement*" . 25070)
+   ("init_values" . 25093)
+   ("rx_data" . 25293))))

@@ -1,8 +1,8 @@
-(("misc" . #<marker at 1064 in misc.vhd>)
+(("misc" . 1064)
  ("RTL"
-  ("*architecture_body*" . #<marker at 1097 in misc.vhd>)
-  ("Anonymous" . #<marker at 1158 in misc.vhd>))
+  ("*architecture_body*" . 1097)
+  ("Anonymous" . 1158))
  ("port_bit_select"
-  ("*architecture_body*" . #<marker at 1484 in misc.vhd>)
-  ("Anonymous" . #<marker at 1569 in misc.vhd>)
-  ("Anonymous" . #<marker at 1736 in misc.vhd>)))
+  ("*architecture_body*" . 1484)
+  ("Anonymous" . 1569)
+  ("Anonymous" . 1736)))

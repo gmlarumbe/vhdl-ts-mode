@@ -46,6 +46,7 @@
 
 ;;; Requirements
 (require 'treesit)
+(require 'imenu)
 (require 'vhdl-mode)
 
 (declare-function treesit-parser-create "treesit.c")
@@ -888,9 +889,11 @@ VHDL parser."
          (name (when ts-node
                  (or (vhdl-ts--node-identifier-name ts-node)
                      "Anonymous")))
+         (pos (treesit-node-start ts-node))
          (marker (when ts-node
-                   (set-marker (make-marker)
-                               (treesit-node-start ts-node)))))
+                   (if imenu-use-markers
+                       (set-marker (make-marker) pos)
+                     pos))))
     (cond
      ;; Root node
      ((null ts-node)
@@ -912,7 +915,7 @@ VHDL parser."
     (mapc
      (lambda (elm)
        (if (and (listp elm) (listp (cdr elm)) (listp (cddr elm)) ; Basic checks due to custom imenu entry format for grouping
-                (markerp (cadr elm))   ; Element can be grouped because it was added ...
+                (or (numberp (cadr elm)) (markerp (cadr elm)))   ; Element can be grouped because it was added ...
                 (stringp (caddr elm))) ; ... a third field, indicating tree-sitter type
            (let ((type (caddr elm))
                  (entry (cons (car elm) (cadr elm))))
@@ -976,9 +979,11 @@ VHDL parser."
          (name (when ts-node
                  (or (vhdl-ts--node-identifier-name ts-node)
                      "Anonymous")))
+         (pos (treesit-node-start ts-node))
          (marker (when ts-node
-                   (set-marker (make-marker)
-                               (treesit-node-start ts-node)))))
+                   (if imenu-use-markers
+                       (set-marker (make-marker) pos)
+                     pos))))
     (cond
      ;; Root node
      ((null ts-node)
@@ -1033,16 +1038,16 @@ to VHDL parser."
   (pcase vhdl-ts-imenu-style
     ('simple
      (setq-local treesit-simple-imenu-settings
-                 `(("Entity" "\\`entity_declaration\\'" nil nil)
-                   ("Architecture" "\\`architecture_body\\'" nil nil)
-                   ("Package" "\\`package_\\(declaration\\|body\\)\\'" nil nil)
-                   ("Component" "\\`component_declaration\\'" nil nil)
-                   ("Process" "\\`process_statement\\'" nil nil)
-                   ("Procedure" "\\`procedure_body\\'" nil nil)
-                   ("Function" "\\`function_body\\'" nil nil)
-                   ("Block" "\\`block_statement\\'" nil nil)
-                   ("Generate" "\\`generate_statement_body\\'" nil nil)
-                   ("Instance" "\\`component_instantiation_statement\\'" nil)))
+                 `(("Entity" "\\`entity_declaration\\'")
+                   ("Architecture" "\\`architecture_body\\'")
+                   ("Package" "\\`package_\\(declaration\\|body\\)\\'")
+                   ("Component" "\\`component_declaration\\'")
+                   ("Process" "\\`process_statement\\'")
+                   ("Procedure" "\\`procedure_body\\'")
+                   ("Function" "\\`function_body\\'")
+                   ("Block" "\\`block_statement\\'")
+                   ("Generate" "\\`generate_statement_body\\'")
+                   ("Instance" "\\`component_instantiation_statement\\'")))
      (setq-local treesit-defun-name-function #'vhdl-ts--node-identifier-name))
     ('tree
      (setq-local imenu-create-index-function #'vhdl-ts-imenu-create-index-tree))

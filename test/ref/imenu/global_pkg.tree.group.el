@@ -1,1 +1,1 @@
-(("global" . #<marker at 71 in global_pkg.vhd>))
+(("global" . 71))
