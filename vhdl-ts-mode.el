@@ -118,9 +118,56 @@ Defaults to .vhd and .vhdl."
 (defconst vhdl-ts-identifier-re "\\(identifier\\|simple_name\\)")
 (defconst vhdl-ts-instance-re "\\_<component_instantiation_statement\\_>")
 
-(defun vhdl-ts--node-at-point ()
-  "Return tree-sitter node at point."
-  (treesit-node-at (point) 'vhdl))
+(defun vhdl-ts--node-at-point (&optional bound)
+  "Return tree-sitter node at point.
+
+If optional BOUND is non-nil, return nil if point is not over a symbol."
+  (let* ((pos (point))
+         (node (treesit-node-at pos 'vhdl)))
+    (if bound
+        (when (and (>= pos (treesit-node-start node))
+                   (<= pos (treesit-node-end node)))
+          node)
+      node)))
+
+(defun vhdl-ts--highest-node-at-pos (pos)
+  "Return highest node starting at POS in the parsed tree.
+
+Only might work as expected if point is at the beginning of a symbol.
+
+Snippet fetched from `treesit--indent-1'."
+  (let* ((smallest-node (vhdl-ts--node-at-point))
+         (node (treesit-parent-while
+                smallest-node
+                (lambda (node)
+                  (eq pos (treesit-node-start node))))))
+    node))
+
+(defun vhdl-ts--highest-node-at-point (&optional bound)
+  "Return highest node at point.
+
+If optional BOUND is non-nil, return nil if point is not over a symbol."
+  (vhdl-ts--highest-node-at-pos (treesit-node-start (vhdl-ts--node-at-point bound))))
+
+(defun vhdl-ts--node-at-bol ()
+  "Return node at first non-blank character of current line.
+Snippet fetched from `treesit--indent-1'."
+  (let* ((bol (save-excursion
+                (forward-line 0)
+                (skip-chars-forward " \t")
+                (point)))
+         (smallest-node
+          (cond ((null (treesit-parser-list)) nil)
+                ((eq 1 (length (treesit-parser-list)))
+                 (treesit-node-at bol))
+                ((treesit-language-at (point))
+                 (treesit-node-at bol (treesit-language-at (point))))
+                (t (treesit-node-at bol))))
+         (node (treesit-parent-while
+                smallest-node
+                (lambda (node)
+                  (eq bol (treesit-node-start node))))))
+    node))
 
 (defun vhdl-ts--node-has-parent-recursive (node node-type)
   "Return non-nil if NODE is part of NODE-TYPE in the parsed tree."
@@ -133,6 +180,14 @@ Defaults to .vhd and .vhdl."
   "Return first node of type NODE-TYPE that is a child of NODE in the parsed tree.
 If none is found, return nil."
   (treesit-search-subtree node node-type))
+
+(defun vhdl-ts--node-parents-list (node node-type)
+  "Return NODE parents that match NODE-TYPE as a list of nodes."
+  (let (parent parent-list)
+    (while (setq parent (vhdl-ts--node-has-parent-recursive node node-type))
+      (push parent parent-list)
+      (setq node parent))
+    (nreverse parent-list)))
 
 (defun vhdl-ts--node-identifier-name (node)
   "Return identifier name of NODE."
@@ -160,51 +215,20 @@ Node must be of type `vhdl-ts-instance-re'.  Otherwise return nil."
     (error "Wrong node type: %s" (treesit-node-type node)))
   (treesit-node-text (treesit-search-subtree node "identifier") :no-props))
 
-(defun vhdl-ts--highest-node-at-pos (pos)
-  "Return highest node starting at POS in the parsed tree.
 
-Only might work as expected if point is at the beginning of a symbol.
-
-Snippet fetched from `treesit--indent-1'."
-  (let* ((smallest-node (vhdl-ts--node-at-point))
-         (node (treesit-parent-while
-                smallest-node
-                (lambda (node)
-                  (eq pos (treesit-node-start node))))))
-    node))
-
-(defun vhdl-ts--highest-node-at-symbol ()
-  "Return highest node in the hierarchy for symbol at point.
-Check also `treesit-thing-at-point' for similar functionality."
-  (vhdl-ts--highest-node-at-pos (car (bounds-of-thing-at-point 'symbol))))
-
-(defun vhdl-ts--node-at-bol ()
-  "Return node at first non-blank character of current line.
-Snippet fetched from `treesit--indent-1'."
-  (let* ((bol (save-excursion
-                (forward-line 0)
-                (skip-chars-forward " \t")
-                (point)))
-         (smallest-node
-          (cond ((null (treesit-parser-list)) nil)
-                ((eq 1 (length (treesit-parser-list)))
-                 (treesit-node-at bol))
-                ((treesit-language-at (point))
-                 (treesit-node-at bol (treesit-language-at (point))))
-                (t (treesit-node-at bol))))
-         (node (treesit-parent-while
-                smallest-node
-                (lambda (node)
-                  (eq bol (treesit-node-start node))))))
-    node))
-
-(defun vhdl-ts--node-parents-list (node node-type)
-  "Return NODE parents that match NODE-TYPE as a list of nodes."
-  (let (parent parent-list)
-    (while (setq parent (vhdl-ts--node-has-parent-recursive node node-type))
-      (push parent parent-list)
-      (setq node parent))
-    (nreverse parent-list)))
+;;;; Context
+(defconst vhdl-ts-block-at-point-re
+  (eval-when-compile
+    (regexp-opt
+     '("entity_declaration"
+       "architecture_body"
+       "process_statement"
+       "procedure_body"
+       "function_body"
+       "generate_statement_body"
+       "block_statement"
+       "component_instantiation_statement")
+     'symbols)))
 
 (defun vhdl-ts-nodes (pred &optional start)
   "Return current buffer NODES that match PRED.
@@ -227,21 +251,6 @@ and end position."
                     :start-pos ,(treesit-node-start node)
                     :end-pos ,(treesit-node-end node)))
           (vhdl-ts-nodes pred start)))
-
-
-;;;; Context
-(defconst vhdl-ts-block-at-point-re
-  (eval-when-compile
-    (regexp-opt
-     '("entity_declaration"
-       "architecture_body"
-       "process_statement"
-       "procedure_body"
-       "function_body"
-       "generate_statement_body"
-       "block_statement"
-       "component_instantiation_statement")
-     'symbols)))
 
 (defun vhdl-ts-entity-at-point ()
   "Return node of entity at point."
@@ -359,40 +368,6 @@ for all nodes.  If BACKWARD is non-nil, search backwards."
   (unless (and arch-node (string= "architecture_body" (treesit-node-type arch-node)))
     (error "Wrong arch-node: %s" arch-node))
   (treesit-node-text (treesit-node-child-by-field-name arch-node "entity") :no-props))
-
-;;;; Navigation
-(defun vhdl-ts-forward-sexp (&optional arg)
-  "Move forward across S-expressions.
-
-With `prefix-arg', move ARG expressions."
-  (interactive "p")
-  (if (member (following-char) '(?\( ?\{ ?\[))
-      (if (and arg (< arg 0))
-          (backward-sexp arg)
-        (forward-sexp arg))
-    (let* ((node (or (vhdl-ts--highest-node-at-symbol)
-                     (vhdl-ts--node-at-point)))
-           (beg (treesit-node-start node))
-           (end (treesit-node-end node)))
-      (if (and arg (< arg 0))
-          (goto-char beg)
-        (goto-char end)))))
-
-(defun vhdl-ts-backward-sexp (&optional arg)
-  "Move backward across S-expressions.
-
-With `prefix-arg', move ARG expressions."
-  (interactive "p")
-  (if (member (preceding-char) '(?\) ?\} ?\]))
-      (if (and arg (< arg 0))
-          (forward-sexp arg)
-        (backward-sexp arg))
-    (let* ((node (treesit-node-parent (vhdl-ts--node-at-point)))
-           (beg (treesit-node-start node))
-           (end (treesit-node-end node)))
-      (if (and arg (< arg 0))
-          (goto-char end)
-        (goto-char beg)))))
 
 
 ;;; Font-lock
@@ -1118,7 +1093,7 @@ type.")
 
 
 ;;; Navigation
-(defconst vhdl-ts--defun-type-regexp
+(defconst vhdl-ts-defun-re
   (eval-when-compile
     (regexp-opt
      '("entity_declaration"
@@ -1129,8 +1104,74 @@ type.")
        "procedure_declaration"
        "procedure_body"
        "function_declaration"
-       "function_body")
+       "function_body"
+       "component_declaration"
+       "configuration_declaration"
+       "context_declaration"
+       "loop_statement"
+       "if_generate_statement"
+       "block_statement"
+       "record_type_definition")
      'symbols)))
+
+
+(defun vhdl-ts-forward-sexp (&optional arg)
+  "Move forward across S-expressions.
+
+With `prefix-arg', move ARG expressions."
+  (interactive "p")
+  (let* ((node (vhdl-ts--node-at-point))
+         (node-type (treesit-node-type node))
+         (highest-node (treesit-parent-while ; Same as `vhdl-ts--highest-node-at-point' but ignoring design_unit and declarative_part
+                        node
+                        (lambda (loop-node)
+                          (and (eq (treesit-node-start node) (treesit-node-start loop-node))
+                               (not (string-match "\\_<\\(design_unit\\|declarative_part\\|concurrent_statement_part\\)\\_>" (treesit-node-type loop-node)))))))
+         (highest-node-type (treesit-node-type highest-node)))
+    (cond (;; Defuns/if-else
+           (or (string-match vhdl-ts-defun-re highest-node-type)
+               (string= "if_statement" highest-node-type))
+           (if (and arg (< arg 0))
+               (goto-char (treesit-node-start highest-node))
+             (goto-char (treesit-node-end highest-node))))
+          (;; if/else/elsif/then
+           (string-match "\\_<\\(if\\|else\\|elsif\\|then\\|for\\|loop\\)\\_>" node-type)
+           (let ((parent (vhdl-ts--node-has-parent-recursive node "\\_<\\(if_statement\\|loop_statement\\|if_generate\\)\\_>")))
+             (if (and arg (< arg 0))
+                 (goto-char (treesit-node-start parent))
+               (goto-char (treesit-node-end parent)))))
+          (;; labeled process/procedure/functions/generate and begin/is
+           (string-match "\\_<\\(process\\|function\\|procedure\\|generate\\|begin\\|is\\)\\_>" node-type)
+           (let ((parent (treesit-node-parent node)))
+             (if (and arg (< arg 0))
+                 (goto-char (treesit-node-start parent))
+               (goto-char (treesit-node-end parent)))))
+          ;; Default
+          (t
+           (if (and arg (< arg 0))
+               (backward-sexp arg)
+             (forward-sexp arg))))))
+
+(defun vhdl-ts-backward-sexp (&optional arg)
+  "Move backward across S-expressions.
+
+With `prefix-arg', move ARG expressions."
+  (interactive "p")
+  (let* ((node (treesit-node-parent (vhdl-ts--node-at-point)))
+         (node-type (treesit-node-type node))
+         (beg (treesit-node-start node))
+         (end (treesit-node-end node)))
+    (cond (;; Defuns/if-else-elsif
+           (or (string-match vhdl-ts-defun-re node-type)
+               (string= "if_statement" node-type))
+           (if (and arg (< arg 0))
+               (goto-char end)
+             (goto-char beg)))
+          ;; Default
+          (t
+           (if (and arg (< arg 0))
+               (forward-sexp arg)
+             (backward-sexp arg))))))
 
 (defun vhdl-ts-find-function-procedure (&optional bwd)
   "Search for a VHDL function/procedure declaration or definition.
@@ -1316,8 +1357,9 @@ and the linker to be installed and on PATH."
   :doc "Keymap for VHDL language with tree-sitter"
   :parent vhdl-mode-map
   "TAB"     #'indent-for-tab-command
-  "C-M-a"   #'beginning-of-defun
-  "C-M-e"   #'end-of-defun
+  "C-M-a"   #'beginning-of-defun ; Unmap `vhdl-beginning-of-defun' from `vhdl-mode'
+  "C-M-e"   #'end-of-defun       ; Unmap `vhdl-end-of-defun' from `vhdl-mode'
+  "C-M-h"   #'mark-defun         ; Unmap `vhdl-mark-defun' from `vhdl-mode'
   "C-M-f"   #'vhdl-ts-forward-sexp
   "C-M-b"   #'vhdl-ts-backward-sexp
   "C-M-d"   #'vhdl-ts-find-entity-instance-fwd
@@ -1366,7 +1408,7 @@ and the linker to be installed and on PATH."
     (setq-local comment-indent-function nil)
     (setq-local treesit-simple-indent-rules vhdl-ts--treesit-indent-rules)
     ;; Navigation
-    (setq-local treesit-defun-type-regexp vhdl-ts--defun-type-regexp)
+    (setq-local treesit-defun-type-regexp vhdl-ts-defun-re)
     ;; Imenu.
     (vhdl-ts-imenu-setup)
     ;; Which-func

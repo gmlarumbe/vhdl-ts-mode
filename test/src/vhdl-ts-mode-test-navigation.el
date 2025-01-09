@@ -43,6 +43,12 @@
 
 (defconst vhdl-ts-mode-test-navigation-block-nav-file-list vhdl-ts-mode-test-common-file-list)
 
+(defconst vhdl-ts-mode-test-navigation-forward-sexp-file-and-pos
+  `((,(file-name-concat vhdl-ts-mode-test-files-common-dir "sexp.vhd") 949 951 955 1064 1067 1070 1244 1256 1312 1321 1479 1486 1668 1670 1672 1705 1707 1709 1750 1752 1754 2059 2066 2076 2085 2287 2295 2390 2458 2647 2808 3115 3124 3406 3426 3534 3651 3658 3676 3685 3866 3891 4072 4126 4175 4209)))
+
+(defconst vhdl-ts-mode-test-navigation-backward-sexp-file-and-pos
+  `((,(file-name-concat vhdl-ts-mode-test-files-common-dir "sexp.vhd") 1057 1051 1047 1166 1163 2381 2368 1472 1462 2031 2022 1989 1984 1981 1971 1951 1965 1945 1754 1750 2238 2230 2198 2188 2350 2341 3385 3077 3044 3039 2881 2876 3227 3224 3527 3514 3647 3858 3853 4040 4037 4051 4040 4119 4159 4202 4228)))
+
 
 (defun vhdl-ts-mode-test-navigation-gen-expected-files ()
   ;; Instances fwd
@@ -95,7 +101,31 @@
                                :fn #'test-hdl-navigation-nav-file-fn
                                :args '(:mode vhdl-ts-mode
                                        :fn vhdl-ts-find-block-bwd
-                                       :start-pos-max t)))
+                                       :start-pos-max t))
+  ;; Forward sexp
+  (dolist (file-and-pos vhdl-ts-mode-test-navigation-forward-sexp-file-and-pos)
+    (let ((file (car file-and-pos))
+          (pos-list (cdr file-and-pos)))
+      (test-hdl-gen-expected-files :file-list `(,file)
+                                   :dest-dir vhdl-ts-mode-test-ref-dir-navigation
+                                   :out-file-ext "fwd.sexp.el"
+                                   :process-fn 'eval
+                                   :fn #'test-hdl-pos-list-fn
+                                   :args `(:mode vhdl-ts-mode
+                                           :fn vhdl-ts-forward-sexp
+                                           :pos-list ,pos-list))))
+  ;; Backward sexp
+  (dolist (file-and-pos vhdl-ts-mode-test-navigation-backward-sexp-file-and-pos)
+    (let ((file (car file-and-pos))
+          (pos-list (cdr file-and-pos)))
+      (test-hdl-gen-expected-files :file-list `(,file)
+                                   :dest-dir vhdl-ts-mode-test-ref-dir-navigation
+                                   :out-file-ext "bwd.sexp.el"
+                                   :process-fn 'eval
+                                   :fn #'test-hdl-pos-list-fn
+                                   :args `(:mode vhdl-ts-mode
+                                           :fn vhdl-ts-backward-sexp
+                                           :pos-list ,pos-list)))))
 
 
 (ert-deftest navigation::instances ()
@@ -159,6 +189,34 @@
                                                                  :fn vhdl-ts-find-block-bwd
                                                                  :start-pos-max t))
                                   (file-name-concat vhdl-ts-mode-test-ref-dir-navigation (test-hdl-basename file "block.bwd.el"))))))
+
+
+(ert-deftest navigation::forward-sexp ()
+  (dolist (file-and-pos vhdl-ts-mode-test-navigation-forward-sexp-file-and-pos)
+    (let ((file (car file-and-pos))
+          (pos-list (cdr file-and-pos)))
+      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
+                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-navigation (test-hdl-basename file "fwd.sexp.el"))
+                                                           :process-fn 'eval
+                                                           :fn #'test-hdl-pos-list-fn
+                                                           :args `(:mode vhdl-ts-mode
+                                                                   :fn vhdl-ts-forward-sexp
+                                                                   :pos-list ,pos-list))
+                                    (file-name-concat vhdl-ts-mode-test-ref-dir-navigation (test-hdl-basename file "fwd.sexp.el")))))))
+
+
+(ert-deftest navigation::backward-sexp ()
+  (dolist (file-and-pos vhdl-ts-mode-test-navigation-backward-sexp-file-and-pos)
+    (let ((file (car file-and-pos))
+          (pos-list (cdr file-and-pos)))
+      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
+                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-navigation (test-hdl-basename file "bwd.sexp.el"))
+                                                           :process-fn 'eval
+                                                           :fn #'test-hdl-pos-list-fn
+                                                           :args `(:mode vhdl-ts-mode
+                                                                   :fn vhdl-ts-backward-sexp
+                                                                   :pos-list ,pos-list))
+                                    (file-name-concat vhdl-ts-mode-test-ref-dir-navigation (test-hdl-basename file "bwd.sexp.el")))))))
 
 
 

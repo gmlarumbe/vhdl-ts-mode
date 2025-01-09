@@ -41,12 +41,6 @@
 (defconst vhdl-ts-mode-test-utils-block-at-point-file-and-pos
   `((,(file-name-concat vhdl-ts-mode-test-files-common-dir "sexp.vhd") 520 892 936 962 1035 1047 1048 1057 1057 1058 1079 1162 1174 1271 1336 1440 1474 1535 1582 1631 1889 2015 2023 2031 2040 2047 2067 2115 2146 2212 2245 2296 2306 2334 2364 2365 2387 2389 2417 2453 2514 2561 2610 2717 2771 2853 3028 3079 3086 3106 3140 3154 3216 3241 3252 3275 3335 3363 3381 3391 3393 3421 3442 3504 3515 3516 3533 3549 3570 3643 3649 3651 3671 3692 3777 3841 3864 3865 3886 3907 3992 4047 4053 4055 4101 4125 4155 4161 4163 4175 4190 4208 4224 4230)))
 
-(defconst vhdl-ts-mode-test-utils-forward-sexp-file-and-pos
-  `((,(file-name-concat vhdl-ts-mode-test-files-common-dir "sexp.vhd") 949 951 955 1064 1067 1070 1244 1256 1312 1321 1479 1486 1668 1670 1672 1705 1707 1709 1750 1752 1754 2059 2066 2076 2085 2287 2295 2390 2458 2647 2808 3115 3124 3406 3426 3534 3651 3658 3676 3685 3866 3891 4072 4126 4175 4209)))
-
-(defconst vhdl-ts-mode-test-utils-backward-sexp-file-and-pos
-  `((,(file-name-concat vhdl-ts-mode-test-files-common-dir "sexp.vhd") 1057 1051 1047 1166 1163 2381 2368 1472 1462 2031 2022 1989 1984 1981 1971 1951 1965 1945 1754 1750 2238 2230 2198 2188 2350 2341 3385 3077 3044 3039 2881 2876 3227 3224 3527 3514 3647 3858 3853 4040 4037 4051 4040 4119 4159 4202 4228)))
-
 
 (defun vhdl-ts-mode-test-utils-block-at-point-fn ()
   (treesit-node-type (vhdl-ts-block-at-point)))
@@ -64,30 +58,6 @@
 
 
 (defun vhdl-ts-mode-test-utils-gen-expected-files ()
-  ;; Forward sexp
-  (dolist (file-and-pos vhdl-ts-mode-test-utils-forward-sexp-file-and-pos)
-    (let ((file (car file-and-pos))
-          (pos-list (cdr file-and-pos)))
-      (test-hdl-gen-expected-files :file-list `(,file)
-                                   :dest-dir vhdl-ts-mode-test-ref-dir-utils
-                                   :out-file-ext "fwd.sexp.el"
-                                   :process-fn 'eval
-                                   :fn #'test-hdl-pos-list-fn
-                                   :args `(:mode vhdl-ts-mode
-                                           :fn vhdl-ts-forward-sexp
-                                           :pos-list ,pos-list))))
-  ;; Backward sexp
-  (dolist (file-and-pos vhdl-ts-mode-test-utils-backward-sexp-file-and-pos)
-    (let ((file (car file-and-pos))
-          (pos-list (cdr file-and-pos)))
-      (test-hdl-gen-expected-files :file-list `(,file)
-                                   :dest-dir vhdl-ts-mode-test-ref-dir-utils
-                                   :out-file-ext "bwd.sexp.el"
-                                   :process-fn 'eval
-                                   :fn #'test-hdl-pos-list-fn
-                                   :args `(:mode vhdl-ts-mode
-                                           :fn vhdl-ts-backward-sexp
-                                           :pos-list ,pos-list))))
   ;; Block at point
   (dolist (file-and-pos vhdl-ts-mode-test-utils-block-at-point-file-and-pos)
     (let ((file (car file-and-pos))
@@ -165,35 +135,6 @@
                                                                    :fn vhdl-ts-mode-test-utils-entity-at-point-fn
                                                                    :pos-list ,pos-list))
                                     (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "ent.point.el")))))))
-
-
-(ert-deftest utils::forward-sexp ()
-  (dolist (file-and-pos vhdl-ts-mode-test-utils-forward-sexp-file-and-pos)
-    (let ((file (car file-and-pos))
-          (pos-list (cdr file-and-pos)))
-      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
-                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-utils (test-hdl-basename file "fwd.sexp.el"))
-                                                           :process-fn 'eval
-                                                           :fn #'test-hdl-pos-list-fn
-                                                           :args `(:mode vhdl-ts-mode
-                                                                   :fn vhdl-ts-forward-sexp
-                                                                   :pos-list ,pos-list))
-                                    (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "fwd.sexp.el")))))))
-
-
-(ert-deftest utils::backward-sexp ()
-  (dolist (file-and-pos vhdl-ts-mode-test-utils-backward-sexp-file-and-pos)
-    (let ((file (car file-and-pos))
-          (pos-list (cdr file-and-pos)))
-      (should (test-hdl-files-equal (test-hdl-process-file :test-file file
-                                                           :dump-file (file-name-concat vhdl-ts-mode-test-dump-dir-utils (test-hdl-basename file "bwd.sexp.el"))
-                                                           :process-fn 'eval
-                                                           :fn #'test-hdl-pos-list-fn
-                                                           :args `(:mode vhdl-ts-mode
-                                                                   :fn vhdl-ts-backward-sexp
-                                                                   :pos-list ,pos-list))
-                                    (file-name-concat vhdl-ts-mode-test-ref-dir-utils (test-hdl-basename file "bwd.sexp.el")))))))
-
 
 
 (provide 'vhdl-ts-mode-test-utils)
