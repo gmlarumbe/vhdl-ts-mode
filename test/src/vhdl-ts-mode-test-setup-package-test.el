@@ -1,6 +1,6 @@
 ;;; vhdl-ts-mode-test-setup-package-test.el --- vhdl-ts-mode ERT Basic Test with package.el  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2022-2024 Gonzalo Larumbe
+;; Copyright (C) 2022-2025 Gonzalo Larumbe
 
 ;; Author: Gonzalo Larumbe <gonzalomlarumbe@gmail.com>
 ;; URL: https://github.com/gmlarumbe/test-hdl
