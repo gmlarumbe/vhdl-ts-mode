@@ -63,7 +63,7 @@ To install it via [straight](https://github.com/radian-software/straight.el) wit
 To install via [Guix](https://guix.gnu.org) use:
 
 ``` shell
-$ guix install emacs-vhdl-ts-mode tree-sitter-vhdl
+$ guix install emacs-vhdl-ts-mode
 ```
 
 No need to manually install tree-sitter, it is pulled automatically.
