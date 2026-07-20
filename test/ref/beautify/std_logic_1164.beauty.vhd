@@ -59,14 +59,14 @@ package std_logic_1164 is
     -- logic state system  (unresolved)
     -------------------------------------------------------------------
     type STD_ULOGIC is ('U',            -- Uninitialized
-                       'X',             -- Forcing  Unknown
-                       '0',             -- Forcing  0
-                       '1',             -- Forcing  1
-                       'Z',             -- High Impedance
-                       'W',             -- Weak     Unknown
-                       'L',             -- Weak     0
-                       'H',             -- Weak     1
-                       '-'              -- Don't care
+                         'X',           -- Forcing  Unknown
+                         '0',           -- Forcing  0
+                         '1',           -- Forcing  1
+                         'Z',           -- High Impedance
+                         'W',           -- Weak     Unknown
+                         'L',           -- Weak     0
+                         'H',           -- Weak     1
+                         '-'            -- Don't care
     );
     -------------------------------------------------------------------
     -- unconstrained array of std_ulogic for use with the resolution function
@@ -198,13 +198,13 @@ package std_logic_1164 is
     -------------------------------------------------------------------
 
     function TO_01 (s : STD_ULOGIC_VECTOR; xmap : STD_ULOGIC := '0')
-        return STD_ULOGIC_VECTOR;
-    function TO_01 (s : STD_ULOGIC; xmap : STD_ULOGIC := '0')
-        return STD_ULOGIC;
-    function TO_01 (s : BIT_VECTOR; xmap : STD_ULOGIC := '0')
-        return STD_ULOGIC_VECTOR;
-    function TO_01 (s : BIT; xmap : STD_ULOGIC := '0')
-        return STD_ULOGIC;
+    return STD_ULOGIC_VECTOR;
+    function TO_01 (s : STD_ULOGIC; xmap : STD_ULOGIC        := '0')
+    return STD_ULOGIC;
+    function TO_01 (s : BIT_VECTOR; xmap : STD_ULOGIC        := '0')
+    return STD_ULOGIC_VECTOR;
+    function TO_01 (s : BIT; xmap : STD_ULOGIC               := '0')
+    return STD_ULOGIC;
 
     function To_X01 (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR;
     function To_X01 (s : STD_ULOGIC) return X01;
@@ -274,11 +274,11 @@ package std_logic_1164 is
     procedure READ (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR; GOOD : out BOOLEAN);
     procedure READ (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
 
-    procedure WRITE (L : inout LINE; VALUE : in STD_ULOGIC;
-        JUSTIFIED      : in    SIDE := right; FIELD : in WIDTH := 0);
+    procedure WRITE (L         : inout LINE; VALUE : in STD_ULOGIC;
+                     JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
 
-    procedure WRITE (L : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
-        JUSTIFIED      : in    SIDE := right; FIELD : in WIDTH := 0);
+    procedure WRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
+                     JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
 
     alias BREAD is READ [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
     alias BREAD is READ [LINE, STD_ULOGIC_VECTOR];
@@ -298,12 +298,12 @@ package std_logic_1164 is
     alias BWRITE is WRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
     alias BINARY_WRITE is WRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
 
-    procedure OWRITE (L : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
-        JUSTIFIED       : in    SIDE := right; FIELD : in WIDTH := 0);
+    procedure OWRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
+                      JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
     alias OCTAL_WRITE is OWRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
 
-    procedure HWRITE (L : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
-        JUSTIFIED       : in    SIDE := right; FIELD : in WIDTH := 0);
+    procedure HWRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
+                      JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
     alias HEX_WRITE is HWRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
 
 end package std_logic_1164;

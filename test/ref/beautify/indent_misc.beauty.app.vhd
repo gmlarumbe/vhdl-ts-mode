@@ -26,13 +26,13 @@ begin
     begin
         case var is
             when A =>
-                out <= in;
+                 out <= in;
             when B =>
-                out <= in;
+                 out <= in;
             when C =>
-                out <= in;
+                 out <= in;
             when others =>
-                out <= in;
+        out <= in;
         end case;
     end process;
 
@@ -42,13 +42,13 @@ end architecture indent;
 -- 3) Constant array initialization
 package body foo is
     constant ARRAY_CONSTANT : array_type :=
-        (
-        VALUE_0,
-        VALUE_1,
-        VALUE_2,
-        VALUE_3,
-        VALUE_4
-        );
+                                         (
+                                             VALUE_0,
+                                             VALUE_1,
+                                             VALUE_2,
+                                             VALUE_3,
+                                             VALUE_4
+                                         );
 end package body foo;
 
 
@@ -87,16 +87,16 @@ architecture STRUCTURE of X_GATE is
 begin
     LEVEL1 : block
         -- local declaration of generic parameters
-        generic (GB1, GB2 :    Time);
-        -- local binding of generic parameters
-        generic map (GB1 => LongTime, GB2 => ShortTime);
-        -- local declaration of ports
-        port (PB1         : in BIT; PB2 : inout BIT);
-        -- local binding of ports and signals
-        port map (PB1    => P1, PB2 => B);
-        -- local declarations:
-        constant Delay    :    Time := 1 ms;
-        signal S1         :    BIT;
+        generic (GB1, GB2 : Time);
+            -- local binding of generic parameters
+            generic map (GB1 => LongTime, GB2 => ShortTime);
+            -- local declaration of ports
+        port (PB1 : in BIT; PB2 : inout BIT);
+            -- local binding of ports and signals
+            port map (PB1 => P1, PB2 => B);
+            -- local declarations:
+        constant Delay : Time := 1 ms;
+        signal S1      : BIT;
     begin
         S1  <= PB1 after Delay;
         PB2 <= S1  after GB1, P1 after GB2;
@@ -108,8 +108,8 @@ signal P, Q, R : std_logic;
 -- ...
 level1         : block
     port(A, B : in  std_logic;
-        C     : out std_logic);
-    port map(A => P, B => Q, C => R);
+         C    : out std_logic);
+        port map(A => P, B => Q, C => R);
 begin
     C <= A and B;
 end block level1;
@@ -129,16 +129,16 @@ begin
 
     LEVEL1 : block
         -- local declaration of generic parameters
-        generic (GB1, GB2 :    Time);
-        -- local binding of generic parameters
-        generic map (GB1 => LongTime, GB2 => ShortTime);
-        -- local declaration of ports
-        port (PB1         : in BIT; PB2 : inout BIT);
-        -- local binding of ports and signals
-        port map (PB1    => P1, PB2 => B);
-        -- local declarations:
-        constant Delay    :    Time := 1 ms;
-        signal S1         :    BIT;
+        generic (GB1, GB2 : Time);
+            -- local binding of generic parameters
+            generic map (GB1 => LongTime, GB2 => ShortTime);
+            -- local declaration of ports
+        port (PB1 : in BIT; PB2 : inout BIT);
+            -- local binding of ports and signals
+            port map (PB1 => P1, PB2 => B);
+            -- local declarations:
+        constant Delay : Time := 1 ms;
+        signal S1      : BIT;
     begin
         S1  <= PB1 after Delay;
         PB2 <= S1  after GB1, P1 after GB2;

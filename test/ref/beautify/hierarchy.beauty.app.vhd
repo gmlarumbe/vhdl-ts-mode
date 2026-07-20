@@ -1559,11 +1559,11 @@ end core_fsm;
 architecture RTL of core_fsm is
 
     type fsm_states is (
-    IDLE,
-    REQ_S2MM,
-    WAIT_S2MM,
-    REQ_MM2S,
-    WAIT_MM2S
+        IDLE,
+        REQ_S2MM,
+        WAIT_S2MM,
+        REQ_MM2S,
+        WAIT_MM2S
     );
     signal state : fsm_states;
 
@@ -1787,13 +1787,13 @@ architecture RTL of core_converter is
 
 
     type fsm_state is (
-    IDLE,
-    WRITE_BURST_SIZE_CALC,
-    WRITE_INITIATE,
-    WRITING_TO_MEM,
-    READ_BURST_SIZE_CALC,
-    READ_INITIATE,
-    READING_FROM_MEM
+        IDLE,
+        WRITE_BURST_SIZE_CALC,
+        WRITE_INITIATE,
+        WRITING_TO_MEM,
+        READ_BURST_SIZE_CALC,
+        READ_INITIATE,
+        READING_FROM_MEM
     );
 
     signal state : fsm_state;

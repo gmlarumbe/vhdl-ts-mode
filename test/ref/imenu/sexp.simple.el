@@ -17,11 +17,13 @@
  ("Procedure"
   ("init_values" . #<marker at 2076 in sexp.vhd>)
   ("init_values" . #<marker at 3115 in sexp.vhd>)
+  ("foo2" . #<marker at 3426 in sexp.vhd>)
+  ("foo2" . #<marker at 3554 in sexp.vhd>)
   ("foo" . #<marker at 3676 in sexp.vhd>)
   ("foo" . #<marker at 3891 in sexp.vhd>))
  ("Function"
   ("clogb2" . #<marker at 1479 in sexp.vhd>)
   ("clogb2" . #<marker at 2458 in sexp.vhd>))
  ("Generate"
-  ("mem_select" . #<marker at 2300 in sexp.vhd>)
-  ("mem_select" . #<marker at 3329 in sexp.vhd>)))
+  ("gen_mem_sel" . #<marker at 2250 in sexp.vhd>)
+  ("gen_mem_sel" . #<marker at 3279 in sexp.vhd>)))

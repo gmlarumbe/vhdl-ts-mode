@@ -1,6 +1,6 @@
 (("instances" . 983)
  ("RTL"
-  ("*architecture_body*" . 1026)
+  ("*architecture_definition*" . 1026)
   ("block0" . 1064)
   ("block0" . 1501)
   ("block0" . 1643)
