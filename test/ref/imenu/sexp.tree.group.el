@@ -1,7 +1,7 @@
 (("foo" . 949)
  ("foo2" . 1064)
  ("RTL"
-  ("*architecture_body*" . 1244)
+  ("*architecture_definition*" . 1244)
   ("Components"
    ("blk_mem_gen_0" . 1312))
   ("Functions"
@@ -12,7 +12,7 @@
    ("Procedures"
     ("init_values" . 2076))))
  ("RTL"
-  ("*architecture_body*" . 2390)
+  ("*architecture_definition*" . 2390)
   ("Functions"
    ("clogb2" . 2458))
   ("gen_mem_sel" . 3279)
@@ -29,12 +29,10 @@
   ("Procedures"
    ("foo2" . 3554)))
  ("foo"
-  ("*package_body*" . 3651)
+  ("*package_definition*" . 3651)
   ("Procedures"
    ("foo" . 3676)))
  ("foo"
-  ("*package_body*" . 3866)
+  ("*package_definition*" . 3866)
   ("Procedures"
-   ("foo" . 3891)))
- ("foo" . 4072)
- ("foo" . 4126))
+   ("foo" . 3891))))

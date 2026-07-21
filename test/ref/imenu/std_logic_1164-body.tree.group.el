@@ -1,5 +1,5 @@
 (("std_logic_1164"
-  ("*package_body*" . 2596)
+  ("*package_definition*" . 2596)
   ("Functions"
    ("resolved" . 3985)
    ("\"and\"" . 8001)

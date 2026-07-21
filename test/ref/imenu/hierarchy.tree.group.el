@@ -66,7 +66,7 @@
  ("core_converter" . 64758)
  ("RTL"
   ("*architecture_definition*" . 69266)
-  ("Procedures"
+  ("Functions"
    ("clogb2" . 69309))
   ("Processes"
    ("fsm_proc" . 76576)
