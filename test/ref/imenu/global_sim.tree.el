@@ -20,7 +20,7 @@
   ("write_master_lite_read_request" . 4759)
   ("end_test_and_stop_clock" . 4965))
  ("global_sim"
-  ("*package_body*" . 5063)
+  ("*package_definition*" . 5063)
   ("end_test_and_stop_clock" . 5109)
   ("read_control_reg" . 5354)
   ("read_status_reg" . 5625)
