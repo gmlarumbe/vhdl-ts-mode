@@ -1,6 +1,6 @@
 (("tb_axi_if_converter" . 402)
  ("TB"
-  ("*architecture_body*" . 587)
+  ("*architecture_definition*" . 587)
   ("Instances"
    ("axi_if_converter" . 10497)
    ("s_axi_model" . 18793)

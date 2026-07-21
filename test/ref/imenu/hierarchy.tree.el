@@ -1,6 +1,6 @@
 (("axi_if_converter" . 1057)
  ("RTL"
-  ("*architecture_body*" . 10723)
+  ("*architecture_definition*" . 10723)
   ("axi_lite_regs" . 15177)
   ("input_buffer" . 17684)
   ("core_converter" . 20906)
@@ -14,20 +14,20 @@
   ("core_fsm" . 33650))
  ("pattern_counter" . 34613)
  ("RTL"
-  ("*architecture_body*" . 35214)
+  ("*architecture_definition*" . 35214)
   ("pattern_count_proc" . 35438))
  ("clk_div" . 36169)
  ("RTL"
-  ("*architecture_body*" . 36433)
+  ("*architecture_definition*" . 36433)
   ("div_proc" . 36552)
   ("BUFG" . 36995))
  ("clk_sync" . 37205)
  ("RTL"
-  ("*architecture_body*" . 37446)
+  ("*architecture_definition*" . 37446)
   ("clk_fs_sync_proc" . 37525))
  ("input_buffer" . 38138)
  ("RTL"
-  ("*architecture_body*" . 40351)
+  ("*architecture_definition*" . 40351)
   ("blk_mem_gen_0" . 40392)
   ("bram_logic" . 40969)
   ("bram_logic_rst" . 41675)
@@ -51,11 +51,11 @@
   ("delay_output_reg_valid_r" . 59691))
  ("core_fsm" . 60224)
  ("RTL"
-  ("*architecture_body*" . 61028)
+  ("*architecture_definition*" . 61028)
   ("fsm_axi_full" . 61560))
  ("core_converter" . 64758)
  ("RTL"
-  ("*architecture_body*" . 69266)
+  ("*architecture_definition*" . 69266)
   ("clogb2" . 69309)
   ("fsm_proc" . 76576)
   ("read_burst_size_calc_proc" . 82084)
@@ -78,7 +78,7 @@
   ("pattern_cnt_proc" . 96676))
  ("axi_lite_regs" . 98535)
  ("RTL"
-  ("*architecture_body*" . 101110)
+  ("*architecture_definition*" . 101110)
   ("add_bit" . 105604)
   ("axi_awready_proc" . 106465)
   ("axi_awaddr_proc" . 107109)
@@ -98,7 +98,7 @@
   ("master_lite_proc" . 122656))
  ("axi_lite_master" . 123512)
  ("RTL"
-  ("*architecture_body*" . 125536)
+  ("*architecture_definition*" . 125536)
   ("awvalid_proc" . 127058)
   ("wvalid_proc" . 127554)
   ("awaddr_proc" . 128043)

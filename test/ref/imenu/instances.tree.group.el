@@ -1,6 +1,6 @@
 (("instances" . 983)
  ("RTL"
-  ("*architecture_body*" . 1026)
+  ("*architecture_definition*" . 1026)
   ("Components"
    ("block0" . 1064))
   ("Instances"

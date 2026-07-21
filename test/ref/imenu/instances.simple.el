@@ -5,7 +5,7 @@
  ("Component"
   ("block0" . #<marker at 1064 in instances.vhd>))
  ("Generate"
-  ("I_BLOCK1_GEN" . #<marker at 2830 in instances.vhd>))
+  ("GEN_BLOCK1" . #<marker at 2780 in instances.vhd>))
  ("Instance"
   ("block0" . #<marker at 1501 in instances.vhd>)
   ("block0" . #<marker at 1643 in instances.vhd>)

@@ -1,6 +1,6 @@
 (("axi_if_converter" . 169)
  ("RTL"
-  ("*architecture_body*" . 9815)
+  ("*architecture_definition*" . 9815)
   ("Instances"
    ("axi_lite_regs" . 14269)
    ("input_buffer" . 16776)
