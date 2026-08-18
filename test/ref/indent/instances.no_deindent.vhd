@@ -43,7 +43,7 @@ architecture RTL of instances is
 
 begin  -- architecture RTL
 
-    -- Component instantiation
+-- Component instantiation
     I_BLOCK0_0 : block0
         port map (
             Port0 => Port0,
@@ -58,15 +58,15 @@ begin  -- architecture RTL
             Port2 => Port2);
 
     I_BLOCK0_2 : block0 generic map (
-        Generic0 => 0,
-        Generic1 => 0,
-        Generic2 => 0
+                            Generic0 => 0,
+                            Generic1 => 0,
+                            Generic2 => 0
     ) port map (
-        Port0 => Port0,
-        Port1 => Port1,
-        Port2 => Port2);
+          Port0 => Port0,
+          Port1 => Port1,
+          Port2 => Port2);
 
-    -- Entity instantiation
+-- Entity instantiation
     I_BLOCK1_0 : entity work.block1
         port map (
             Port0 => Port0,
@@ -82,13 +82,13 @@ begin  -- architecture RTL
         );
 
     I_BLOCK1_2 : entity work.block1 generic map (
-        Generic0 => 0,
-        Generic1 => 0,
-        Generic2 => 0
+                                        Generic0 => 0,
+                                        Generic1 => 0,
+                                        Generic2 => 0
     ) port map (
-        Port0 => Port0,
-        Port1 => Port1,
-        Port2 => Port2);
+          Port0 => Port0,
+          Port1 => Port1,
+          Port2 => Port2);
 
     I_BLOCK1_3 : entity work.block1
         generic map (
@@ -96,17 +96,17 @@ begin  -- architecture RTL
             Generic1 => 0,
             Generic2 => 0
         ) port map (
-            Port0 => Port0,
-            Port1 => Port1,
-            Port2 => Port2
+              Port0 => Port0,
+              Port1 => Port1,
+              Port2 => Port2
         );
 
-    -- Generate
-    GEN_BLOCK1 :
-        for I in 0 to 3 generate
-        I_BLOCK1_GEN : entity work.block1 port map
-            (Port0, Port1, Port2);
-    end generate GEN_BLOCK1;
+-- Generate
+GEN_BLOCK1 :
+for I in 0 to 3 generate
+                I_BLOCK1_GEN : entity work.block1 port map
+                                                  (Port0, Port1, Port2);
+end generate GEN_BLOCK1;
 
 
 

@@ -8,7 +8,7 @@ use xil_defaultlib.input_buffer_types.all;
 entity axi_if_converter is
 
     port (
-        -- Non-axi modules clocks and resets
+    -- Non-axi modules clocks and resets
         clk        : in std_logic;
         resetn     : in std_logic;
         clk_fs_ext : in std_logic;
@@ -192,10 +192,10 @@ end entity axi_if_converter;
 
 architecture RTL of axi_if_converter is
 
-    -- Global signals
+                                     -- Global signals
     signal soft_reset : std_logic;
 
-    -- Input buffer <-> Converter AXI signals
+                                     -- Input buffer <-> Converter AXI signals
     signal m_axis_lch_inbuf_aclk    : std_logic;
     signal m_axis_lch_inbuf_aresetn : std_logic;
     signal m_axis_lch_inbuf_tdata   : std_logic_vector(63 downto 0);
@@ -212,7 +212,7 @@ architecture RTL of axi_if_converter is
     signal m_axis_rch_inbuf_tlast   : std_logic;
     signal m_axis_rch_inbuf_tready  : std_logic;
 
-    -- Input_buffer <-> Converters Feedback signals
+                                     -- Input_buffer <-> Converters Feedback signals
     signal fb_wr_burst_start_lch : std_logic;
     signal fb_bw_counter_lch     : std_logic_vector(7 downto 0);
     signal fb_wlast_lch          : std_logic;
@@ -229,14 +229,14 @@ architecture RTL of axi_if_converter is
     signal fb_burst_done_rch     : std_logic;
     signal fb_send_size_r        : unsigned(9 downto 0);
 
-    -- Input buffer <-> Register interface signals
+                                     -- Input buffer <-> Register interface signals
     signal bram_overflow_error       : std_logic;
     signal out_reg_underflow_error_l : std_logic;
     signal out_reg_overflow_error_l  : std_logic;
     signal out_reg_underflow_error_r : std_logic;
     signal out_reg_overflow_error_r  : std_logic;
 
-    -- AXI Lite Master <-> Register interface signals
+                                     -- AXI Lite Master <-> Register interface signals
     signal transaction_error : std_logic;
 
     signal write_request : std_logic;
@@ -249,13 +249,13 @@ architecture RTL of axi_if_converter is
     signal read_data       : std_logic_vector (31 downto 0);
     signal read_data_valid : std_logic;
 
-    -- Pattern counters <-> Register interface
+                                     -- Pattern counters <-> Register interface
     signal count_lch         : unsigned(31 downto 0);
     signal pattern_count_lch : unsigned(31 downto 0);
     signal count_rch         : unsigned(31 downto 0);
     signal pattern_count_rch : unsigned(31 downto 0);
 
-    -- Registers <-> FSM signals
+                                     -- Registers <-> FSM signals
     signal system_enable      : std_logic;
     signal system_running     : std_logic;
     signal system_running_lch : std_logic;
@@ -266,7 +266,7 @@ architecture RTL of axi_if_converter is
     signal read_size_r        : unsigned(15 downto 0);
 
 
-    -- Converters <-> FSM signals
+                                     -- Converters <-> FSM signals
     signal conv_req_lch         : conversion_req_t;
     signal conv_rsp_lch         : conversion_rsp_t;
     signal internal_error_lch   : std_logic;
@@ -283,25 +283,25 @@ architecture RTL of axi_if_converter is
     signal pattern_finished_rch : std_logic;
     signal pattern_tlast_rch    : std_logic;
 
-    -- Input Buffer <-> FSM signals
+                                     -- Input Buffer <-> FSM signals
     signal buffer_size_l : unsigned(10 downto 0);
     signal bram_ptr_l    : std_logic_vector(31 downto 0);
     signal buffer_size_r : unsigned(10 downto 0);
     signal bram_ptr_r    : std_logic_vector(31 downto 0);
 
-    -- FS clock divider
+                                     -- FS clock divider
     signal clk_fs      : std_logic;
     signal clk_fs_sync : std_logic;
 
 
 begin
 
-    -- Comb logic
+-- Comb logic
     fb_send_size_l <= b"00" & unsigned(fb_awlen_lch);
     fb_send_size_r <= b"00" & unsigned(fb_awlen_rch);
     system_running <= system_running_lch or system_running_rch;
 
-    -- Instances
+-- Instances
     I_AXI_LITE_REGS : entity xil_defaultlib.axi_lite_regs
         generic map (
             C_S_AXI_DATA_WIDTH => C_S_AXI_DATA_WIDTH,
@@ -310,7 +310,7 @@ begin
         port map (
             soft_reset => soft_reset,
 
-            -- To FSM
+                 -- To FSM
             system_enable  => system_enable,
             system_running => system_running,
             conv_op_lch    => conv_op_lch,
@@ -318,7 +318,7 @@ begin
             read_size_l    => read_size_l,
             read_size_r    => read_size_r,
 
-            -- To axi-lite master
+                 -- To axi-lite master
             write_request => write_request,
             write_data    => write_data,
             write_address => write_address,
@@ -331,13 +331,13 @@ begin
 
             transaction_error => transaction_error,
 
-            -- From pattern counters
+                 -- From pattern counters
             count_lch         => count_lch,
             pattern_count_lch => pattern_count_lch,
             count_rch         => count_rch,
             pattern_count_rch => pattern_count_rch,
 
-            -- Input buffer error checking
+                 -- Input buffer error checking
             bram_overflow_error       => bram_overflow_error,
             out_reg_underflow_error_l => out_reg_underflow_error_l,
             out_reg_overflow_error_l  => out_reg_overflow_error_l,
@@ -377,7 +377,7 @@ begin
         port map (
             soft_reset => soft_reset,
 
-            -- Feedback from converters
+                 -- Feedback from converters
             inputs.start_burst_master_l => fb_wr_burst_start_lch,
             inputs.bw_counter_l         => fb_bw_counter_lch,
             inputs.wlast_l              => fb_wlast_lch,
@@ -639,13 +639,13 @@ begin
             soft_reset        => soft_reset,
             transaction_error => transaction_error,
 
-            -- From register interface
+                 -- From register interface
             write_request => write_request,
             write_data    => write_data,
             write_address => write_address,
             write_done    => write_done,
 
-            -- From register interface
+                 -- From register interface
             read_request    => read_request,
             read_address    => read_address,
             read_data       => read_data,

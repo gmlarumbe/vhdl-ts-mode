@@ -46,10 +46,10 @@ architecture RTL of foo is
     signal soft_reset : std_logic;
 
     component blk_mem_gen_0
-        port (
-            clka  : in  std_logic;
-            doutb : out std_logic_vector(63 downto 0)
-        );
+    port (
+        clka  : in  std_logic;
+        doutb : out std_logic_vector(63 downto 0)
+    );
     end component;
 
     function clogb2 (bit_depth : integer) return integer is
@@ -84,10 +84,10 @@ begin
     begin
     end process main;
 
-    gen_mem_sel : if (USER_NUM_MEM >= 1) generate
-        begin
-        mem_select  <= "1";
-    end generate gen_mem_sel;
+gen_mem_sel : if (USER_NUM_MEM >= 1) generate
+begin
+                                     mem_select  <= "1";
+end generate gen_mem_sel;
 
 end architecture RTL;
 
@@ -131,10 +131,10 @@ begin
     begin
     end process main;
 
-    gen_mem_sel : if (USER_NUM_MEM >= 1) generate
-        begin
-        mem_select  <= "1";
-    end generate;
+gen_mem_sel : if (USER_NUM_MEM >= 1) generate
+begin
+                                     mem_select  <= "1";
+end generate;
 
 end RTL;
 
@@ -143,17 +143,17 @@ end RTL;
 -- Packages
 package foo is
 
-    procedure foo2(
-        signal common_in   : in  mf_common_response_r_type_in
-    );
+            procedure foo2(
+                signal common_in   : in  mf_common_response_r_type_in
+            );
 
 end package foo;
 
 package foo is
 
-    procedure foo2(
-        signal common_in   : in  mf_common_response_r_type_in
-    );
+            procedure foo2(
+                signal common_in   : in  mf_common_response_r_type_in
+            );
 
 end;
 

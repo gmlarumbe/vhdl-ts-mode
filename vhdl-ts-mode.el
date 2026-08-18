@@ -114,8 +114,9 @@ Defaults to .vhd and .vhdl."
 
 ;;; Utils
 ;;;; Core
-(defconst vhdl-ts-identifier-re "\\(identifier\\|simple_name\\)")
+(defconst vhdl-ts-identifier-re "\\_<\\(identifier\\|label\\|library_function\\)\\_>")
 (defconst vhdl-ts-instance-re "\\_<component_instantiation_statement\\_>")
+(defconst vhdl-ts-generate-re "\\_<\\(for\\|if\\|case\\)_generate_statement\\_>")
 
 (defun vhdl-ts--node-at-point (&optional bound)
   "Return tree-sitter node at point.
@@ -193,14 +194,18 @@ If none is found, return nil."
   (let (temp-node)
     (when node
       (cond ((string-match vhdl-ts-instance-re (treesit-node-type node))
-             (cond ((setq temp-node (treesit-search-subtree node "\\_<component_instantiation\\_>"))
-                    (treesit-node-text (or (treesit-node-child-by-field-name (treesit-search-subtree temp-node "selected_name") "suffix")
-                                           (treesit-node-child-by-field-name temp-node "component"))
-                                       :no-prop))
-                   ((setq temp-node (treesit-search-subtree node "entity_instantiation"))
-                    (treesit-node-text (treesit-node-child-by-field-name (treesit-node-child temp-node 1) "suffix") :no-props))
-                   (t (error "Unexpected component_instantiation_statement subnode!"))))
-            ((string-match "function_\\(declaration\\|body\\)" (treesit-node-type node))
+             (if (setq temp-node (treesit-node-child-by-field-name node "component"))
+                 ;; Component instantiation
+                 (treesit-node-text (treesit-search-subtree temp-node "identifier"))
+               ;; Entity instantiation
+               (setq temp-node (treesit-node-child-by-field-name (treesit-search-subtree node "instantiated_unit") "entity"))
+               (setq temp-node (or (treesit-search-subtree temp-node "selection")
+                                   (treesit-search-subtree temp-node "name")))
+               (treesit-node-text (treesit-search-subtree temp-node "identifier") :no-prop)))
+            ;; TODO: Generate blocks
+
+            ;; TODO: To be reviewed
+            ((string-match "\\(function\\|procedure\\)_specification" (treesit-node-type node))
              (treesit-node-text (treesit-search-subtree node (concat "\\(operator_symbol\\|" vhdl-ts-identifier-re "\\)")) :no-prop)) ; Overloaded functions
             (t
              (treesit-node-text (treesit-search-subtree node vhdl-ts-identifier-re) :no-prop))))))
@@ -212,7 +217,7 @@ Node must be of type `vhdl-ts-instance-re'.  Otherwise return nil."
   (unless (and node
                (string-match vhdl-ts-instance-re (treesit-node-type node)))
     (error "Wrong node type: %s" (treesit-node-type node)))
-  (treesit-node-text (treesit-search-subtree node "identifier") :no-props))
+  (treesit-node-text (treesit-search-subtree node "\\_<label\\_>") :no-props))
 
 
 ;;;; Context
@@ -220,11 +225,14 @@ Node must be of type `vhdl-ts-instance-re'.  Otherwise return nil."
   (eval-when-compile
     (regexp-opt
      '("entity_declaration"
-       "architecture_body"
+       "architecture_definition"
        "process_statement"
-       "procedure_body"
-       "function_body"
-       "generate_statement_body"
+       "procedure_specification"
+       "function_specification"
+       "subprogram_definition"
+       "for_generate_statement"
+       "if_generate_statement"
+       "case_generate_statement"
        "block_statement"
        "component_instantiation_statement")
      'symbols)))
@@ -262,7 +270,7 @@ and end position."
 
 (defun vhdl-ts-arch-at-point ()
   "Return node of architectre body at point."
-  (let ((arch (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) "architecture_body"))
+  (let ((arch (vhdl-ts--node-has-parent-recursive (vhdl-ts--node-at-point) "architecture_definition"))
         (pos (point)))
     (when (and arch
                (>= pos (treesit-node-start arch))
@@ -324,23 +332,23 @@ for all nodes.  If BACKWARD is non-nil, search backwards."
 
 (defun vhdl-ts-arch-body-nodes-current-buffer ()
   "Return architecture body nodes of current file."
-  (vhdl-ts-nodes "architecture_body"))
+  (vhdl-ts-nodes "architecture_definition"))
 
 (defun vhdl-ts-arch-body-current-buffer ()
   "Return architecture body names of current file."
   (mapcar (lambda (node-and-props)
             (plist-get (cdr node-and-props) :name))
-          (vhdl-ts-nodes-props "architecture_body")))
+          (vhdl-ts-nodes-props "architecture_definition")))
 
 (defun vhdl-ts-arch-instances-nodes (arch-node)
   "Return instance nodes of ARCH-NODE."
-  (unless (and arch-node (string= "architecture_body" (treesit-node-type arch-node)))
+  (unless (and arch-node (string= "architecture_definition" (treesit-node-type arch-node)))
     (error "Wrong arch-node: %s" arch-node))
   (vhdl-ts-nodes vhdl-ts-instance-re arch-node))
 
 (defun vhdl-ts-arch-instances (arch-node)
   "Return instances of ARCH-NODE."
-  (unless (and arch-node (string= "architecture_body" (treesit-node-type arch-node)))
+  (unless (and arch-node (string= "architecture_definition" (treesit-node-type arch-node)))
     (error "Wrong arch-node: %s" arch-node))
   (mapcar (lambda (node-and-props)
             (plist-get (cdr node-and-props) :name))
@@ -348,7 +356,7 @@ for all nodes.  If BACKWARD is non-nil, search backwards."
 
 (defun vhdl-ts-arch-process-blocks (arch-node)
   "Return process blocks of ARCH-NODE."
-  (unless (and arch-node (string= "architecture_body" (treesit-node-type arch-node)))
+  (unless (and arch-node (string= "architecture_definition" (treesit-node-type arch-node)))
     (error "Wrong arch-node: %s" arch-node))
   (mapcar (lambda (node-and-props)
             (plist-get (cdr node-and-props) :name))
@@ -356,7 +364,7 @@ for all nodes.  If BACKWARD is non-nil, search backwards."
 
 (defun vhdl-ts-arch-concurrent-assignments (arch-node)
   "Return concurrent assignments of ARCH-NODE."
-  (unless (and arch-node (string= "architecture_body" (treesit-node-type arch-node)))
+  (unless (and arch-node (string= "architecture_definition" (treesit-node-type arch-node)))
     (error "Wrong arch-node: %s" arch-node))
   (mapcar (lambda (node-and-props)
             (plist-get (cdr node-and-props) :name))
@@ -364,7 +372,7 @@ for all nodes.  If BACKWARD is non-nil, search backwards."
 
 (defun vhdl-ts-arch-entity-name (arch-node)
   "Return associated entity name of ARCH-NODE."
-  (unless (and arch-node (string= "architecture_body" (treesit-node-type arch-node)))
+  (unless (and arch-node (string= "architecture_definition" (treesit-node-type arch-node)))
     (error "Wrong arch-node: %s" arch-node))
   (treesit-node-text (treesit-node-child-by-field-name arch-node "entity") :no-props))
 
@@ -453,7 +461,126 @@ For NODE,OVERRIDE, START, END, and ARGS, see `treesit-font-lock-rules'."
                                    start end)))
 
 ;;;; Keywords
-(defconst vhdl-ts-keywords (append vhdl-02-keywords vhdl-08-keywords))
+;; (defconst vhdl-ts-keywords (append vhdl-02-keywords vhdl-08-keywords))
+(defconst vhdl-ts-keywords
+  '(
+"abs"
+"access"
+"after"
+"alias"
+;; "all"
+"and"
+"architecture"
+"array"
+"assert"
+;; "assume"
+"attribute"
+"begin"
+"block"
+"body"
+"buffer"
+"bus"
+"case"
+"component"
+"configuration"
+"constant"
+"context"
+;; "cover"
+;; "default"
+"disconnect"
+"downto"
+"else"
+"elsif"
+"end"
+"entity"
+"exit"
+;; "fairness"
+"file"
+"for"
+"force"
+"function"
+"generate"
+"generic"
+"group"
+"guarded"
+"if"
+"impure"
+"in"
+"inertial"
+"inout"
+"is"
+"label"
+"library"
+"linkage"
+"literal"
+"loop"
+"map"
+"mod"
+"nand"
+"new"
+"next"
+"nor"
+"not"
+"null"
+"of"
+"on"
+;; "open"
+"or"
+;; "others"
+"out"
+"package"
+"parameter"
+"port"
+"postponed"
+"procedure"
+"process"
+"property"
+"protected"
+"private"
+"pure"
+"range"
+"record"
+"register"
+"reject"
+"release"
+"rem"
+"report"
+;; "restrict"
+"return"
+"rol"
+"ror"
+"select"
+"sequence"
+"severity"
+"signal"
+"shared"
+"sla"
+"sll"
+"sra"
+"srl"
+;; "strong"
+"subtype"
+"then"
+"to"
+"transport"
+"type"
+"unaffected"
+"units"
+"until"
+"use"
+"variable"
+"view"
+;; "vmode"
+;; "vpkg"
+;; "vprop"
+"vunit"
+"wait"
+"when"
+"while"
+"with"
+"xnor"
+"xor"
+    ))
 (defconst vhdl-ts-types (append vhdl-02-types vhdl-08-types vhdl-math-types))
 (defconst vhdl-ts-types-regexp (regexp-opt vhdl-ts-types 'symbols))
 (defconst vhdl-ts-attributes (append vhdl-02-attributes vhdl-08-attributes))
@@ -463,37 +590,63 @@ For NODE,OVERRIDE, START, END, and ARGS, see `treesit-font-lock-rules'."
 (defconst vhdl-ts-functions-regexp (regexp-opt vhdl-ts-functions 'symbols))
 (defconst vhdl-ts-packages (append vhdl-02-packages vhdl-08-packages vhdl-math-packages))
 (defconst vhdl-ts-directives vhdl-08-directives)
-(defconst vhdl-ts-operators-relational '("=" "/=" "<" ">"
-                                         "<=" ; Less or equal/signal assignment
-                                         ">=" ; Greater or equal
-                                         ":=" ; Variable assignment (not an operator, but falls better here)
-                                         "=>")) ; Port connection (not an operator, but falls better here)
-(defconst vhdl-ts-operators-arithmetic '("+" "-" "*" "/" "**" "&"))
-(defconst vhdl-ts-punctuation '(";" ":" "," "'" "|" "." "!" "?"))
+(defconst vhdl-ts-operators-relational
+  '(
+    "="
+    "/="
+    "<"
+    ">"
+    "<=" ; Less or equal/signal assignment
+    ">=" ; Greater or equal
+    ;; ":=" ; Variable assignment (not an operator, but falls better here)
+    "=>"   ; Port connection (not an operator, but falls better here)
+    )
+  )
+(defconst vhdl-ts-operators-arithmetic
+  '(
+    "+"
+    "-"
+    "*"
+    "/"
+    ;; "**"
+    "&"
+    ))
+(defconst vhdl-ts-punctuation
+  '(";"
+    ":"
+    ","
+    "'"
+    "|"
+    "."
+    "?"
+    ))
 (defconst vhdl-ts-parenthesis '("(" ")" "[" "]"))
 
 ;;;; Treesit-settings
-(defvar vhdl-ts--font-lock-settings
+(defconst vhdl-ts--font-lock-settings
   (treesit-font-lock-rules
    :feature 'comment
    :language 'vhdl
-   '((comment) @font-lock-comment-face)
+   '((line_comment) @font-lock-comment-face
+     (block_comment) @font-lock-comment-face)
 
    :feature 'string
    :language 'vhdl
    '([(string_literal)
       (bit_string_literal)
-      (character_literal)]
+      (character_literal)
+      (operator_symbol)
+      (character_literal)
+      (library_constant_std_logic)
+      (string_literal_std_logic)]
      @font-lock-string-face)
 
    :feature 'keyword
    :language 'vhdl
    `((["downto" "to"] @vhdl-ts-font-lock-instance-lib-face)
      (["then"] @vhdl-ts-font-lock-then-face)
-     ([,@vhdl-ts-keywords] @font-lock-keyword-face)
-     (attribute_name ; clk'event / s'range
-      prefix: (simple_name) @font-lock-builtin-face
-      (predefined_designator) @font-lock-builtin-face))
+     ([,@vhdl-ts-keywords (OTHERS) (OPEN) (ALL)] @font-lock-keyword-face)
+     ((attribute) @font-lock-builtin-face))
 
    :feature 'punctuation
    :language 'vhdl
@@ -502,151 +655,209 @@ For NODE,OVERRIDE, START, END, and ARGS, see `treesit-font-lock-rules'."
 
    :feature 'operator
    :language 'vhdl
-   `(([,@vhdl-ts-operators-relational] @vhdl-ts-font-lock-punctuation-face)
-     ([,@vhdl-ts-operators-arithmetic] @vhdl-ts-font-lock-operator-face))
+   `(([(unary_operator)
+       (logical_operator)
+       (shift_operator)
+       (sign)
+       (adding_operator)
+       (multiplying_operator)
+       (exponentiate)]
+      @vhdl-ts-font-lock-operator-face)
+     ([(relational_operator)
+       (variable_assignment)
+       (signal_assignment)
+       "=>"]
+      @vhdl-ts-font-lock-punctuation-face))
+
+   :feature 'builtin
+   :language 'vhdl
+   `(((library_constant) @font-lock-constant-face)
+     ((library_constant_debug) @font-lock-constant-face)
+     ((library_function) @font-lock-builtin-face)
+     ((library_type) @font-lock-type-face)
+     )
 
    :feature 'declaration
    :language 'vhdl
    '(;; Entity
      (entity_declaration
-      name: (identifier) @font-lock-function-name-face)
-     (entity_declaration
-      at_end: (simple_name) @font-lock-function-name-face)
+      entity: (identifier) @font-lock-function-name-face)
      ;; Architecture
-     (architecture_body
-      (identifier) @font-lock-function-name-face
-      (simple_name) @font-lock-function-name-face)
+     (architecture_definition
+      architecture: (identifier) @font-lock-function-name-face
+      entity: (name (identifier) @font-lock-function-name-face))
      ;; Component
      (component_declaration
-      name: (identifier) @font-lock-function-name-face)
+      component: (identifier) @font-lock-function-name-face)
      ;; Package
      (package_declaration
-      (identifier) @font-lock-function-name-face)
-     (package_body
-      (simple_name) @font-lock-function-name-face)
+      package: (identifier) @font-lock-function-name-face)
+     (package_definition
+      package: (identifier) @font-lock-function-name-face)
      ;; Function
-     (procedure_declaration (identifier) @font-lock-function-name-face)
-     (procedure_body (identifier) @font-lock-function-name-face)
-     (function_declaration (identifier) @font-lock-function-name-face)
-     (function_body (identifier) @font-lock-function-name-face)
-     ;; Function Overloading
-     (function_declaration (operator_symbol) @font-lock-function-name-face)
-     (function_body (operator_symbol) @font-lock-function-name-face)
+     (procedure_specification
+      procedure: (identifier) @font-lock-function-name-face)
+     (function_specification
+      function: (identifier) @font-lock-function-name-face)
+     ;; TODO: How to if the constant is:
+     ;;       - $.library_constant,
+     ;;       - $.library_constant_debug,
+     ;;       - $.library_function,
+     ;;       - $.library_type,
+     ;; ;; Function Overloading
+     ;; (function_declaration (operator_symbol) @font-lock-function-name-face)
+     ;; (function_specification (operator_symbol) @font-lock-function-name-face)
      ;; Constants
      (constant_declaration
-      (identifier_list (identifier) @font-lock-constant-face))
+      (identifier_list
+       constant: (identifier) @font-lock-constant-face))
+     ;; TODO: How to if the constant is:
+     ;;       - $.library_constant,
+     ;;       - $.library_constant_debug,
+     ;;       - $.library_function,
+     ;;       - $.library_type,
      ;; Alias
      (alias_declaration
-      designator : (identifier) @font-lock-constant-face))
+      (identifier) @font-lock-constant-face))
 
    :feature 'type
    :language 'vhdl
-   `((full_type_declaration
-      name: (identifier) @font-lock-type-face)
+   `((type_declaration
+      type: (identifier) @font-lock-type-face)
      (subtype_declaration
-      name: (identifier) @font-lock-type-face)
-     ((ambiguous_name
-       prefix: (simple_name) @font-lock-type-face)
-      (:match ,vhdl-ts-types-regexp @font-lock-type-face))
+      type: (identifier) @font-lock-type-face)
      (subtype_indication
-      (type_mark
-       (simple_name) @font-lock-type-face)))
+      (name
+       (identifier) @font-lock-type-face))
+     (subtype_indication
+      (name
+       (library_type) @font-lock-type-face)))
 
-   :feature 'instance
+   :feature 'instance-1
    :language 'vhdl
-   '((component_instantiation_statement
-      (label (identifier) @vhdl-ts-font-lock-instance-face)
-      (entity_instantiation
-       (selected_name
-        prefix: (simple_name) @vhdl-ts-font-lock-instance-lib-face
-        suffix: (simple_name) @vhdl-ts-font-lock-entity-face)))
+   '(;; Entity instantiation
      (component_instantiation_statement
-      (label (identifier) @vhdl-ts-font-lock-instance-face)
-      (component_instantiation
-       (selected_name
-        prefix: (selected_name) @vhdl-ts-font-lock-instance-lib-face
-        suffix: (simple_name) @vhdl-ts-font-lock-entity-face)))
+      (label_declaration (label) @vhdl-ts-font-lock-instance-face)
+      (instantiated_unit
+       entity: (name
+                (identifier) @vhdl-ts-font-lock-instance-lib-face
+                (selection
+                 (identifier) @vhdl-ts-font-lock-entity-face))))
      (component_instantiation_statement
-      (label (identifier) @vhdl-ts-font-lock-instance-face)
-      (entity_instantiation (simple_name) @vhdl-ts-font-lock-entity-face))
+      (label_declaration (label) @vhdl-ts-font-lock-instance-face)
+      (instantiated_unit
+       library: (library_namespace) @vhdl-ts-font-lock-instance-lib-face
+       entity: (name
+                (identifier) @vhdl-ts-font-lock-entity-face)))
+     ;; Component instantiation
      (component_instantiation_statement
-      (label (identifier) @vhdl-ts-font-lock-instance-face)
-      (component_instantiation (simple_name) @vhdl-ts-font-lock-entity-face)))
+      (label_declaration (label) @vhdl-ts-font-lock-instance-face)
+      component: (name (identifier) @vhdl-ts-font-lock-entity-face)))
 
-   :feature 'builtin
+   :feature 'instance-2
    :language 'vhdl
-   `(((ambiguous_name
-       prefix: (simple_name) @font-lock-builtin-face)
-      (:match ,vhdl-ts-functions-regexp @font-lock-builtin-face)))
+   '(;; Entity instantiation without library prefix.
+     ;; - Needed in another feature group to make it have less precedence
+     ;;   than entity instantiation with library prefix
+     (component_instantiation_statement
+      (label_declaration (label) @vhdl-ts-font-lock-instance-face)
+      (instantiated_unit
+       entity: (name
+                (identifier) @vhdl-ts-font-lock-entity-face))))
 
    :feature 'array
    :language 'vhdl
    :override t
-   '((descending_range
-      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (descending_range
-      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (ascending_range
-      high: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (ascending_range
-      low: (simple_expression) @vhdl-ts-font-lock-brackets-content-face)
-     (expression_list
-      (expression (integer_decimal) @vhdl-ts-font-lock-brackets-content-face))
-     (expression_list
-      (expression (simple_name) @vhdl-ts-font-lock-brackets-content-face)))
+   '((simple_range
+      (simple_expression) @vhdl-ts-font-lock-brackets-content-face))
 
    :feature 'misc
    :language 'vhdl
    '(;; Library
      (library_clause
-      (logical_name_list (simple_name) @font-lock-builtin-face))
+      (logical_name_list
+       (library_namespace) @font-lock-builtin-face))
+     (library_clause
+      (logical_name_list
+       (identifier) @font-lock-builtin-face))
      (use_clause
-      (selected_name
-       (selected_name (simple_name) @font-lock-function-name-face)))
+      (selected_name_list
+       (selected_name
+        library: (library_namespace) @font-lock-function-name-face
+        package: (identifier) @font-lock-function-name-face)))
+     (use_clause
+      (selected_name_list
+       (selected_name
+        library: (identifier) @font-lock-function-name-face
+        package: (identifier) @font-lock-function-name-face)))
+     (use_clause
+      (selected_name_list
+       (selected_name
+        library: (identifier) @font-lock-function-name-face)))
      ;; Generate
      (if_generate_statement
-      (label (identifier) @font-lock-constant-face))
+      (label_declaration
+       (label) @font-lock-constant-face))
      (for_generate_statement
-      (label (identifier) @font-lock-constant-face))
+      (label_declaration
+       (label) @font-lock-constant-face))
+     (case_generate_statement
+      (label_declaration
+       (label) @font-lock-constant-face))
      ;; Block
      (block_statement
-      (label (identifier) @font-lock-constant-face))
+      (label_declaration
+       (label) @font-lock-constant-face))
      ;; Process
      (process_statement
-      (label (identifier) @font-lock-constant-face))
+      (label_declaration
+       (label) @font-lock-constant-face))
      (process_statement
-      (sensitivity_list (simple_name) @font-lock-constant-face))
+      (sensitivity_specification
+       (sensitivity_list
+        (name
+         (identifier) @font-lock-constant-face))))
      ;; Port connections
      (association_list
-      (named_association_element
-       formal_part: (simple_name) @vhdl-ts-font-lock-port-connection-face))
+      (association_element
+       (name
+        (identifier) @vhdl-ts-font-lock-instance-lib-face
+        (selection
+         (identifier) @vhdl-ts-font-lock-port-connection-face))))
      (association_list
-      (named_association_element
-       formal_part: (selected_name
-                     prefix: (simple_name) @vhdl-ts-font-lock-instance-lib-face
-                     suffix: (simple_name) @vhdl-ts-font-lock-port-connection-face)))
+      (association_element
+       (name
+        (identifier) @vhdl-ts-font-lock-port-connection-face)
+       "=>"))
      (association_list
-      (named_association_element
-       formal_part:
-       (ambiguous_name
-        (simple_name) @vhdl-ts-font-lock-port-connection-face)))
-     (association_list
-      (named_association_element
-       formal_part:
-       (slice_name
-        (simple_name) @vhdl-ts-font-lock-port-connection-face)))
+      (association_element
+       (name
+        (identifier) @vhdl-ts-font-lock-port-connection-face
+        (parenthesis_group
+         (association_or_range_list) @vhdl-ts-font-lock-brackets-content-face))
+       "=>"))
+     (association_or_range_list
+      (association_element
+       (name
+        (identifier) @vhdl-ts-font-lock-port-connection-face)
+       "=>"))
      ;; Enum labels
      (enumeration_type_definition
-      literal: (identifier) @font-lock-constant-face)
-     ;; Record members
-     (selected_name
-      prefix: (simple_name) @vhdl-ts-font-lock-instance-lib-face))
+      (enumeration_literal
+       constant: (identifier) @font-lock-constant-face))
+     ;; Record elements
+     (name
+      (identifier) @vhdl-ts-font-lock-instance-lib-face
+      (selection
+       (identifier)))
+     ;; Label fallback
+     (label_declaration
+      (label) @font-lock-constant-face))
 
    :feature 'error
    :language 'vhdl
    :override t
    '((ERROR) @vhdl-ts--fontify-error)))
-
 
 ;;; Indent
 ;;;; Matchers
@@ -662,7 +873,7 @@ Matches if point is at generic/port declaration."
   (let* ((node-type (treesit-node-type node))
          (entity-or-comp-node (vhdl-ts--node-has-parent-recursive node "\\(entity\\|component\\)_declaration")))
     (when (and entity-or-comp-node
-               (string-match "\\(\\(generic\\|port\\)_clause\\|\\(entity\\|component\\)_header\\)" node-type))
+               (string-match "\\(\\(generic\\|port\\)_clause\\|\\(entity\\|component\\)_head\\)" node-type))
       (treesit-node-start entity-or-comp-node))))
 
 (defun vhdl-ts--matcher-keyword (node &rest _)
@@ -698,77 +909,113 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
         (treesit-node-start gen-node)
       (treesit-node-start (treesit-node-parent parent)))))
 
+(defun vhdl-ts--anchor-subprogram-port (node &rest _)
+  "A tree-sitter simple indent anchor for NODE."
+  (let ((spec-node (vhdl-ts--node-has-parent-recursive node "\\(procedure\\|function\\)_specification")))
+    (treesit-node-start spec-node)))
+
 
 ;;;; Rules
 (defconst vhdl-ts--indent-zero-parent-node-re
   (eval-when-compile
-    (regexp-opt '("design_file" "context_clause" "design_unit") 'symbols)))
+    (regexp-opt '("design_file" "design_unit" "library_clause" "use_clause" "context_reference") 'symbols)))
 
-(defvar vhdl-ts--treesit-indent-rules
+(defconst vhdl-ts--treesit-indent-rules
   `((vhdl
      ;; Comments
-     ((and (node-is "comment")
-           (parent-is ,vhdl-ts--indent-zero-parent-node-re))
-      parent-bol 0)
-     ((node-is "comment") grand-parent vhdl-ts-indent-level)
+     ;; ((and vhdl-ts--matcher-blank-line (parent-is "\\(line\\|block\\)_comment")) parent-bol 0)
+     ;; ((and vhdl-ts--matcher-blank-line (parent-is "\\(line\\|block\\)_comment")) parent-bol 0)
+     ((and vhdl-ts--matcher-blank-line (parent-is "\\(line\\|block\\)_comment")) grand-parent 0)
+     ;; ((node-is "\\(line\\|block\\)_comment") grand-parent vhdl-ts-indent-level)
      ;; Zero-indent
      ((or (node-is "\\(library\\|use\\)_clause")
-          (node-is "design_unit") ; architecture_body
+          (node-is "design_unit") ; architecture_definition
           (node-is "entity_declaration")
-          (node-is "architecture_body")
-          (node-is "package_\\(declaration\\|body\\)"))
+          (node-is "architecture_definition")
+          (node-is "package_\\(declaration\\|definition\\)"))
       parent-bol 0)
-     ;; Procedure parameter types
+
+     ;; Entity generic/ports
+     ((node-is "interface_list") parent-bol vhdl-ts-indent-level)
+     ((and (node-is "interface_declaration") (parent-is "interface_list")) grand-parent vhdl-ts-indent-level)
+     ((and (node-is "interface_\\(constant\\|signal\\)_declaration") (parent-is "interface_list")) vhdl-ts--anchor-subprogram-port vhdl-ts-indent-level)
      (vhdl-ts--matcher-generic-or-port grand-parent vhdl-ts-indent-level)
-     ((node-is "\\(constant\\|variable\\|signal\\)_interface_declaration") parent-bol vhdl-ts-indent-level)
+
+     ;; ((node-is "interface_declaration") grand-parent vhdl-ts-indent-level)
+     ;; ((node-is "interface_list") parent-bol vhdl-ts-indent-level)
+     ;; ((node-is "\\(constant\\|variable\\|signal\\)_interface_declaration") parent-bol vhdl-ts-indent-level)
+
      ;; Declarations
-     ((node-is "declarative_part") parent-bol vhdl-ts-indent-level) ; First declaration of the declarative part
-     ((or (node-is "\\(component\\|signal\\|constant\\|full_type\\|element\\|variable\\|procedure\\|function\\)_declaration")
-          (node-is "\\(function\\|procedure\\)_body"))
-      grand-parent vhdl-ts-indent-level)
-     ;; Block
-     ((node-is "block_header") parent-bol vhdl-ts-indent-level)
-     ((or (node-is "block_statement")
-          (parent-is "block_header"))
-      grand-parent vhdl-ts-indent-level)
+     ;; ((node-is "declarative_part") parent-bol vhdl-ts-indent-level) ; First declaration of the declarative part
+     ;; ((or (node-is "\\(component\\|signal\\|constant\\|full_type\\|element\\|variable\\|procedure\\|function\\)_declaration")
+     ;;      (node-is "\\(function\\|procedure\\)_body"))
+     ;;  grand-parent vhdl-ts-indent-level)
+     ((node-is "\\(component\\|signal\\|constant\\|element\\|variable\\|type\\|subprogram\\)_declaration") grand-parent vhdl-ts-indent-level)
+
+     ;; ;; Block
+     ;; ((node-is "block_header") parent-bol vhdl-ts-indent-level)
+     ;; ((or (node-is "block_statement")
+     ;;      (parent-is "block_header"))
+     ;;  grand-parent vhdl-ts-indent-level)
+
      ;; Concurrent & generate
-     ((or (node-is "concurrent_statement_part") ; First signal declaration of a declarative part
-          (node-is "generate_statement_body"))
-      parent-bol vhdl-ts-indent-level)
-     ((node-is "\\(for\\|if\\)_generate_statement") grand-parent vhdl-ts-indent-level)
-     ((node-is "\\(simple\\|conditional\\)_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level) ; Parent is (concurrent_statement_part)
-     ((and (node-is "waveforms")
-           (parent-is "alternative_\\(conditional\\|selected\\)_waveforms"))
-      grand-parent 0) ; when else on next line or select multiple lines
-     ((node-is "process_statement") grand-parent vhdl-ts-indent-level) ; Grandparent is architecture_body
-     ((node-is "selected_waveforms") parent-bol vhdl-ts-indent-level)
-     ((and (node-is "simple_name")
-           (parent-is "selected_concurrent_signal_assignment"))
-      parent-bol vhdl-ts-indent-level)
-     ;; Instances
-     ((node-is "component_\\(instantiation_statement\\|map_aspect\\)") grand-parent vhdl-ts-indent-level)
-     ((node-is "port_map_aspect") parent-bol 0) ; Port map only when there are generics
-     ((node-is "association_list") parent-bol vhdl-ts-indent-level)
-     ((node-is "named_association_element") parent-bol 0)
-     ;; Procedural
-     ((node-is "sequence_of_statements") parent-bol vhdl-ts-indent-level) ; Statements inside process
-     ((parent-is "sequence_of_statements") grand-parent vhdl-ts-indent-level)
-     ((node-is "\\(if\\|else\\|elsif\\)") parent-bol 0)
-     ((node-is "case_statement") grand-parent vhdl-ts-indent-level)
-     ((node-is "case_statement_alternative") parent-bol vhdl-ts-indent-level)
-     ;; Others
-     ((node-is "aggregate") grand-parent vhdl-ts-indent-level) ; Aggregates/array elements
-     ((node-is "positional_element_association") parent-bol 0) ; Check test/files/common/indent_misc.vhd:42
+     ((node-is "concurrent_\\(simple\\|conditional\\|selected\\)_signal_assignment") parent-bol vhdl-ts-indent-level)
+
+     ;; ((node-is "wait_statement") parent-bol vhdl-ts-indent-level)
+
+     ;; ((or (node-is "concurrent_statement_part") ; First signal declaration of a declarative part
+     ;;      (node-is "generate_statement_body"))
+     ;;  parent-bol vhdl-ts-indent-level)
+     ;; ((node-is "\\(for\\|if\\)_generate_statement") grand-parent vhdl-ts-indent-level)
+     ;; ((node-is "\\(simple\\|conditional\\)_concurrent_signal_assignment") vhdl-ts--anchor-concurrent-signal-assignment vhdl-ts-indent-level) ; Parent is (concurrent_statement_part)
+     ;; ((and (node-is "waveforms")
+     ;;       (parent-is "alternative_\\(conditional\\|selected\\)_waveforms"))
+     ;;  grand-parent 0) ; when else on next line or select multiple lines
+
+     ((node-is "process_statement") grand-parent vhdl-ts-indent-level)
+     ((node-is "process_head") parent-bol vhdl-ts-indent-level)
+     ((node-is "subprogram_definition") grand-parent vhdl-ts-indent-level)
+
+     ;; ((node-is "selected_waveforms") parent-bol vhdl-ts-indent-level)
+     ;; ((and (node-is "simple_name")
+     ;;       (parent-is "selected_concurrent_signal_assignment"))
+     ;;  parent-bol vhdl-ts-indent-level)
+
+     ;; ;; Instances
+     ((node-is "component_instantiation_statement") grand-parent vhdl-ts-indent-level)
+     ((node-is "\\(generic\\|port\\)_map_aspect") parent-bol vhdl-ts-indent-level)
+     ((node-is "association_element") grand-parent vhdl-ts-indent-level)
+
+     ;; ;; Procedural
+     ((node-is "if_statement_\\(block\\|body\\)") grand-parent vhdl-ts-indent-level)
+     ((parent-is "sequential_block") parent-bol vhdl-ts-indent-level)
+     ((parent-is "loop_body") parent-bol vhdl-ts-indent-level)
+
+     ;; ((node-is "simple_waveform_assignment") parent-bol vhdl-ts-indent-level)
+
+     ;; ((node-is "sequence_of_statements") parent-bol vhdl-ts-indent-level) ; Statements inside process
+     ;; ((parent-is "sequence_of_statements") grand-parent vhdl-ts-indent-level)
+     ;; ((node-is "\\(if\\|else\\|elsif\\)") parent-bol 0)
+     ;; ((node-is "case_statement") grand-parent vhdl-ts-indent-level)
+     ;; ((node-is "case_statement_alternative") parent-bol vhdl-ts-indent-level)
+
+     ;; ;; Others
+     ;; ((node-is "aggregate") grand-parent vhdl-ts-indent-level) ; Aggregates/array elements
+     ;; ((node-is "positional_element_association") parent-bol 0) ; Check test/files/common/indent_misc.vhd:42
+
      ;; Opening & closing
      ((node-is "\\(begin\\|end\\|)\\)") parent-bol 0)
-     ;; Fallbacks/default
-     ((and vhdl-ts--matcher-blank-line (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
-     ((and vhdl-ts--matcher-blank-line
-           (not (parent-is "\\(concurrent_statement\\|declarative\\)_part"))
-           (not (parent-is "association_list")))
-      parent-bol vhdl-ts-indent-level)
-     ((or vhdl-ts--matcher-keyword vhdl-ts--matcher-punctuation) parent-bol vhdl-ts-indent-level)
-     (vhdl-ts--matcher-default parent 0))))
+
+     ;; ;; Fallbacks/default
+     ;; ((and vhdl-ts--matcher-blank-line (parent-is ,vhdl-ts--indent-zero-parent-node-re)) parent-bol 0)
+     ;; ((and vhdl-ts--matcher-blank-line
+     ;;       (not (parent-is "\\(concurrent_statement\\|declarative\\)_part"))
+     ;;       (not (parent-is "association_list")))
+     ;;  parent-bol vhdl-ts-indent-level)
+     ;; ((or vhdl-ts--matcher-keyword vhdl-ts--matcher-punctuation) parent-bol vhdl-ts-indent-level)
+     (vhdl-ts--matcher-default parent 0)
+
+     )))
 
 ;;; Imenu
 (defconst vhdl-ts-imenu-create-index-re
@@ -777,26 +1024,21 @@ Matches if point is at a punctuation/operator char, somehow as a fallback."
      '(;; 3.2 Entity declarations
        "entity_declaration"
        ;; 3.3 Architecture bodies
-       "architecture_body"
+       "architecture_definition"
        ;; 3.4 Configuration declarations
        "configuration_declaration"
        ;; 3.4.3 Component configuration
        "component_configuration"
        ;; 4.2.1 Subprogram declarations
-       "procedure_declaration"
-       "function_declaration"
-       ;; 4.3 Subprogram bodies
-       "procedure_body"
-       "function_body"
-       ;; 4.4 Subprogram instantiation declarations
-       "procedure_instantiation_declaration"
-       "function_instantiation_declaration"
+       ;; "subprogram_definition"
+       "procedure_specification"
+       "interface_procedure_specification"
+       "function_specification"
+       "interface_function_specification"
        ;; 4.7 Package declarations
        "package_declaration"
        ;; 4.8 Package bodies
-       "package_body"
-       ;; 4.9 Package instantiation declarations
-       "package_instantiation_declaration"
+       "package_definition"
        ;; 6.8 Component declarations
        "component_declaration"
        ;; 11 Concurrent statements
@@ -896,8 +1138,8 @@ VHDL parser."
              (pcase type
                ("component_instantiation_statement" (push entry instances))
                ("process_statement" (push entry processes))
-               ((or "procedure_declaration" "procedure_body") (push entry procedures))
-               ((or "function_declaration" "function_body") (push entry functions))
+               ((or "procedure_specification" "interface_procedure_specification") (push entry procedures))
+               ((or "function_specification" "interface_function_specification") (push entry functions))
                ("component_declaration" (push entry components))
                (_ (push entry default))))
          ;; Otherwise entry cannot be grouped because it already was, or because it was a leaf node
@@ -973,10 +1215,10 @@ VHDL parser."
      (t (let ((label (funcall vhdl-ts-imenu-format-item-label-function type name)))
           (if (member type '("component_instantiation_statement"
                              "process_statement"
-                             "procedure_declaration"
-                             "function_declaration"
-                             "procedure_body"
-                             "function_body"
+                             "procedure_specification"
+                             "interface_procedure_specification"
+                             "function_specification"
+                             "interface_function_specification"
                              "component_declaration"))
               (list (list label marker type))
             (list (cons label marker))))))))
@@ -1013,14 +1255,14 @@ to VHDL parser."
     ('simple
      (setq-local treesit-simple-imenu-settings
                  `(("Entity" "\\`entity_declaration\\'")
-                   ("Architecture" "\\`architecture_body\\'")
-                   ("Package" "\\`package_\\(declaration\\|body\\)\\'")
+                   ("Architecture" "\\`architecture_definition\\'")
+                   ("Package" "\\`package_\\(declaration\\|definition\\)\\'")
                    ("Component" "\\`component_declaration\\'")
                    ("Process" "\\`process_statement\\'")
-                   ("Procedure" "\\`procedure_body\\'")
-                   ("Function" "\\`function_body\\'")
+                   ("Procedure" "\\`\\(interface_\\)?procedure_specification\\'")
+                   ("Function" "\\`\\(interface_\\)?function_specification\\'")
                    ("Block" "\\`block_statement\\'")
-                   ("Generate" "\\`generate_statement_body\\'")
+                   ("Generate" "\\`\\(for\\|if\\|case\\)_generate_statement\\'")
                    ("Instance" "\\`component_instantiation_statement\\'")))
      (setq-local treesit-defun-name-function #'vhdl-ts--node-identifier-name))
     ('tree
@@ -1031,6 +1273,26 @@ to VHDL parser."
 
 
 ;;; Which-func
+(defconst vhdl-ts-which-func-re
+  (eval-when-compile
+    (regexp-opt
+     '("entity_declaration"
+       "architecture_definition"
+       "configuration_declaration"
+       "component_configuration"
+       "subprogram_definition"
+       "package_declaration"
+       "package_definition"
+       "component_declaration"
+       "block_statement"
+       "process_statement"
+       "component_instantiation_statement"
+       "for_generate_statement"
+       "if_generate_statement"
+       "case_generate_statement")
+     'symbols))
+  "Same as `vhdl-ts-imenu-create-index-re' but using subprogram_definition.")
+
 (defvar-local vhdl-ts-which-func-extra nil
   "Variable to hold extra information for `which-func'.")
 
@@ -1048,18 +1310,25 @@ type.")
   "Return shortened name of NODE if possible."
   (pcase (treesit-node-type node)
     ("entity_declaration"                "ent")
-    ("architecture_body"                 "arch")
+    ("architecture_definition"           "arch")
+    ("package_definition"                "pkg")
     ("process_statement"                 "proc")
-    ("procedure_body"                    "pcd")
-    ("function_body"                     "fun")
     ("block_statement"                   "blk")
-    ("generate_statement_body"           "gen")
+    ("if_generate_statement"             "gen")
+    ("for_generate_statement"            "gen")
+    ("case_generate_statement"           "gen")
     ("component_instantiation_statement" (vhdl-ts--node-instance-name node))
-    (_                                   (treesit-node-type node))))
+    ("subprogram_definition" (cond ((treesit-search-subtree node "procedure_specification")
+                                    "pcd")
+                                   ((treesit-search-subtree node "function_specification")
+                                    "fun")
+                                   (t
+                                    (error "Unexpected choice"))))
+    (_ (treesit-node-type node))))
 
 (defun vhdl-ts-which-func-function ()
   "Retrieve `which-func' candidates."
-  (let ((node (vhdl-ts--block-at-point vhdl-ts-imenu-create-index-re)))
+  (let ((node (vhdl-ts--block-at-point vhdl-ts-which-func-re)))
     (if node
         (progn
           (setq vhdl-ts-which-func-extra (vhdl-ts--node-identifier-name node))
@@ -1096,19 +1365,21 @@ type.")
   (eval-when-compile
     (regexp-opt
      '("entity_declaration"
-       "architecture_body"
+       "architecture_definition"
        "package_declaration"
-       "package_body"
+       "package_definition"
        "process_statement"
        "procedure_declaration"
-       "procedure_body"
+       "procedure_specification"
        "function_declaration"
-       "function_body"
+       "function_specification"
        "component_declaration"
        "configuration_declaration"
        "context_declaration"
        "loop_statement"
        "if_generate_statement"
+       "for_generate_statement"
+       "case_generate_statement"
        "block_statement"
        "record_type_definition")
      'symbols)))
@@ -1133,18 +1404,18 @@ With `prefix-arg', move ARG expressions."
            (if (and arg (< arg 0))
                (goto-char (treesit-node-start highest-node))
              (goto-char (treesit-node-end highest-node))))
-          (;; if/else/elsif/then
-           (string-match "\\_<\\(if\\|else\\|elsif\\|then\\|for\\|loop\\)\\_>" node-type)
-           (let ((parent (vhdl-ts--node-has-parent-recursive node "\\_<\\(if_statement\\|loop_statement\\|if_generate\\)\\_>")))
+          (;; if/else/elsif/then/generate
+           (string-match "\\_<\\(if\\|else\\|elsif\\|then\\|for\\|loop\\|generate\\)\\_>" node-type)
+           (let ((parent (vhdl-ts--node-has-parent-recursive node "\\_<\\(if_statement_block\\|\\(\\(else\\|loop\\|if_generate\\|for_generate\\|case_generate\\)_statement\\)\\)\\_>")))
              (if (and arg (< arg 0))
                  (goto-char (treesit-node-start parent))
                (goto-char (treesit-node-end parent)))))
-          (;; labeled process/procedure/functions/generate and begin/is
-           (string-match "\\_<\\(process\\|function\\|procedure\\|generate\\|begin\\|is\\)\\_>" node-type)
-           (let ((parent (treesit-node-parent node)))
+          (;; labeled process/procedure/functions and begin/is
+           (string-match "\\_<\\(process\\|function\\|procedure\\|begin\\|is\\)\\_>" node-type)
+           (let ((grand-parent (treesit-node-parent (treesit-node-parent node))))
              (if (and arg (< arg 0))
-                 (goto-char (treesit-node-start parent))
-               (goto-char (treesit-node-end parent)))))
+                 (goto-char (treesit-node-start grand-parent))
+               (goto-char (treesit-node-end grand-parent)))))
           ;; Default
           (t
            (if (and arg (< arg 0))
@@ -1156,16 +1427,27 @@ With `prefix-arg', move ARG expressions."
 
 With `prefix-arg', move ARG expressions."
   (interactive "p")
-  (let* ((node (treesit-node-parent (vhdl-ts--node-at-point)))
+  (let* ((node (vhdl-ts--node-at-point))
          (node-type (treesit-node-type node))
-         (beg (treesit-node-start node))
-         (end (treesit-node-end node)))
+         (parent-node (treesit-node-parent node))
+         (parent-node-type (treesit-node-type parent-node)))
     (cond (;; Defuns/if-else-elsif
-           (or (string-match vhdl-ts-defun-re node-type)
-               (string= "if_statement" node-type))
-           (if (and arg (< arg 0))
-               (goto-char end)
-             (goto-char beg)))
+           (or (string-match vhdl-ts-defun-re parent-node-type)
+               (string= "if_statement_block" parent-node-type))
+           (let ((beg (treesit-node-start parent-node))
+                 (end (treesit-node-end parent-node)))
+             (if (and arg (< arg 0))
+                 (goto-char end)
+               (goto-char beg))))
+          (;; Ending blocks
+           (string-match "\\_<end_" parent-node-type)
+           (let* ((grandparent-node (treesit-node-parent parent-node))
+                  (beg (treesit-node-start grandparent-node))
+                  (end (treesit-node-end grandparent-node)))
+             (if (and arg (< arg 0))
+                 (goto-char end)
+               (goto-char beg))))
+
           ;; Default
           (t
            (if (and arg (< arg 0))
@@ -1176,7 +1458,7 @@ With `prefix-arg', move ARG expressions."
   "Search for a VHDL function/procedure declaration or definition.
 
 If optional arg BWD is non-nil, search backwards."
-  (treesit-search-forward-goto (vhdl-ts--node-at-point) "\\(function\\|procedure\\)_body" t bwd))
+  (treesit-search-forward-goto (vhdl-ts--node-at-point) "\\(function\\|procedure\\)_specification" t bwd))
 
 (defun vhdl-ts-find-function-procedure-fwd ()
   "Search forward for a VHDL function/procedure definition."
@@ -1348,7 +1630,7 @@ Complete with keywords and current buffer identifiers."
 This command requires Git, a C compiler and (sometimes) a C++ compiler,
 and the linker to be installed and on PATH."
   (interactive)
-  (let ((url "https://github.com/alemuller/tree-sitter-vhdl"))
+  (let ((url "https://github.com/jpt13653903/tree-sitter-vhdl"))
     (add-to-list 'treesit-language-source-alist `(vhdl ,url))
     (treesit-install-language-grammar 'vhdl)))
 
@@ -1399,7 +1681,7 @@ and the linker to be installed and on PATH."
     (setq-local treesit-font-lock-feature-list
                 '((comment string)
                   (keyword operator)
-                  (type declaration instance builtin misc error)
+                  (type declaration instance-2 instance-1 builtin misc error)
                   (punctuation array)))
     (setq-local treesit-font-lock-settings vhdl-ts--font-lock-settings)
     ;; Indent.

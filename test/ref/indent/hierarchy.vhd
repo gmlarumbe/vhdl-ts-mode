@@ -29,7 +29,7 @@ use xil_defaultlib.input_buffer_types.all;
 entity axi_if_converter is
 
     port (
-        -- Non-axi modules clocks and resets
+    -- Non-axi modules clocks and resets
         clk        : in std_logic;
         resetn     : in std_logic;
         clk_fs_ext : in std_logic;
@@ -213,10 +213,10 @@ end entity axi_if_converter;
 
 architecture RTL of axi_if_converter is
 
-    -- Global signals
+                                     -- Global signals
     signal soft_reset : std_logic;
 
-    -- Input buffer <-> Converter AXI signals
+                                     -- Input buffer <-> Converter AXI signals
     signal m_axis_lch_inbuf_aclk    : std_logic;
     signal m_axis_lch_inbuf_aresetn : std_logic;
     signal m_axis_lch_inbuf_tdata   : std_logic_vector(63 downto 0);
@@ -233,7 +233,7 @@ architecture RTL of axi_if_converter is
     signal m_axis_rch_inbuf_tlast   : std_logic;
     signal m_axis_rch_inbuf_tready  : std_logic;
 
-    -- Input_buffer <-> Converters Feedback signals
+                                     -- Input_buffer <-> Converters Feedback signals
     signal fb_wr_burst_start_lch : std_logic;
     signal fb_bw_counter_lch     : std_logic_vector(7 downto 0);
     signal fb_wlast_lch          : std_logic;
@@ -250,14 +250,14 @@ architecture RTL of axi_if_converter is
     signal fb_burst_done_rch     : std_logic;
     signal fb_send_size_r        : unsigned(9 downto 0);
 
-    -- Input buffer <-> Register interface signals
+                                     -- Input buffer <-> Register interface signals
     signal bram_overflow_error       : std_logic;
     signal out_reg_underflow_error_l : std_logic;
     signal out_reg_overflow_error_l  : std_logic;
     signal out_reg_underflow_error_r : std_logic;
     signal out_reg_overflow_error_r  : std_logic;
 
-    -- AXI Lite Master <-> Register interface signals
+                                     -- AXI Lite Master <-> Register interface signals
     signal transaction_error : std_logic;
 
     signal write_request : std_logic;
@@ -270,13 +270,13 @@ architecture RTL of axi_if_converter is
     signal read_data       : std_logic_vector (31 downto 0);
     signal read_data_valid : std_logic;
 
-    -- Pattern counters <-> Register interface
+                                     -- Pattern counters <-> Register interface
     signal count_lch         : unsigned(31 downto 0);
     signal pattern_count_lch : unsigned(31 downto 0);
     signal count_rch         : unsigned(31 downto 0);
     signal pattern_count_rch : unsigned(31 downto 0);
 
-    -- Registers <-> FSM signals
+                                     -- Registers <-> FSM signals
     signal system_enable      : std_logic;
     signal system_running     : std_logic;
     signal system_running_lch : std_logic;
@@ -287,7 +287,7 @@ architecture RTL of axi_if_converter is
     signal read_size_r        : unsigned(15 downto 0);
 
 
-    -- Converters <-> FSM signals
+                                     -- Converters <-> FSM signals
     signal conv_req_lch         : conversion_req_t;
     signal conv_rsp_lch         : conversion_rsp_t;
     signal internal_error_lch   : std_logic;
@@ -304,25 +304,25 @@ architecture RTL of axi_if_converter is
     signal pattern_finished_rch : std_logic;
     signal pattern_tlast_rch    : std_logic;
 
-    -- Input Buffer <-> FSM signals
+                                     -- Input Buffer <-> FSM signals
     signal buffer_size_l : unsigned(10 downto 0);
     signal bram_ptr_l    : std_logic_vector(31 downto 0);
     signal buffer_size_r : unsigned(10 downto 0);
     signal bram_ptr_r    : std_logic_vector(31 downto 0);
 
-    -- FS clock divider
+                                     -- FS clock divider
     signal clk_fs      : std_logic;
     signal clk_fs_sync : std_logic;
 
 
 begin
 
-    -- Comb logic
+-- Comb logic
     fb_send_size_l <= b"00" & unsigned(fb_awlen_lch);
     fb_send_size_r <= b"00" & unsigned(fb_awlen_rch);
     system_running <= system_running_lch or system_running_rch;
 
-    -- Instances
+-- Instances
     I_AXI_LITE_REGS : entity xil_defaultlib.axi_lite_regs
         generic map (
             C_S_AXI_DATA_WIDTH => C_S_AXI_DATA_WIDTH,
@@ -331,7 +331,7 @@ begin
         port map (
             soft_reset => soft_reset,
 
-            -- To FSM
+                 -- To FSM
             system_enable  => system_enable,
             system_running => system_running,
             conv_op_lch    => conv_op_lch,
@@ -339,7 +339,7 @@ begin
             read_size_l    => read_size_l,
             read_size_r    => read_size_r,
 
-            -- To axi-lite master
+                 -- To axi-lite master
             write_request => write_request,
             write_data    => write_data,
             write_address => write_address,
@@ -352,13 +352,13 @@ begin
 
             transaction_error => transaction_error,
 
-            -- From pattern counters
+                 -- From pattern counters
             count_lch         => count_lch,
             pattern_count_lch => pattern_count_lch,
             count_rch         => count_rch,
             pattern_count_rch => pattern_count_rch,
 
-            -- Input buffer error checking
+                 -- Input buffer error checking
             bram_overflow_error       => bram_overflow_error,
             out_reg_underflow_error_l => out_reg_underflow_error_l,
             out_reg_overflow_error_l  => out_reg_overflow_error_l,
@@ -398,7 +398,7 @@ begin
         port map (
             soft_reset => soft_reset,
 
-            -- Feedback from converters
+                 -- Feedback from converters
             inputs.start_burst_master_l => fb_wr_burst_start_lch,
             inputs.bw_counter_l         => fb_bw_counter_lch,
             inputs.wlast_l              => fb_wlast_lch,
@@ -660,13 +660,13 @@ begin
             soft_reset        => soft_reset,
             transaction_error => transaction_error,
 
-            -- From register interface
+                 -- From register interface
             write_request => write_request,
             write_data    => write_data,
             write_address => write_address,
             write_done    => write_done,
 
-            -- From register interface
+                 -- From register interface
             read_request    => read_request,
             read_address    => read_address,
             read_data       => read_data,
@@ -1024,29 +1024,29 @@ end input_buffer;
 architecture RTL of input_buffer is
 
     component blk_mem_gen_0
-        port (
-            -- BRAM Write
-            clka  : in  std_logic;
-            ena   : in  std_logic;
-            wea   : in  std_logic_vector(0 downto 0);
-            addra : in  std_logic_vector(10 downto 0);
-            dina  : in  std_logic_vector(63 downto 0);
-            -- BRAM Read
-            clkb  : in  std_logic;
-            rstb  : in  std_logic;
-            enb   : in  std_logic;
-            addrb : in  std_logic_vector(10 downto 0);
-            doutb : out std_logic_vector(63 downto 0)
-        );
+    port (
+    -- BRAM Write
+        clka  : in  std_logic;
+        ena   : in  std_logic;
+        wea   : in  std_logic_vector(0 downto 0);
+        addra : in  std_logic_vector(10 downto 0);
+        dina  : in  std_logic_vector(63 downto 0);
+        -- BRAM Read
+        clkb  : in  std_logic;
+        rstb  : in  std_logic;
+        enb   : in  std_logic;
+        addrb : in  std_logic_vector(10 downto 0);
+        doutb : out std_logic_vector(63 downto 0)
+    );
     end component;
 
     procedure bram_logic (
         signal s_axis_tvalid   : in    std_logic;
-        signal s_axis_tdata    : in    std_logic_vector(63 downto 0);
-        signal read_bram_enb   : in    std_logic;
-        signal bram_pointer    : inout bram_read_pointer_t;
-        signal overflow_error  : out   std_logic;
-        signal address_write_d : out   std_logic_vector(10 downto 0)
+                             signal s_axis_tdata    : in    std_logic_vector(63 downto 0);
+                             signal read_bram_enb   : in    std_logic;
+                             signal bram_pointer    : inout bram_read_pointer_t;
+                             signal overflow_error  : out   std_logic;
+                             signal address_write_d : out   std_logic_vector(10 downto 0)
     ) is
     begin
         if (read_bram_enb = '1') then
@@ -1060,8 +1060,8 @@ architecture RTL of input_buffer is
 
     procedure bram_logic_rst (
         signal bram_pointer    : out bram_read_pointer_t;
-        signal overflow_error  : out std_logic;
-        signal address_write_d : out std_logic_vector(10 downto 0)
+                                 signal overflow_error  : out std_logic;
+                                 signal address_write_d : out std_logic_vector(10 downto 0)
     ) is
     begin
         init_bram_logic(bram_pointer);
@@ -1072,15 +1072,15 @@ architecture RTL of input_buffer is
 
     procedure read_to_output_reg_logic (
         signal start_burst_master    : in    std_logic;
-        signal wlast                 : in    std_logic;
-        signal read_size             : in    unsigned(9 downto 0);
-        signal idx                   : inout unsigned(10 downto 0);
-        signal idx_bram              : inout unsigned(10 downto 0);
-        signal bram_to_buffer        : in    std_logic_vector(63 downto 0);
-        signal read_bram_enb         : inout std_logic;
-        signal last_word_out_reg     : inout std_logic;
-        signal load_output_reg       : out   std_logic;
-        signal output_reg_out_tvalid : out   std_logic
+                                           signal wlast                 : in    std_logic;
+                                           signal read_size             : in    unsigned(9 downto 0);
+                                           signal idx                   : inout unsigned(10 downto 0);
+                                           signal idx_bram              : inout unsigned(10 downto 0);
+                                           signal bram_to_buffer        : in    std_logic_vector(63 downto 0);
+                                           signal read_bram_enb         : inout std_logic;
+                                           signal last_word_out_reg     : inout std_logic;
+                                           signal load_output_reg       : out   std_logic;
+                                           signal output_reg_out_tvalid : out   std_logic
     ) is
     begin
         if (start_burst_master = '1') then
@@ -1111,11 +1111,11 @@ architecture RTL of input_buffer is
 
     procedure read_to_output_reg_logic_rst (
         signal idx                   : out unsigned(10 downto 0);
-        signal idx_bram              : out unsigned(10 downto 0);
-        signal read_bram_enb         : out std_logic;
-        signal output_reg_out_tvalid : out std_logic;
-        signal load_output_reg       : out std_logic;
-        signal last_word_out_reg     : out std_logic
+                                               signal idx_bram              : out unsigned(10 downto 0);
+                                               signal read_bram_enb         : out std_logic;
+                                               signal output_reg_out_tvalid : out std_logic;
+                                               signal load_output_reg       : out std_logic;
+                                               signal last_word_out_reg     : out std_logic
     ) is
     begin
         idx                   <= (others => '0');
@@ -1129,8 +1129,8 @@ architecture RTL of input_buffer is
 
     procedure bram_pointer_position_calc (
         signal write_done            : in    std_logic;
-        signal read_size             : in    unsigned(9 downto 0);
-        signal bram_pointer_position : inout std_logic_vector(31 downto 0)
+                                             signal read_size             : in    unsigned(9 downto 0);
+                                             signal bram_pointer_position : inout std_logic_vector(31 downto 0)
     ) is
     begin
         if (write_done = '1') then
@@ -1141,7 +1141,7 @@ architecture RTL of input_buffer is
 
     procedure bram_pointer_position_rst (
         constant CH_BASE_ADDRESS     : in  std_logic_vector(31 downto 0);
-        signal bram_pointer_position : out std_logic_vector(31 downto 0)
+                                            signal bram_pointer_position : out std_logic_vector(31 downto 0)
     ) is
     begin
         bram_pointer_position <= CH_BASE_ADDRESS;
@@ -1150,13 +1150,13 @@ architecture RTL of input_buffer is
 
     procedure load_output_reg (
         constant OUTPUT_REG_DEFAULT_VALUE : in  std_logic_vector(63 downto 0);
-        signal output_reg_out_tvalid      : in  std_logic;
-        signal idx                        : in  unsigned(10 downto 0);
-        signal bram_to_buffer             : in  std_logic_vector(63 downto 0);
-        signal load_output_reg            : in  std_logic;
-        signal output_reg                 : out output_reg;
-        signal out_reg_underflow_error    : out std_logic;
-        signal out_reg_overflow_error     : out std_logic
+                                  signal output_reg_out_tvalid      : in  std_logic;
+                                  signal idx                        : in  unsigned(10 downto 0);
+                                  signal bram_to_buffer             : in  std_logic_vector(63 downto 0);
+                                  signal load_output_reg            : in  std_logic;
+                                  signal output_reg                 : out output_reg;
+                                  signal out_reg_underflow_error    : out std_logic;
+                                  signal out_reg_overflow_error     : out std_logic
     ) is
     begin
         if (output_reg_out_tvalid = '1') then
@@ -1177,9 +1177,9 @@ architecture RTL of input_buffer is
 
     procedure load_output_reg_rst (
         constant OUTPUT_REG_DEFAULT_VALUE : in  std_logic_vector(63 downto 0);
-        signal output_reg                 : out output_reg;
-        signal out_reg_underflow_error    : out std_logic;
-        signal out_reg_overflow_error     : out std_logic
+                                      signal output_reg                 : out output_reg;
+                                      signal out_reg_underflow_error    : out std_logic;
+                                      signal out_reg_overflow_error     : out std_logic
     ) is
     begin
         output_reg              <= (others => OUTPUT_REG_DEFAULT_VALUE);
@@ -1222,12 +1222,12 @@ architecture RTL of input_buffer is
     signal idx_r      : unsigned(10 downto 0);
     signal idx_r_bram : unsigned(10 downto 0);
 
-    attribute keep                      : string;
-    attribute keep of output_reg_l      : signal is "true";
-    attribute keep of output_reg_r      : signal is "true";
-    attribute ram_style                 : string;
-    attribute ram_style of output_reg_l : signal is "distributed";
-    attribute ram_style of output_reg_r : signal is "distributed";
+                                 attribute keep                      : string;
+                                 attribute keep of output_reg_l      : signal is "true";
+                                 attribute keep of output_reg_r      : signal is "true";
+                                 attribute ram_style                 : string;
+                                 attribute ram_style of output_reg_l : signal is "distributed";
+                                 attribute ram_style of output_reg_r : signal is "distributed";
 
 begin
 
@@ -1266,9 +1266,9 @@ begin
         );
 
 
-    ----------------
-    -- COMB LOGIC --
-    ----------------
+----------------
+-- COMB LOGIC --
+----------------
     outputs.buffer_size_l <= bram_pointer_l.tail - bram_pointer_l.head;
     outputs.bram_ptr_l    <= bram_ptr_pos_l;
     m_axis_lch_tdata      <= output_reg_l(to_integer(unsigned(inputs.bw_counter_l)));
@@ -1279,17 +1279,17 @@ begin
     m_axis_rch_tdata      <= output_reg_r(to_integer(unsigned(inputs.bw_counter_r)));
     m_axis_rch_tvalid     <= output_reg_out_tvalid_r and output_reg_out_tvalid_r_d;
 
-    -- BRAMs Address read/write management
+-- BRAMs Address read/write management
     bram_a_addrb <= std_logic_vector(idx_l_bram);
     bram_b_addrb <= std_logic_vector(idx_r_bram);
 
-    -- Overflow management
+-- Overflow management
     bram_overflow_error <= bram_overflow_error_l or bram_overflow_error_r;
 
 
-    --------------------
-    -- Undriven Signals --
-    --------------------
+--------------------
+-- Undriven Signals --
+--------------------
     s_axis_lch_tready <= '1';
     s_axis_rch_tready <= '1';
     m_axis_lch_tkeep  <= (others => '0');
@@ -1297,26 +1297,26 @@ begin
     m_axis_rch_tkeep  <= (others => '0');
     m_axis_rch_tlast  <= '0';
 
-    ---------------
-    -- SEQ LOGIC --
-    ---------------
+---------------
+-- SEQ LOGIC --
+---------------
     axi_bram_logic_l : process(s_axis_lch_aclk)
     begin
         if (rising_edge(s_axis_lch_aclk)) then
             if (s_axis_lch_aresetn = '0' or soft_reset = '1') then
                 bram_logic_rst(
-                    bram_pointer    => bram_pointer_l,
-                    overflow_error  => bram_overflow_error_l,
-                    address_write_d => address_write_d_l
+                              bram_pointer    => bram_pointer_l,
+                                  overflow_error  => bram_overflow_error_l,
+                                  address_write_d => address_write_d_l
                 );
             else
                 bram_logic(
-                    s_axis_tvalid   => s_axis_lch_tvalid,
-                    s_axis_tdata    => s_axis_lch_tdata,
-                    read_bram_enb   => read_bram_enb_l,
-                    bram_pointer    => bram_pointer_l,
-                    overflow_error  => bram_overflow_error_l,
-                    address_write_d => address_write_d_l
+                          s_axis_tvalid   => s_axis_lch_tvalid,
+                              s_axis_tdata    => s_axis_lch_tdata,
+                              read_bram_enb   => read_bram_enb_l,
+                              bram_pointer    => bram_pointer_l,
+                              overflow_error  => bram_overflow_error_l,
+                              address_write_d => address_write_d_l
                 );
             end if;
         end if;
@@ -1328,18 +1328,18 @@ begin
         if (rising_edge(s_axis_rch_aclk)) then
             if (s_axis_rch_aresetn = '0' or soft_reset = '1') then
                 bram_logic_rst(
-                    bram_pointer    => bram_pointer_r,
-                    overflow_error  => bram_overflow_error_r,
-                    address_write_d => address_write_d_r
+                              bram_pointer    => bram_pointer_r,
+                                  overflow_error  => bram_overflow_error_r,
+                                  address_write_d => address_write_d_r
                 );
             else
                 bram_logic(
-                    s_axis_tvalid   => s_axis_rch_tvalid,
-                    s_axis_tdata    => s_axis_rch_tdata,
-                    read_bram_enb   => read_bram_enb_r,
-                    bram_pointer    => bram_pointer_r,
-                    overflow_error  => bram_overflow_error_r,
-                    address_write_d => address_write_d_r
+                          s_axis_tvalid   => s_axis_rch_tvalid,
+                              s_axis_tdata    => s_axis_rch_tdata,
+                              read_bram_enb   => read_bram_enb_r,
+                              bram_pointer    => bram_pointer_r,
+                              overflow_error  => bram_overflow_error_r,
+                              address_write_d => address_write_d_r
                 );
             end if;
         end if;
@@ -1351,25 +1351,25 @@ begin
         if (rising_edge(s_axis_lch_aclk)) then
             if (s_axis_lch_aresetn = '0' or soft_reset = '1') then
                 read_to_output_reg_logic_rst(
-                    idx                   => idx_l,
-                    idx_bram              => idx_l_bram,
-                    read_bram_enb         => read_bram_enb_l,
-                    output_reg_out_tvalid => output_reg_out_tvalid_l,
-                    load_output_reg       => load_output_reg_l,
-                    last_word_out_reg     => last_word_out_reg_l
+                                            idx                   => idx_l,
+                                                idx_bram              => idx_l_bram,
+                                                read_bram_enb         => read_bram_enb_l,
+                                                output_reg_out_tvalid => output_reg_out_tvalid_l,
+                                                load_output_reg       => load_output_reg_l,
+                                                last_word_out_reg     => last_word_out_reg_l
                 );
             else
                 read_to_output_reg_logic(
-                    start_burst_master    => inputs.start_burst_master_l,
-                    wlast                 => inputs.wlast_l,
-                    read_size             => inputs.send_size_l,
-                    idx                   => idx_l,
-                    idx_bram              => idx_l_bram,
-                    bram_to_buffer        => bram_to_buffer_l,
-                    read_bram_enb         => read_bram_enb_l,
-                    last_word_out_reg     => last_word_out_reg_l,
-                    load_output_reg       => load_output_reg_l,
-                    output_reg_out_tvalid => output_reg_out_tvalid_l
+                                        start_burst_master    => inputs.start_burst_master_l,
+                                            wlast                 => inputs.wlast_l,
+                                            read_size             => inputs.send_size_l,
+                                            idx                   => idx_l,
+                                            idx_bram              => idx_l_bram,
+                                            bram_to_buffer        => bram_to_buffer_l,
+                                            read_bram_enb         => read_bram_enb_l,
+                                            last_word_out_reg     => last_word_out_reg_l,
+                                            load_output_reg       => load_output_reg_l,
+                                            output_reg_out_tvalid => output_reg_out_tvalid_l
                 );
             end if;
         end if;
@@ -1381,25 +1381,25 @@ begin
         if (rising_edge(s_axis_rch_aclk)) then
             if (s_axis_rch_aresetn = '0' or soft_reset = '1') then
                 read_to_output_reg_logic_rst(
-                    idx                   => idx_r,
-                    idx_bram              => idx_r_bram,
-                    read_bram_enb         => read_bram_enb_r,
-                    output_reg_out_tvalid => output_reg_out_tvalid_r,
-                    load_output_reg       => load_output_reg_r,
-                    last_word_out_reg     => last_word_out_reg_r
+                                            idx                   => idx_r,
+                                                idx_bram              => idx_r_bram,
+                                                read_bram_enb         => read_bram_enb_r,
+                                                output_reg_out_tvalid => output_reg_out_tvalid_r,
+                                                load_output_reg       => load_output_reg_r,
+                                                last_word_out_reg     => last_word_out_reg_r
                 );
             else
                 read_to_output_reg_logic(
-                    start_burst_master    => inputs.start_burst_master_r,
-                    wlast                 => inputs.wlast_r,
-                    read_size             => inputs.send_size_r,
-                    idx                   => idx_r,
-                    idx_bram              => idx_r_bram,
-                    bram_to_buffer        => bram_to_buffer_r,
-                    read_bram_enb         => read_bram_enb_r,
-                    last_word_out_reg     => last_word_out_reg_r,
-                    load_output_reg       => load_output_reg_r,
-                    output_reg_out_tvalid => output_reg_out_tvalid_r
+                                        start_burst_master    => inputs.start_burst_master_r,
+                                            wlast                 => inputs.wlast_r,
+                                            read_size             => inputs.send_size_r,
+                                            idx                   => idx_r,
+                                            idx_bram              => idx_r_bram,
+                                            bram_to_buffer        => bram_to_buffer_r,
+                                            read_bram_enb         => read_bram_enb_r,
+                                            last_word_out_reg     => last_word_out_reg_r,
+                                            load_output_reg       => load_output_reg_r,
+                                            output_reg_out_tvalid => output_reg_out_tvalid_r
                 );
             end if;
         end if;
@@ -1411,14 +1411,14 @@ begin
         if (rising_edge(s_axis_lch_aclk)) then
             if (s_axis_lch_aresetn = '0' or soft_reset = '1') then
                 bram_pointer_position_rst(
-                    CH_BASE_ADDRESS       => LEFT_CH_BASE_ADDRESS,
-                    bram_pointer_position => bram_ptr_pos_l
+                                         CH_BASE_ADDRESS       => LEFT_CH_BASE_ADDRESS,
+                                             bram_pointer_position => bram_ptr_pos_l
                 );
             else
                 bram_pointer_position_calc(
-                    write_done            => inputs.write_done_l,
-                    read_size             => inputs.send_size_l,
-                    bram_pointer_position => bram_ptr_pos_l
+                                          write_done            => inputs.write_done_l,
+                                              read_size             => inputs.send_size_l,
+                                              bram_pointer_position => bram_ptr_pos_l
                 );
             end if;
         end if;
@@ -1430,14 +1430,14 @@ begin
         if (rising_edge(s_axis_rch_aclk)) then
             if (s_axis_rch_aresetn = '0' or soft_reset = '1') then
                 bram_pointer_position_rst(
-                    CH_BASE_ADDRESS       => RIGHT_CH_BASE_ADDRESS,
-                    bram_pointer_position => bram_ptr_pos_r
+                                         CH_BASE_ADDRESS       => RIGHT_CH_BASE_ADDRESS,
+                                             bram_pointer_position => bram_ptr_pos_r
                 );
             else
                 bram_pointer_position_calc(
-                    write_done            => inputs.write_done_r,
-                    read_size             => inputs.send_size_r,
-                    bram_pointer_position => bram_ptr_pos_r
+                                          write_done            => inputs.write_done_r,
+                                              read_size             => inputs.send_size_r,
+                                              bram_pointer_position => bram_ptr_pos_r
                 );
             end if;
         end if;
@@ -1449,21 +1449,21 @@ begin
         if (rising_edge(s_axis_lch_aclk)) then
             if (s_axis_lch_aresetn = '0' or soft_reset = '1') then
                 load_output_reg_rst(
-                    OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
-                    output_reg               => output_reg_l,
-                    out_reg_underflow_error  => out_reg_underflow_error_l,
-                    out_reg_overflow_error   => out_reg_overflow_error_l
+                                   OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
+                                       output_reg               => output_reg_l,
+                                       out_reg_underflow_error  => out_reg_underflow_error_l,
+                                       out_reg_overflow_error   => out_reg_overflow_error_l
                 );
             else
                 load_output_reg(
-                    OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
-                    output_reg_out_tvalid    => output_reg_out_tvalid_l,
-                    idx                      => idx_l,
-                    bram_to_buffer           => bram_to_buffer_l,
-                    load_output_reg          => load_output_reg_l,
-                    output_reg               => output_reg_l,
-                    out_reg_underflow_error  => out_reg_underflow_error_l,
-                    out_reg_overflow_error   => out_reg_overflow_error_l
+                               OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
+                                   output_reg_out_tvalid    => output_reg_out_tvalid_l,
+                                   idx                      => idx_l,
+                                   bram_to_buffer           => bram_to_buffer_l,
+                                   load_output_reg          => load_output_reg_l,
+                                   output_reg               => output_reg_l,
+                                   out_reg_underflow_error  => out_reg_underflow_error_l,
+                                   out_reg_overflow_error   => out_reg_overflow_error_l
                 );
             end if;
         end if;
@@ -1476,21 +1476,21 @@ begin
         if (rising_edge(s_axis_rch_aclk)) then
             if (s_axis_rch_aresetn = '0' or soft_reset = '1') then
                 load_output_reg_rst(
-                    OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
-                    output_reg               => output_reg_r,
-                    out_reg_underflow_error  => out_reg_underflow_error_r,
-                    out_reg_overflow_error   => out_reg_overflow_error_r
+                                   OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
+                                       output_reg               => output_reg_r,
+                                       out_reg_underflow_error  => out_reg_underflow_error_r,
+                                       out_reg_overflow_error   => out_reg_overflow_error_r
                 );
             else
                 load_output_reg(
-                    OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
-                    output_reg_out_tvalid    => output_reg_out_tvalid_r,
-                    idx                      => idx_r,
-                    bram_to_buffer           => bram_to_buffer_r,
-                    load_output_reg          => load_output_reg_r,
-                    output_reg               => output_reg_r,
-                    out_reg_underflow_error  => out_reg_underflow_error_r,
-                    out_reg_overflow_error   => out_reg_overflow_error_r
+                               OUTPUT_REG_DEFAULT_VALUE => OUTPUT_REG_DEFAULT_VALUE,
+                                   output_reg_out_tvalid    => output_reg_out_tvalid_r,
+                                   idx                      => idx_r,
+                                   bram_to_buffer           => bram_to_buffer_r,
+                                   load_output_reg          => load_output_reg_r,
+                                   output_reg               => output_reg_r,
+                                   out_reg_underflow_error  => out_reg_underflow_error_r,
+                                   out_reg_overflow_error   => out_reg_overflow_error_r
                 );
             end if;
         end if;
@@ -1558,13 +1558,13 @@ end core_fsm;
 
 architecture RTL of core_fsm is
 
-    type fsm_states is (
-    IDLE,
-    REQ_S2MM,
-    WAIT_S2MM,
-    REQ_MM2S,
-    WAIT_MM2S
-    );
+                             type fsm_states is (
+                                                IDLE,
+                                                REQ_S2MM,
+                                                WAIT_S2MM,
+                                                REQ_MM2S,
+                                                WAIT_MM2S
+                             );
     signal state : fsm_states;
 
     signal s2mm_write_ptr      : std_logic_vector(31 downto 0);
@@ -1592,7 +1592,7 @@ begin
                 mm2s_read_req_size  <= (others  => '0');
 
             else
-                -- Default outputs
+            -- Default outputs
                 conv_req.request <= '0';
                 conv_req.size    <= (others => '0');
                 conv_req.address <= (others => '0');
@@ -1600,51 +1600,51 @@ begin
 
                 -- FSM
                 case state is
-                    when IDLE =>
-                        system_running <= '0';
-                        if (system_enable) then
-                            if (conv_op = '0' and buffer_size >= S2MM_WRITE_SIZE) then
-                                state <= REQ_S2MM;
-                            elsif (conv_op = '1' and mm2s_read_ptr(15 downto 0) < std_logic_vector(read_size)) then
-                                state <= REQ_MM2S;
-                            end if;
-                        end if;
+                           when IDLE =>
+                           system_running <= '0';
+                               if (system_enable) then
+                                   if (conv_op = '0' and buffer_size >= S2MM_WRITE_SIZE) then
+                                       state <= REQ_S2MM;
+                                   elsif (conv_op = '1' and mm2s_read_ptr(15 downto 0) < std_logic_vector(read_size)) then
+                                       state <= REQ_MM2S;
+                                   end if;
+                               end if;
 
 
-                    when REQ_S2MM =>
-                        if (buffer_size >= S2MM_WRITE_SIZE) then
-                            conv_req.op_type <= S2MM;
-                            conv_req.request <= '1';
-                            conv_req.size    <= to_unsigned(S2MM_WRITE_SIZE, 10);
-                            conv_req.address <= s2mm_write_ptr;
+                           when REQ_S2MM =>
+                               if (buffer_size >= S2MM_WRITE_SIZE) then
+                                   conv_req.op_type <= S2MM;
+                                   conv_req.request <= '1';
+                                   conv_req.size    <= to_unsigned(S2MM_WRITE_SIZE, 10);
+                                   conv_req.address <= s2mm_write_ptr;
 
-                            s2mm_write_req_size <= to_unsigned(S2MM_WRITE_SIZE, 10);
-                            state               <= WAIT_S2MM;
-                        end if;
-
-
-                    when WAIT_S2MM =>
-                        if (conv_rsp.s2mm_done) then
-                            s2mm_write_ptr <= std_logic_vector(unsigned(s2mm_write_ptr) + s2mm_write_req_size);
-                            state          <= IDLE;
-                        end if;
+                                   s2mm_write_req_size <= to_unsigned(S2MM_WRITE_SIZE, 10);
+                                   state               <= WAIT_S2MM;
+                               end if;
 
 
-                    when REQ_MM2S =>
-                        conv_req.op_type <= MM2S;
-                        conv_req.request <= '1';
-                        conv_req.size    <= read_size(9 downto 0);
-                        conv_req.address <= mm2s_read_ptr;
-
-                        mm2s_read_req_size <= read_size(9 downto 0);
-                        state              <= WAIT_MM2S;
+                           when WAIT_S2MM =>
+                               if (conv_rsp.s2mm_done) then
+                                   s2mm_write_ptr <= std_logic_vector(unsigned(s2mm_write_ptr) + s2mm_write_req_size);
+                                   state          <= IDLE;
+                               end if;
 
 
-                    when WAIT_MM2S =>
-                        if (conv_rsp.mm2s_done) then
-                            mm2s_read_ptr <= std_logic_vector(unsigned(mm2s_read_ptr) + mm2s_read_req_size);
-                            state         <= IDLE;
-                        end if;
+                           when REQ_MM2S =>
+                           conv_req.op_type <= MM2S;
+                           conv_req.request <= '1';
+                           conv_req.size    <= read_size(9 downto 0);
+                           conv_req.address <= mm2s_read_ptr;
+
+                           mm2s_read_req_size <= read_size(9 downto 0);
+                           state              <= WAIT_MM2S;
+
+
+                           when WAIT_MM2S =>
+                               if (conv_rsp.mm2s_done) then
+                                   mm2s_read_ptr <= std_logic_vector(unsigned(mm2s_read_ptr) + mm2s_read_req_size);
+                                   state         <= IDLE;
+                               end if;
 
                 end case;
 
@@ -1786,15 +1786,15 @@ architecture RTL of core_converter is
     end;
 
 
-    type fsm_state is (
-    IDLE,
-    WRITE_BURST_SIZE_CALC,
-    WRITE_INITIATE,
-    WRITING_TO_MEM,
-    READ_BURST_SIZE_CALC,
-    READ_INITIATE,
-    READING_FROM_MEM
-    );
+                                   type fsm_state is (
+                                                     IDLE,
+                                                     WRITE_BURST_SIZE_CALC,
+                                                     WRITE_INITIATE,
+                                                     WRITING_TO_MEM,
+                                                     READ_BURST_SIZE_CALC,
+                                                     READ_INITIATE,
+                                                     READING_FROM_MEM
+                                   );
 
     signal state : fsm_state;
 
@@ -1854,7 +1854,7 @@ architecture RTL of core_converter is
 
 begin
 
-    -- Write fixed signals
+-- Write fixed signals
     m_axi_awid    <= (others => '0');
     m_axi_awburst <= "01";
     m_axi_awlock  <= '0';
@@ -1862,7 +1862,7 @@ begin
     m_axi_awprot  <= "000";
     m_axi_awqos   <= x"0";
     m_axi_wuser   <= (others => '0');
-    -- Read fixed signals
+-- Read fixed signals
     m_axi_arid    <= (others => '0');
     m_axi_aruser  <= (others => '1');
     m_axi_arburst <= "01";
@@ -1870,7 +1870,7 @@ begin
     m_axi_arcache <= "0010";
     m_axi_arprot  <= "000";
     m_axi_arqos   <= x"0";
-    -- Read/write logic
+-- Read/write logic
     m_axi_awaddr  <= burst_wr_addr;
     m_axi_awlen   <= std_logic_vector(unsigned(axi_awlen) -1);
     m_axi_awsize  <= std_logic_vector(to_unsigned(clogb2((C_M_AXI_DATA_WIDTH/8)-1), 3));
@@ -1886,45 +1886,45 @@ begin
     m_axi_arvalid <= axi_arvalid;
     m_axi_rready  <= axi_rready;
 
-    ----------------------------
-    -- Master stream interface -
-    ----------------------------
+----------------------------
+-- Master stream interface -
+----------------------------
     m_axis_tdata <= (others => '0') when pattern_req = '1' else
-                    m_axi_rdata when (axi_rready = '1' and m_axi_rvalid = '1' and (unsigned(transaction_rd_size)-1) >= unsigned(transaction_rd_counter)) else
-                    (others => '0');
+                                                           m_axi_rdata when (axi_rready = '1' and m_axi_rvalid = '1' and (unsigned(transaction_rd_size)-1) >= unsigned(transaction_rd_counter)) else
+                                                                                                                                                                                                (others => '0');
 
     m_axis_tvalid <= '1' when (pattern_req = '1' and pattern_finished_i = '0') else
-                     m_axi_rvalid when (axi_rready = '1' and (unsigned(transaction_rd_size)-1) >= unsigned(transaction_rd_counter)) else
-                     '0';
+                                                                               m_axi_rvalid when (axi_rready = '1' and (unsigned(transaction_rd_size)-1) >= unsigned(transaction_rd_counter)) else
+                                                                                                                                                                                              '0';
 
     m_axis_tlast <= '1' when (pattern_tlast = '1' and m_axi_rvalid = '1' and axi_rready = '1' and (unsigned(transaction_rd_size)-1) = unsigned(transaction_rd_counter)) else
-                    '0';
+                                                                                                                                                                        '0';
 
     axi_rready <=
     m_axis_tready when (read_start = '1' and (unsigned(transaction_rd_size)-1) >= unsigned(transaction_rd_counter)) else
-    '1'           when (read_start = '1' and (unsigned(burst_read_counter) <= C_M_AXI_BURST_LEN-1)) else
-    '0';
+                                                                                                                    '1'           when (read_start = '1' and (unsigned(burst_read_counter) <= C_M_AXI_BURST_LEN-1)) else
+                                                                                                                                                                                                                    '0';
 
     m_axis_tdest <= '0';
     m_axis_tkeep <= x"FF";
 
 
-    ----------------------------
-    -- Slave stream interface --
-    ----------------------------
+----------------------------
+-- Slave stream interface --
+----------------------------
     axi_wdata <= s_axis_tdata when ((axi_wvalid = '1') and ((unsigned(transaction_wr_size)-1) >= unsigned(transaction_wr_counter))) else
-                 (others => '0');
+                                                                                                                                    (others => '0');
 
     axi_wvalid <=
     s_axis_tvalid when ((m_axi_wready = '1') and ((unsigned(transaction_wr_size)-1) >= unsigned(transaction_wr_counter))) else
-    '1'           when ((write_start = '1') and (unsigned(burst_write_counter) <= C_M_AXI_BURST_LEN-1)) else
-    '0';
+                                                                                                                          '1'           when ((write_start = '1') and (unsigned(burst_write_counter) <= C_M_AXI_BURST_LEN-1)) else
+                                                                                                                                                                                                                              '0';
 
     s_axis_tready <= m_axi_wready when ((m_axi_wready = '1') and ((unsigned(transaction_wr_size)-1) >= unsigned(transaction_wr_counter))) else
-                     '0';
+                                                                                                                                          '0';
 
 
-    -- Feedback to input buffer
+-- Feedback to input buffer
     fb_wr_burst_start <= wr_burst_start;
     fb_bw_counter     <= burst_write_counter;
     fb_wlast          <= axi_wlast;
@@ -1932,19 +1932,19 @@ begin
     fb_awlen          <= strobe_len when (strobe_burst = '1')     else axi_awlen;
     fb_burst_done     <= write_done when (state = WRITING_TO_MEM) else '0';
 
-    -- Other signals
+-- Other signals
     pattern_finished <= pattern_finished_i;
     internal_error   <= (axi_rready and m_axi_rvalid and m_axi_rresp(1)) or
                         (axi_bready and m_axi_bvalid and m_axi_bresp(1));
 
-    -- Internal signals comb logic
+-- Internal signals comb logic
     axi_wlast <= (axi_wlast_i) and (m_axi_wready);
     req_pulse <= '1' when req_dd = '0' and req_d = '1' else '0';
 
 
-    ---------
-    -- FSM --
-    ---------
+---------
+-- FSM --
+---------
     fsm_proc : process (m_axi_aclk) is
     begin
         if (rising_edge(m_axi_aclk)) then
@@ -1964,109 +1964,109 @@ begin
                 read_start               <= '0';
             else
                 case (state) is
-                    when IDLE =>
-                        write_start        <= '0';
-                        wr_burst_start     <= '0';
-                        conv_rsp.s2mm_done <= '0';
-                        conv_rsp.mm2s_done <= '0';
+                             when IDLE =>
+                             write_start        <= '0';
+                             wr_burst_start     <= '0';
+                             conv_rsp.s2mm_done <= '0';
+                             conv_rsp.mm2s_done <= '0';
 
-                        if (req_pulse = '1') then
-                            if (conv_req.op_type = S2MM) then
-                                state               <= WRITE_BURST_SIZE_CALC;
-                                base_wr_addr        <= conv_req.address;
-                                transaction_wr_size <= std_logic_vector(conv_req.size);
-                            else
-                                state               <= READ_BURST_SIZE_CALC;
-                                base_rd_addr        <= conv_req.address;
-                                transaction_rd_size <= std_logic_vector(conv_req.size);
-                            end if;
-                        end if;
-
-
-                    when WRITE_BURST_SIZE_CALC =>
-                        if (wr_burst_size_calc_done = '0' and wr_burst_size_calc_active = '0' and wr_burst_size_calc_start = '0') then
-                            wr_burst_size_calc_start <= '1';
-                        else
-                            wr_burst_size_calc_start <= '0';
-                        end if;
-                        if (wr_burst_size_calc_done = '1')then
-                            state <= WRITE_INITIATE;
-                        end if;
+                                 if (req_pulse = '1') then
+                                     if (conv_req.op_type = S2MM) then
+                                         state               <= WRITE_BURST_SIZE_CALC;
+                                         base_wr_addr        <= conv_req.address;
+                                         transaction_wr_size <= std_logic_vector(conv_req.size);
+                                     else
+                                         state               <= READ_BURST_SIZE_CALC;
+                                         base_rd_addr        <= conv_req.address;
+                                         transaction_rd_size <= std_logic_vector(conv_req.size);
+                                     end if;
+                                 end if;
 
 
-                    when WRITE_INITIATE =>
-                        if (wr_burst_start_done = '0' and wr_burst_start_active = '0' and wr_burst_start = '0') then
-                            wr_burst_start <= '1';
-                        else
-                            wr_burst_start <= '0';
-                        end if;
-
-                        if (wr_burst_start_done = '1') then
-                            state <= WRITING_TO_MEM;
-                        end if;
-
-
-                    when WRITING_TO_MEM =>
-                        if (write_done = '0') then
-                            write_start <= '1';
-                        else
-                            write_start <= '0';
-                        end if;
-
-                        if (write_done = '1') then
-                            if (unsigned(transaction_wr_counter) >= unsigned(transaction_wr_size)) then
-                                conv_rsp.s2mm_done <= '1';
-                                state              <= IDLE;
-                            else
-                                state              <= WRITE_BURST_SIZE_CALC;
-                                conv_rsp.s2mm_done <= '0';
-                            end if;
-                        else
-                            conv_rsp.s2mm_done <= '0';
-                        end if;
+                             when WRITE_BURST_SIZE_CALC =>
+                                 if (wr_burst_size_calc_done = '0' and wr_burst_size_calc_active = '0' and wr_burst_size_calc_start = '0') then
+                                     wr_burst_size_calc_start <= '1';
+                                 else
+                                     wr_burst_size_calc_start <= '0';
+                                 end if;
+                                 if (wr_burst_size_calc_done = '1')then
+                                     state <= WRITE_INITIATE;
+                                 end if;
 
 
-                    when READ_BURST_SIZE_CALC =>
-                        if (rd_burst_size_calc_done = '0' and rd_burst_size_calc_active = '0' and rd_burst_size_calc_start = '0') then
-                            rd_burst_size_calc_start <= '1';
-                        else
-                            rd_burst_size_calc_start <= '0';
-                        end if;
+                             when WRITE_INITIATE =>
+                                 if (wr_burst_start_done = '0' and wr_burst_start_active = '0' and wr_burst_start = '0') then
+                                     wr_burst_start <= '1';
+                                 else
+                                     wr_burst_start <= '0';
+                                 end if;
 
-                        if (rd_burst_size_calc_done = '1')then
-                            state <= READ_INITIATE;
-                        end if;
-
-
-                    when READ_INITIATE =>
-                        if (rd_burst_start_done = '0' and rd_burst_start_active = '0' and rd_burst_start = '0') then
-                            rd_burst_start <= '1';
-                        else
-                            rd_burst_start <= '0';
-                        end if;
-
-                        if (rd_burst_start_done = '1') then
-                            state <= READING_FROM_MEM;
-                        end if;
+                                 if (wr_burst_start_done = '1') then
+                                     state <= WRITING_TO_MEM;
+                                 end if;
 
 
-                    when READING_FROM_MEM =>
-                        if (read_done = '0') then
-                            read_start <= '1';
-                        else
-                            read_start <= '0';
-                        end if;
+                             when WRITING_TO_MEM =>
+                                 if (write_done = '0') then
+                                     write_start <= '1';
+                                 else
+                                     write_start <= '0';
+                                 end if;
 
-                        if (read_done = '1') then
-                            if (unsigned(transaction_rd_counter) >= unsigned(transaction_rd_size)) then
-                                conv_rsp.mm2s_done <= '1';
-                                state              <= IDLE;
-                            else
-                                state <= READ_BURST_SIZE_CALC;
-                            end if;
-                        else
-                            conv_rsp.mm2s_done <= '0';
-                        end if;
+                                 if (write_done = '1') then
+                                     if (unsigned(transaction_wr_counter) >= unsigned(transaction_wr_size)) then
+                                         conv_rsp.s2mm_done <= '1';
+                                         state              <= IDLE;
+                                     else
+                                         state              <= WRITE_BURST_SIZE_CALC;
+                                         conv_rsp.s2mm_done <= '0';
+                                     end if;
+                                 else
+                                     conv_rsp.s2mm_done <= '0';
+                                 end if;
+
+
+                             when READ_BURST_SIZE_CALC =>
+                                 if (rd_burst_size_calc_done = '0' and rd_burst_size_calc_active = '0' and rd_burst_size_calc_start = '0') then
+                                     rd_burst_size_calc_start <= '1';
+                                 else
+                                     rd_burst_size_calc_start <= '0';
+                                 end if;
+
+                                 if (rd_burst_size_calc_done = '1')then
+                                     state <= READ_INITIATE;
+                                 end if;
+
+
+                             when READ_INITIATE =>
+                                 if (rd_burst_start_done = '0' and rd_burst_start_active = '0' and rd_burst_start = '0') then
+                                     rd_burst_start <= '1';
+                                 else
+                                     rd_burst_start <= '0';
+                                 end if;
+
+                                 if (rd_burst_start_done = '1') then
+                                     state <= READING_FROM_MEM;
+                                 end if;
+
+
+                             when READING_FROM_MEM =>
+                                 if (read_done = '0') then
+                                     read_start <= '1';
+                                 else
+                                     read_start <= '0';
+                                 end if;
+
+                                 if (read_done = '1') then
+                                     if (unsigned(transaction_rd_counter) >= unsigned(transaction_rd_size)) then
+                                         conv_rsp.mm2s_done <= '1';
+                                         state              <= IDLE;
+                                     else
+                                         state <= READ_BURST_SIZE_CALC;
+                                     end if;
+                                 else
+                                     conv_rsp.mm2s_done <= '0';
+                                 end if;
 
                 end case;
             end if;
@@ -2580,7 +2580,7 @@ architecture RTL of axi_lite_regs is
     signal soft_reset_cnt      : integer;
     constant SOFT_RESET_CYCLES : integer := 50;
 
-    -- Actual registers
+                                  -- Actual registers
     signal control_reg              : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal status_reg               : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal version_reg              : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
@@ -2597,47 +2597,47 @@ architecture RTL of axi_lite_regs is
     signal count_rch_reg            : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal pattern_count_rch_reg    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
 
-    attribute keep                             : boolean;
-    attribute keep of control_reg              : signal is true;
-    attribute keep of status_reg               : signal is true;
-    attribute keep of version_reg              : signal is true;
-    attribute keep of converter_setup_reg      : signal is true;
-    attribute keep of mm2s_size_reg            : signal is true;
-    attribute keep of master_lite_wr_setup_reg : signal is true;
-    attribute keep of master_lite_wr_add_reg   : signal is true;
-    attribute keep of master_lite_wr_data_reg  : signal is true;
-    attribute keep of master_lite_rd_setup_reg : signal is true;
-    attribute keep of master_lite_rd_add_reg   : signal is true;
-    attribute keep of master_lite_rd_data_reg  : signal is true;
-    attribute keep of count_lch_reg            : signal is true;
-    attribute keep of pattern_count_lch_reg    : signal is true;
-    attribute keep of count_rch_reg            : signal is true;
-    attribute keep of pattern_count_rch_reg    : signal is true;
+                                  attribute keep                             : boolean;
+                                  attribute keep of control_reg              : signal is true;
+                                  attribute keep of status_reg               : signal is true;
+                                  attribute keep of version_reg              : signal is true;
+                                  attribute keep of converter_setup_reg      : signal is true;
+                                  attribute keep of mm2s_size_reg            : signal is true;
+                                  attribute keep of master_lite_wr_setup_reg : signal is true;
+                                  attribute keep of master_lite_wr_add_reg   : signal is true;
+                                  attribute keep of master_lite_wr_data_reg  : signal is true;
+                                  attribute keep of master_lite_rd_setup_reg : signal is true;
+                                  attribute keep of master_lite_rd_add_reg   : signal is true;
+                                  attribute keep of master_lite_rd_data_reg  : signal is true;
+                                  attribute keep of count_lch_reg            : signal is true;
+                                  attribute keep of pattern_count_lch_reg    : signal is true;
+                                  attribute keep of count_rch_reg            : signal is true;
+                                  attribute keep of pattern_count_rch_reg    : signal is true;
 
-    -- Bit aliases
-    alias BIT_ENABLE     : std_logic is control_reg(0);
-    alias BIT_SOFT_RESET : std_logic is control_reg(31);
+                                  -- Bit aliases
+                                  alias BIT_ENABLE     : std_logic is control_reg(0);
+                                  alias BIT_SOFT_RESET : std_logic is control_reg(31);
 
-    alias BIT_RUNNING                 : std_logic is status_reg(0);
-    alias BIT_AXI_LITE_MASTER_ERR     : std_logic is status_reg(26);
-    alias BIT_BRAM_OVERFLOW_ERR       : std_logic is status_reg(27);
-    alias BIT_OUT_REG_UNDERFLOW_ERR_L : std_logic is status_reg(28);
-    alias BIT_OUT_REG_OVERFLOW_ERR_L  : std_logic is status_reg(29);
-    alias BIT_OUT_REG_UNDERFLOW_ERR_R : std_logic is status_reg(30);
-    alias BIT_OUT_REG_OVERFLOW_ERR_R  : std_logic is status_reg(31);
+                                  alias BIT_RUNNING                 : std_logic is status_reg(0);
+                                  alias BIT_AXI_LITE_MASTER_ERR     : std_logic is status_reg(26);
+                                  alias BIT_BRAM_OVERFLOW_ERR       : std_logic is status_reg(27);
+                                  alias BIT_OUT_REG_UNDERFLOW_ERR_L : std_logic is status_reg(28);
+                                  alias BIT_OUT_REG_OVERFLOW_ERR_L  : std_logic is status_reg(29);
+                                  alias BIT_OUT_REG_UNDERFLOW_ERR_R : std_logic is status_reg(30);
+                                  alias BIT_OUT_REG_OVERFLOW_ERR_R  : std_logic is status_reg(31);
 
     constant IP_VERSION : std_logic_vector(31 downto 0) := x"DEAD_BEEF";
 
-    alias BIT_CONV_OP_L : std_logic is converter_setup_reg(0);
-    alias BIT_CONV_OP_R : std_logic is converter_setup_reg(1);
+                                  alias BIT_CONV_OP_L : std_logic is converter_setup_reg(0);
+                                  alias BIT_CONV_OP_R : std_logic is converter_setup_reg(1);
 
-    alias BIT_WRITE_REQUEST   : std_logic is master_lite_wr_setup_reg(0);
-    alias BIT_WRITE_DONE      : std_logic is master_lite_wr_setup_reg(31);
-    alias BIT_READ_REQUEST    : std_logic is master_lite_rd_setup_reg(0);
-    alias BIT_READ_DATA_VALID : std_logic is master_lite_rd_setup_reg(31);
+                                  alias BIT_WRITE_REQUEST   : std_logic is master_lite_wr_setup_reg(0);
+                                  alias BIT_WRITE_DONE      : std_logic is master_lite_wr_setup_reg(31);
+                                  alias BIT_READ_REQUEST    : std_logic is master_lite_rd_setup_reg(0);
+                                  alias BIT_READ_DATA_VALID : std_logic is master_lite_rd_setup_reg(31);
 
 
-    -- Procedures
+                                  -- Procedures
     procedure add_bit (signal sigH : in std_logic; signal bitpos : out std_logic) is
     begin
         if (sigH) then bitpos <= '1';
@@ -2661,10 +2661,10 @@ begin
     slv_reg_rden <= axi_arready and s_axi_arvalid and (not axi_rvalid);
 
 
-    -- Implement axi_awready generation
-    -- axi_awready is asserted for one S_AXI_ACLK clock cycle when both
-    -- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
-    -- de-asserted when reset is low.
+-- Implement axi_awready generation
+-- axi_awready is asserted for one S_AXI_ACLK clock cycle when both
+-- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
+-- de-asserted when reset is low.
     axi_awready_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2681,9 +2681,9 @@ begin
     end process axi_awready_proc;
 
 
-    -- Implement axi_awaddr latching
-    -- This process is used to latch the address when both
-    -- S_AXI_AWVALID and S_AXI_WVALID are valid.
+-- Implement axi_awaddr latching
+-- This process is used to latch the address when both
+-- S_AXI_AWVALID and S_AXI_WVALID are valid.
     axi_awaddr_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2696,10 +2696,10 @@ begin
     end process axi_awaddr_proc;
 
 
-    -- Implement axi_wready generation
-    -- axi_wready is asserted for one S_AXI_ACLK clock cycle when both
-    -- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_wready is
-    -- de-asserted when reset is low.
+-- Implement axi_wready generation
+-- axi_wready is asserted for one S_AXI_ACLK clock cycle when both
+-- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_wready is
+-- de-asserted when reset is low.
     axi_wready_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2716,11 +2716,11 @@ begin
     end process axi_wready_proc;
 
 
-    -- Implement write response logic generation
-    -- The write response and response valid signals are asserted by the slave
-    -- when axi_wready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted.
-    -- This marks the acceptance of address and indicates the status of
-    -- write transaction.
+-- Implement write response logic generation
+-- The write response and response valid signals are asserted by the slave
+-- when axi_wready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted.
+-- This marks the acceptance of address and indicates the status of
+-- write transaction.
     axi_bvalid_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2739,12 +2739,12 @@ begin
     end process axi_bvalid_proc;
 
 
-    -- Implement axi_arready generation
-    -- axi_arready is asserted for one S_AXI_ACLK clock cycle when
-    -- S_AXI_ARVALID is asserted. axi_awready is
-    -- de-asserted when reset (active low) is asserted.
-    -- The read address is also latched when S_AXI_ARVALID is
-    -- asserted. axi_araddr is reset to zero on reset assertion.
+-- Implement axi_arready generation
+-- axi_arready is asserted for one S_AXI_ACLK clock cycle when
+-- S_AXI_ARVALID is asserted. axi_awready is
+-- de-asserted when reset (active low) is asserted.
+-- The read address is also latched when S_AXI_ARVALID is
+-- asserted. axi_araddr is reset to zero on reset assertion.
     axi_arready_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2763,14 +2763,14 @@ begin
     end process axi_arready_proc;
 
 
-    -- Implement axi_arvalid generation
-    -- axi_rvalid is asserted for one S_AXI_ACLK clock cycle when both
-    -- S_AXI_ARVALID and axi_arready are asserted. The slave registers
-    -- data are available on the axi_rdata bus at this instance. The
-    -- assertion of axi_rvalid marks the validity of read data on the
-    -- bus and axi_rresp indicates the status of read transaction.axi_rvalid
-    -- is deasserted on reset (active low). axi_rresp and axi_rdata are
-    -- cleared to zero on reset (active low).
+-- Implement axi_arvalid generation
+-- axi_rvalid is asserted for one S_AXI_ACLK clock cycle when both
+-- S_AXI_ARVALID and axi_arready are asserted. The slave registers
+-- data are available on the axi_rdata bus at this instance. The
+-- assertion of axi_rvalid marks the validity of read data on the
+-- bus and axi_rresp indicates the status of read transaction.axi_rvalid
+-- is deasserted on reset (active low). axi_rresp and axi_rdata are
+-- cleared to zero on reset (active low).
     axi_rvalid_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2789,7 +2789,7 @@ begin
     end process axi_rvalid_proc;
 
 
-    -- Output register or memory read data
+-- Output register or memory read data
     axi_rdata_proc : process(s_axi_aclk) is
     begin
         if (rising_edge (s_axi_aclk)) then
@@ -2804,55 +2804,55 @@ begin
     end process axi_rdata_proc;
 
 
-    -- Read address decoding
+-- Read address decoding
     address_decoding_proc : process (all)
         variable loc_addr : std_logic_vector(OPT_MEM_ADDR_BITS downto 0);
     begin
         loc_addr := axi_araddr(ADDR_LSB + OPT_MEM_ADDR_BITS downto ADDR_LSB);
         case loc_addr is
-            when b"00000" =>
-                reg_data_out <= control_reg;
-            when b"00001" =>
-                reg_data_out <= status_reg;
-            when b"00010" =>
-                reg_data_out <= version_reg;
-            when b"00011" =>
-                reg_data_out <= converter_setup_reg;
-            when b"00100" =>
-                reg_data_out <= mm2s_size_reg;
-            when b"00101" =>
-                reg_data_out <= master_lite_wr_setup_reg;
-            when b"00110" =>
-                reg_data_out <= master_lite_wr_add_reg;
-            when b"00111" =>
-                reg_data_out <= master_lite_wr_data_reg;
-            when b"01000" =>
-                reg_data_out <= master_lite_rd_setup_reg;
-            when b"01001" =>
-                reg_data_out <= master_lite_rd_add_reg;
-            when b"01010" =>
-                reg_data_out <= master_lite_rd_data_reg;
-            when b"01011" =>
-                reg_data_out <= count_lch_reg;
-            when b"01100" =>
-                reg_data_out <= pattern_count_lch_reg;
-            when b"01101" =>
-                reg_data_out <= count_rch_reg;
-            when b"01110" =>
-                reg_data_out <= pattern_count_rch_reg;
-            when others =>
-                reg_data_out <= (others => '0');
+                      when b"00000" =>
+                      reg_data_out <= control_reg;
+                      when b"00001" =>
+                      reg_data_out <= status_reg;
+                      when b"00010" =>
+                      reg_data_out <= version_reg;
+                      when b"00011" =>
+                      reg_data_out <= converter_setup_reg;
+                      when b"00100" =>
+                      reg_data_out <= mm2s_size_reg;
+                      when b"00101" =>
+                      reg_data_out <= master_lite_wr_setup_reg;
+                      when b"00110" =>
+                      reg_data_out <= master_lite_wr_add_reg;
+                      when b"00111" =>
+                      reg_data_out <= master_lite_wr_data_reg;
+                      when b"01000" =>
+                      reg_data_out <= master_lite_rd_setup_reg;
+                      when b"01001" =>
+                      reg_data_out <= master_lite_rd_add_reg;
+                      when b"01010" =>
+                      reg_data_out <= master_lite_rd_data_reg;
+                      when b"01011" =>
+                      reg_data_out <= count_lch_reg;
+                      when b"01100" =>
+                      reg_data_out <= pattern_count_lch_reg;
+                      when b"01101" =>
+                      reg_data_out <= count_rch_reg;
+                      when b"01110" =>
+                      reg_data_out <= pattern_count_rch_reg;
+                      when others =>
+                      reg_data_out <= (others => '0');
         end case;
     end process address_decoding_proc;
 
 
-    -- Implement memory mapped register select and write logic generation
-    -- The write data is accepted and written to memory mapped registers when
-    -- axi_awready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted. Write strobes are used to
-    -- select byte enables of slave registers while writing.
-    -- These registers are cleared when reset (active low) is applied.
-    -- Slave register write enable is asserted when valid address and data are available
-    -- and the slave is ready to accept the write address and write data.
+-- Implement memory mapped register select and write logic generation
+-- The write data is accepted and written to memory mapped registers when
+-- axi_awready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted. Write strobes are used to
+-- select byte enables of slave registers while writing.
+-- These registers are cleared when reset (active low) is applied.
+-- Slave register write enable is asserted when valid address and data are available
+-- and the slave is ready to accept the write address and write data.
     read_write_regs_proc : process (s_axi_aclk)
         variable loc_addr : std_logic_vector(OPT_MEM_ADDR_BITS downto 0);
     begin
@@ -2870,63 +2870,63 @@ begin
                 loc_addr := axi_awaddr(ADDR_LSB + OPT_MEM_ADDR_BITS downto ADDR_LSB);
                 if (slv_reg_wren = '1') then
                     case loc_addr is
-                        when b"00000" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    control_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"00000" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          control_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"00011" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    converter_setup_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"00011" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          converter_setup_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"00100" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    mm2s_size_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"00100" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          mm2s_size_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"00101" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    master_lite_wr_setup_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"00101" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          master_lite_wr_setup_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"00110" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    master_lite_wr_add_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"00110" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          master_lite_wr_add_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"00111" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    master_lite_wr_data_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"00111" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          master_lite_wr_data_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"01000" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    master_lite_rd_setup_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"01000" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          master_lite_rd_setup_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when b"01001" =>
-                            for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
-                                if (s_axi_wstrb(byte_index) = '1') then
-                                    master_lite_rd_add_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
-                                end if;
-                            end loop;
+                                  when b"01001" =>
+                                  for byte_index in 0 to (C_S_AXI_DATA_WIDTH/8-1) loop
+                                      if (s_axi_wstrb(byte_index) = '1') then
+                                          master_lite_rd_add_reg(byte_index*8+7 downto byte_index*8) <= s_axi_wdata(byte_index*8+7 downto byte_index*8);
+                                      end if;
+                                  end loop;
 
-                        when others => null;
+                                  when others => null;
 
                     end case;
                 end if;
@@ -2973,7 +2973,7 @@ begin
                 pattern_count_rch_reg   <= (others => '0');
                 master_lite_rd_data_reg <= (others => '0');
             else
-                -- Status REG
+            -- Status REG
                 add_bit(system_running, BIT_RUNNING);
                 add_bit(transaction_error, BIT_AXI_LITE_MASTER_ERR);
                 add_bit(bram_overflow_error, BIT_BRAM_OVERFLOW_ERR);
@@ -3164,7 +3164,7 @@ begin
     m_axi_arprot  <= "001";
 
     read_data <= m_axi_rdata when (m_axi_rvalid = '1' and axi_rready = '1') else
-                 (others => '0');
+                                                                            (others => '0');
     read_data_valid <= axi_rready and m_axi_rvalid;
     write_done      <= axi_bready and m_axi_bvalid;
 
