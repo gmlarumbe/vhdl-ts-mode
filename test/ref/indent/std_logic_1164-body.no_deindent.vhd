@@ -52,15 +52,15 @@
 -- --------------------------------------------------------------------
 
 package body std_logic_1164 is
-                            -------------------------------------------------------------------
-                            -- local types
-                            -------------------------------------------------------------------
-                            type stdlogic_1d is array (STD_ULOGIC) of STD_ULOGIC;
-                            type stdlogic_table is array(STD_ULOGIC, STD_ULOGIC) of STD_ULOGIC;
+    -------------------------------------------------------------------
+    -- local types
+    -------------------------------------------------------------------
+    type stdlogic_1d is array (STD_ULOGIC) of STD_ULOGIC;
+    type stdlogic_table is array(STD_ULOGIC, STD_ULOGIC) of STD_ULOGIC;
 
-                            -------------------------------------------------------------------
-                            -- resolution function
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- resolution function
+    -------------------------------------------------------------------
     constant resolution_table : stdlogic_table := (
                                                   --      ---------------------------------------------------------
                                                   --      |  U    X    0    1    Z    W    L    H    -        |   |
@@ -92,11 +92,11 @@ package body std_logic_1164 is
         return result;
     end function resolved;
 
-                            -------------------------------------------------------------------
-                            -- tables for logical operations
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- tables for logical operations
+    -------------------------------------------------------------------
 
-                            -- truth table for "and" function
+    -- truth table for "and" function
     constant and_table : stdlogic_table := (
                                            --      ----------------------------------------------------
                                            --      |  U    X    0    1    Z    W    L    H    -         |   |
@@ -112,7 +112,7 @@ package body std_logic_1164 is
                                            ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X')   -- | - |
     );
 
-                            -- truth table for "or" function
+    -- truth table for "or" function
     constant or_table : stdlogic_table := (
                                           --      ----------------------------------------------------
                                           --      |  U    X    0    1    Z    W    L    H    -         |   |
@@ -128,7 +128,7 @@ package body std_logic_1164 is
                                           ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X')   -- | - |
     );
 
-                            -- truth table for "xor" function
+    -- truth table for "xor" function
     constant xor_table : stdlogic_table := (
                                            --      ----------------------------------------------------
                                            --      |  U    X    0    1    Z    W    L    H    -         |   |
@@ -144,16 +144,16 @@ package body std_logic_1164 is
                                            ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X')   -- | - |
     );
 
-                            -- truth table for "not" function
+    -- truth table for "not" function
     constant not_table : stdlogic_1d :=
                                      --  -------------------------------------------------
                                      --  |   U    X    0    1    Z    W    L    H    -   |
                                      --  -------------------------------------------------
                                      ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X');
 
-                            -------------------------------------------------------------------
-                            -- overloaded logical operators ( with optimizing hints )
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- overloaded logical operators ( with optimizing hints )
+    -------------------------------------------------------------------
 
     function "and" (l : STD_ULOGIC; r : STD_ULOGIC) return UX01 is
     begin
@@ -190,9 +190,9 @@ package body std_logic_1164 is
         return (not_table(l));
     end function "not";
 
-                            -------------------------------------------------------------------
-                            -- and
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- and
+    -------------------------------------------------------------------
     function "and" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
                                                                        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
@@ -210,9 +210,9 @@ package body std_logic_1164 is
         end if;
         return result;
     end function "and";
-                            -------------------------------------------------------------------
-                            -- nand
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- nand
+    -------------------------------------------------------------------
     function "nand" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
                                                                         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
@@ -230,9 +230,9 @@ package body std_logic_1164 is
         end if;
         return result;
     end function "nand";
-                            -------------------------------------------------------------------
-                            -- or
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- or
+    -------------------------------------------------------------------
     function "or" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                       alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
                                                                       alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
@@ -250,9 +250,9 @@ package body std_logic_1164 is
         end if;
         return result;
     end function "or";
-                            -------------------------------------------------------------------
-                            -- nor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- nor
+    -------------------------------------------------------------------
     function "nor" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
                                                                        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
@@ -270,9 +270,9 @@ package body std_logic_1164 is
         end if;
         return result;
     end function "nor";
-                            ---------------------------------------------------------------------
-                            -- xor
-                            -------------------------------------------------------------------
+    ---------------------------------------------------------------------
+    -- xor
+    -------------------------------------------------------------------
     function "xor" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
                                                                        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
@@ -290,9 +290,9 @@ package body std_logic_1164 is
         end if;
         return result;
     end function "xor";
-                            -------------------------------------------------------------------
-                            -- xnor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- xnor
+    -------------------------------------------------------------------
     function "xnor" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
                                                                         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
@@ -310,9 +310,9 @@ package body std_logic_1164 is
         end if;
         return result;
     end function "xnor";
-                            -------------------------------------------------------------------
-                            -- not
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- not
+    -------------------------------------------------------------------
     function "not" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                     alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => 'X');
@@ -323,9 +323,9 @@ package body std_logic_1164 is
         return result;
     end function "not";
 
-                            -------------------------------------------------------------------
-                            -- and
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- and
+    -------------------------------------------------------------------
     function "and" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
@@ -337,7 +337,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function "and";
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function "and" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -350,9 +350,9 @@ package body std_logic_1164 is
         return result;
     end function "and";
 
-                            -------------------------------------------------------------------
-                            -- nand
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- nand
+    -------------------------------------------------------------------
     function "nand" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
@@ -364,7 +364,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function "nand";
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function "nand" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -377,9 +377,9 @@ package body std_logic_1164 is
         return result;
     end function "nand";
 
-                            -------------------------------------------------------------------
-                            -- or
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- or
+    -------------------------------------------------------------------
     function "or" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
@@ -391,7 +391,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function "or";
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function "or" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -404,9 +404,9 @@ package body std_logic_1164 is
         return result;
     end function "or";
 
-                            -------------------------------------------------------------------
-                            -- nor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- nor
+    -------------------------------------------------------------------
     function "nor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
@@ -418,7 +418,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function "nor";
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function "nor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -431,9 +431,9 @@ package body std_logic_1164 is
         return result;
     end function "nor";
 
-                            -------------------------------------------------------------------
-                            -- xor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- xor
+    -------------------------------------------------------------------
     function "xor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
@@ -445,7 +445,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function "xor";
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function "xor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -458,9 +458,9 @@ package body std_logic_1164 is
         return result;
     end function "xor";
 
-                            -------------------------------------------------------------------
-                            -- xnor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- xnor
+    -------------------------------------------------------------------
     function "xnor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
@@ -472,7 +472,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function "xnor";
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function "xnor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -485,9 +485,9 @@ package body std_logic_1164 is
         return result;
     end function "xnor";
 
-                            -------------------------------------------------------------------
-                            -- and
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- and
+    -------------------------------------------------------------------
     function "and" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC is
         variable result : STD_ULOGIC := '1';
     begin
@@ -497,9 +497,9 @@ package body std_logic_1164 is
         return result;
     end function "and";
 
-                            -------------------------------------------------------------------
-                            -- nand
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- nand
+    -------------------------------------------------------------------
     function "nand" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC is
         variable result : STD_ULOGIC := '1';
     begin
@@ -509,9 +509,9 @@ package body std_logic_1164 is
         return not_table(result);
     end function "nand";
 
-                            -------------------------------------------------------------------
-                            -- or
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- or
+    -------------------------------------------------------------------
     function "or" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC is
         variable result : STD_ULOGIC := '0';
     begin
@@ -521,9 +521,9 @@ package body std_logic_1164 is
         return result;
     end function "or";
 
-                            -------------------------------------------------------------------
-                            -- nor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- nor
+    -------------------------------------------------------------------
     function "nor" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC is
         variable result : STD_ULOGIC := '0';
     begin
@@ -533,9 +533,9 @@ package body std_logic_1164 is
         return not_table(result);
     end function "nor";
 
-                            -------------------------------------------------------------------
-                            -- xor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- xor
+    -------------------------------------------------------------------
     function "xor" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC is
         variable result : STD_ULOGIC := '0';
     begin
@@ -545,9 +545,9 @@ package body std_logic_1164 is
         return result;
     end function "xor";
 
-                            -------------------------------------------------------------------
-                            -- xnor
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- xnor
+    -------------------------------------------------------------------
     function "xnor" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC is
         variable result : STD_ULOGIC := '0';
     begin
@@ -557,13 +557,13 @@ package body std_logic_1164 is
         return not_table(result);
     end function "xnor";
 
-                            -------------------------------------------------------------------
-                            -- shift operators
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- shift operators
+    -------------------------------------------------------------------
 
-                            -------------------------------------------------------------------
-                            -- sll
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- sll
+    -------------------------------------------------------------------
     function "sll" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
@@ -578,9 +578,9 @@ package body std_logic_1164 is
         return result;
     end function "sll";
 
-                            -------------------------------------------------------------------
-                            -- srl
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- srl
+    -------------------------------------------------------------------
     function "srl" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
@@ -595,9 +595,9 @@ package body std_logic_1164 is
         return result;
     end function "srl";
 
-                            -------------------------------------------------------------------
-                            -- rol
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- rol
+    -------------------------------------------------------------------
     function "rol" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
@@ -614,9 +614,9 @@ package body std_logic_1164 is
         return result;
     end function "rol";
 
-                            -------------------------------------------------------------------
-                            -- ror
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- ror
+    -------------------------------------------------------------------
     function "ror" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
@@ -633,23 +633,23 @@ package body std_logic_1164 is
         return result;
     end function "ror";
 
-                            -------------------------------------------------------------------
-                            -- conversion tables
-                            -------------------------------------------------------------------
-                            type logic_x01_table is array (STD_ULOGIC'low to STD_ULOGIC'high) of X01;
-                            type logic_x01z_table is array (STD_ULOGIC'low to STD_ULOGIC'high) of X01Z;
-                            type logic_ux01_table is array (STD_ULOGIC'low to STD_ULOGIC'high) of UX01;
-                            ----------------------------------------------------------
-                            -- table name : cvt_to_x01
-                            --
-                            -- parameters :
-                            --        in  :  std_ulogic  -- some logic value
-                            -- returns    :  x01         -- state value of logic value
-                            -- purpose    :  to convert state-strength to state only
-                            --
-                            -- example    : if (cvt_to_x01 (input_signal) = '1' ) then ...
-                            --
-                            ----------------------------------------------------------
+    -------------------------------------------------------------------
+    -- conversion tables
+    -------------------------------------------------------------------
+    type logic_x01_table is array (STD_ULOGIC'low to STD_ULOGIC'high) of X01;
+    type logic_x01z_table is array (STD_ULOGIC'low to STD_ULOGIC'high) of X01Z;
+    type logic_ux01_table is array (STD_ULOGIC'low to STD_ULOGIC'high) of UX01;
+    ----------------------------------------------------------
+    -- table name : cvt_to_x01
+    --
+    -- parameters :
+    --        in  :  std_ulogic  -- some logic value
+    -- returns    :  x01         -- state value of logic value
+    -- purpose    :  to convert state-strength to state only
+    --
+    -- example    : if (cvt_to_x01 (input_signal) = '1' ) then ...
+    --
+    ----------------------------------------------------------
     constant cvt_to_x01 : logic_x01_table := (
                                              'X',                                -- 'U'
                                              'X',                                -- 'X'
@@ -662,17 +662,17 @@ package body std_logic_1164 is
                                              'X'                                 -- '-'
     );
 
-                            ----------------------------------------------------------
-                            -- table name : cvt_to_x01z
-                            --
-                            -- parameters :
-                            --        in  :  std_ulogic  -- some logic value
-                            -- returns    :  x01z        -- state value of logic value
-                            -- purpose    :  to convert state-strength to state only
-                            --
-                            -- example    : if (cvt_to_x01z (input_signal) = '1' ) then ...
-                            --
-                            ----------------------------------------------------------
+    ----------------------------------------------------------
+    -- table name : cvt_to_x01z
+    --
+    -- parameters :
+    --        in  :  std_ulogic  -- some logic value
+    -- returns    :  x01z        -- state value of logic value
+    -- purpose    :  to convert state-strength to state only
+    --
+    -- example    : if (cvt_to_x01z (input_signal) = '1' ) then ...
+    --
+    ----------------------------------------------------------
     constant cvt_to_x01z : logic_x01z_table := (
                                                'X',                                -- 'U'
                                                'X',                                -- 'X'
@@ -685,17 +685,17 @@ package body std_logic_1164 is
                                                'X'                                 -- '-'
     );
 
-                            ----------------------------------------------------------
-                            -- table name : cvt_to_ux01
-                            --
-                            -- parameters :
-                            --        in  :  std_ulogic  -- some logic value
-                            -- returns    :  ux01        -- state value of logic value
-                            -- purpose    :  to convert state-strength to state only
-                            --
-                            -- example    : if (cvt_to_ux01 (input_signal) = '1' ) then ...
-                            --
-                            ----------------------------------------------------------
+    ----------------------------------------------------------
+    -- table name : cvt_to_ux01
+    --
+    -- parameters :
+    --        in  :  std_ulogic  -- some logic value
+    -- returns    :  ux01        -- state value of logic value
+    -- purpose    :  to convert state-strength to state only
+    --
+    -- example    : if (cvt_to_ux01 (input_signal) = '1' ) then ...
+    --
+    ----------------------------------------------------------
     constant cvt_to_ux01 : logic_ux01_table := (
                                                'U',                                -- 'U'
                                                'X',                                -- 'X'
@@ -708,9 +708,9 @@ package body std_logic_1164 is
                                                'X'                                 -- '-'
     );
 
-                            -------------------------------------------------------------------
-                            -- conversion functions
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- conversion functions
+    -------------------------------------------------------------------
     function To_bit (s : STD_ULOGIC; xmap : BIT := '0') return BIT is
     begin
         case s is
@@ -719,7 +719,7 @@ package body std_logic_1164 is
                when others    => return xmap;
         end case;
     end function To_bit;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_bitvector (s : STD_ULOGIC_VECTOR; xmap : BIT := '0')
     return BIT_VECTOR
     is
@@ -735,7 +735,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_bitvector;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_StdULogic (b : BIT) return STD_ULOGIC is
     begin
         case b is
@@ -743,7 +743,7 @@ package body std_logic_1164 is
                when '1' => return '1';
         end case;
     end function To_StdULogic;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_StdLogicVector (b : BIT_VECTOR)
     return STD_LOGIC_VECTOR
     is
@@ -758,7 +758,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_StdLogicVector;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_StdLogicVector (s : STD_ULOGIC_VECTOR)
     return STD_LOGIC_VECTOR
     is
@@ -770,7 +770,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_StdLogicVector;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_StdULogicVector (b : BIT_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -785,7 +785,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_StdULogicVector;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_StdULogicVector (s : STD_LOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
@@ -798,11 +798,11 @@ package body std_logic_1164 is
         return result;
     end function To_StdULogicVector;
 
-                            -------------------------------------------------------------------
-                            -- strength strippers and type convertors
-                            -------------------------------------------------------------------
-                            -- to_01
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- strength strippers and type convertors
+    -------------------------------------------------------------------
+    -- to_01
+    -------------------------------------------------------------------
     function TO_01 (s : STD_ULOGIC_VECTOR; xmap : STD_ULOGIC := '0')
     return STD_ULOGIC_VECTOR
     is
@@ -824,7 +824,7 @@ package body std_logic_1164 is
         end if;
         return RESULT;
     end function TO_01;
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function TO_01 (s : STD_ULOGIC; xmap : STD_ULOGIC := '0') return STD_ULOGIC is
     begin
         case s is
@@ -833,7 +833,7 @@ package body std_logic_1164 is
                when others    => return xmap;
         end case;
     end function TO_01;
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function TO_01 (s : BIT_VECTOR; xmap : STD_ULOGIC := '0')
     return STD_ULOGIC_VECTOR
     is
@@ -848,7 +848,7 @@ package body std_logic_1164 is
         end loop;
         return RESULT;
     end function TO_01;
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
     function TO_01 (s : BIT; xmap : STD_ULOGIC := '0') return STD_ULOGIC is
     begin
         case s is
@@ -856,9 +856,9 @@ package body std_logic_1164 is
                when '1' => RETURN '1';
         end case;
     end function TO_01;
-                            -------------------------------------------------------------------
-                            -- to_x01
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- to_x01
+    -------------------------------------------------------------------
     function To_X01 (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                      alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
         variable result : STD_ULOGIC_VECTOR (1 to s'length);
@@ -868,12 +868,12 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_X01;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_X01 (s : STD_ULOGIC) return X01 is
     begin
         return (cvt_to_x01(s));
     end function To_X01;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_X01 (b : BIT_VECTOR) return STD_ULOGIC_VECTOR is
                                                               alias bv        : BIT_VECTOR (1 to b'length) is b;
         variable result : STD_ULOGIC_VECTOR (1 to b'length);
@@ -886,7 +886,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_X01;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_X01 (b : BIT) return X01 is
     begin
         case b is
@@ -894,9 +894,9 @@ package body std_logic_1164 is
                when '1' => return('1');
         end case;
     end function To_X01;
-                            --------------------------------------------------------------------
-                            -- to_x01z
-                            -------------------------------------------------------------------
+    --------------------------------------------------------------------
+    -- to_x01z
+    -------------------------------------------------------------------
     function To_X01Z (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                       alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
         variable result : STD_ULOGIC_VECTOR (1 to s'length);
@@ -906,12 +906,12 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_X01Z;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_X01Z (s : STD_ULOGIC) return X01Z is
     begin
         return (cvt_to_x01z(s));
     end function To_X01Z;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_X01Z (b : BIT_VECTOR) return STD_ULOGIC_VECTOR is
                                                                alias bv        : BIT_VECTOR (1 to b'length) is b;
         variable result : STD_ULOGIC_VECTOR (1 to b'length);
@@ -924,7 +924,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_X01Z;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_X01Z (b : BIT) return X01Z is
     begin
         case b is
@@ -932,9 +932,9 @@ package body std_logic_1164 is
                when '1' => return('1');
         end case;
     end function To_X01Z;
-                            --------------------------------------------------------------------
-                            -- to_ux01
-                            -------------------------------------------------------------------
+    --------------------------------------------------------------------
+    -- to_ux01
+    -------------------------------------------------------------------
     function To_UX01 (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
                                                                       alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
         variable result : STD_ULOGIC_VECTOR (1 to s'length);
@@ -944,12 +944,12 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_UX01;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_UX01 (s : STD_ULOGIC) return UX01 is
     begin
         return (cvt_to_ux01(s));
     end function To_UX01;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_UX01 (b : BIT_VECTOR) return STD_ULOGIC_VECTOR is
                                                                alias bv        : BIT_VECTOR (1 to b'length) is b;
         variable result : STD_ULOGIC_VECTOR (1 to b'length);
@@ -962,7 +962,7 @@ package body std_logic_1164 is
         end loop;
         return result;
     end function To_UX01;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function To_UX01 (b : BIT) return UX01 is
     begin
         case b is
@@ -976,9 +976,9 @@ package body std_logic_1164 is
         return l = '1' or l = 'H';
     end function "??";
 
-                            -------------------------------------------------------------------
-                            -- edge detection
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- edge detection
+    -------------------------------------------------------------------
     function rising_edge (signal s : STD_ULOGIC) return BOOLEAN is
     begin
         return (s'event and (To_X01(s) = '1') and
@@ -991,9 +991,9 @@ package body std_logic_1164 is
                 (To_X01(s'last_value) = '1'));
     end function falling_edge;
 
-                            -------------------------------------------------------------------
-                            -- object contains an unknown
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- object contains an unknown
+    -------------------------------------------------------------------
     function Is_X (s : STD_ULOGIC_VECTOR) return BOOLEAN is
     begin
         for i in s'range loop
@@ -1004,7 +1004,7 @@ package body std_logic_1164 is
         end loop;
         return false;
     end function Is_X;
-                            --------------------------------------------------------------------
+    --------------------------------------------------------------------
     function Is_X (s : STD_ULOGIC) return BOOLEAN is
     begin
         case s is
@@ -1014,9 +1014,9 @@ package body std_logic_1164 is
         return false;
     end function Is_X;
 
-                            -------------------------------------------------------------------
-                            -- string conversion and write operations
-                            -------------------------------------------------------------------
+    -------------------------------------------------------------------
+    -- string conversion and write operations
+    -------------------------------------------------------------------
 
     function TO_OSTRING (value : STD_ULOGIC_VECTOR) return STRING is
         constant result_length : NATURAL := (value'length+2)/3;
@@ -1088,12 +1088,12 @@ package body std_logic_1164 is
         return result;
     end function TO_HSTRING;
 
-                            -- Type and constant definitions used to map STD_ULOGIC values
-                            -- into/from character values.
-                            type MVL9plus is ('U', 'X', '0', '1', 'Z', 'W', 'L', 'H', '-', error);
-                            type char_indexed_by_MVL9 is array (STD_ULOGIC) of CHARACTER;
-                            type MVL9_indexed_by_char is array (CHARACTER) of STD_ULOGIC;
-                            type MVL9plus_indexed_by_char is array (CHARACTER) of MVL9plus;
+    -- Type and constant definitions used to map STD_ULOGIC values
+    -- into/from character values.
+    type MVL9plus is ('U', 'X', '0', '1', 'Z', 'W', 'L', 'H', '-', error);
+    type char_indexed_by_MVL9 is array (STD_ULOGIC) of CHARACTER;
+    type MVL9_indexed_by_char is array (CHARACTER) of STD_ULOGIC;
+    type MVL9plus_indexed_by_char is array (CHARACTER) of MVL9plus;
     constant MVL9_to_char : char_indexed_by_MVL9 := "UX01ZWLH-";
     constant char_to_MVL9 : MVL9_indexed_by_char :=
                                                  ('U' => 'U', 'X' => 'X', '0' => '0', '1' => '1', 'Z' => 'Z',
@@ -1104,7 +1104,7 @@ package body std_logic_1164 is
 
     constant NBSP : CHARACTER := CHARACTER'val(160);  -- space character
 
-                            -- purpose: Skips white space
+    -- purpose: Skips white space
     procedure skip_whitespace (
         L : inout LINE) is
         variable c : CHARACTER;

@@ -143,17 +143,17 @@ end RTL;
 -- Packages
 package foo is
 
-            procedure foo2(
-                signal common_in   : in  mf_common_response_r_type_in
-            );
+    procedure foo2(
+        signal common_in   : in  mf_common_response_r_type_in
+    );
 
 end package foo;
 
 package foo is
 
-            procedure foo2(
-                signal common_in   : in  mf_common_response_r_type_in
-            );
+    procedure foo2(
+        signal common_in   : in  mf_common_response_r_type_in
+    );
 
 end;
 

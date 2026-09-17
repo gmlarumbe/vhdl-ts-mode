@@ -158,7 +158,7 @@ entity traffic_light_fsm is
 end entity traffic_light_fsm;
 
 architecture rtl of traffic_light_fsm is
-                                      type state_type is (RED, YELLOW, GREEN, RED_YELLOW);
+    type state_type is (RED, YELLOW, GREEN, RED_YELLOW);
     signal state_reg, state_next : state_type;
 begin  -- architecture rtl
 

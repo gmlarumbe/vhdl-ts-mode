@@ -1042,11 +1042,11 @@ architecture RTL of input_buffer is
 
     procedure bram_logic (
         signal s_axis_tvalid   : in    std_logic;
-                             signal s_axis_tdata    : in    std_logic_vector(63 downto 0);
-                             signal read_bram_enb   : in    std_logic;
-                             signal bram_pointer    : inout bram_read_pointer_t;
-                             signal overflow_error  : out   std_logic;
-                             signal address_write_d : out   std_logic_vector(10 downto 0)
+        signal s_axis_tdata    : in    std_logic_vector(63 downto 0);
+        signal read_bram_enb   : in    std_logic;
+        signal bram_pointer    : inout bram_read_pointer_t;
+        signal overflow_error  : out   std_logic;
+        signal address_write_d : out   std_logic_vector(10 downto 0)
     ) is
     begin
         if (read_bram_enb = '1') then
@@ -1060,8 +1060,8 @@ architecture RTL of input_buffer is
 
     procedure bram_logic_rst (
         signal bram_pointer    : out bram_read_pointer_t;
-                                 signal overflow_error  : out std_logic;
-                                 signal address_write_d : out std_logic_vector(10 downto 0)
+        signal overflow_error  : out std_logic;
+        signal address_write_d : out std_logic_vector(10 downto 0)
     ) is
     begin
         init_bram_logic(bram_pointer);
@@ -1072,15 +1072,15 @@ architecture RTL of input_buffer is
 
     procedure read_to_output_reg_logic (
         signal start_burst_master    : in    std_logic;
-                                           signal wlast                 : in    std_logic;
-                                           signal read_size             : in    unsigned(9 downto 0);
-                                           signal idx                   : inout unsigned(10 downto 0);
-                                           signal idx_bram              : inout unsigned(10 downto 0);
-                                           signal bram_to_buffer        : in    std_logic_vector(63 downto 0);
-                                           signal read_bram_enb         : inout std_logic;
-                                           signal last_word_out_reg     : inout std_logic;
-                                           signal load_output_reg       : out   std_logic;
-                                           signal output_reg_out_tvalid : out   std_logic
+        signal wlast                 : in    std_logic;
+        signal read_size             : in    unsigned(9 downto 0);
+        signal idx                   : inout unsigned(10 downto 0);
+        signal idx_bram              : inout unsigned(10 downto 0);
+        signal bram_to_buffer        : in    std_logic_vector(63 downto 0);
+        signal read_bram_enb         : inout std_logic;
+        signal last_word_out_reg     : inout std_logic;
+        signal load_output_reg       : out   std_logic;
+        signal output_reg_out_tvalid : out   std_logic
     ) is
     begin
         if (start_burst_master = '1') then
@@ -1111,11 +1111,11 @@ architecture RTL of input_buffer is
 
     procedure read_to_output_reg_logic_rst (
         signal idx                   : out unsigned(10 downto 0);
-                                               signal idx_bram              : out unsigned(10 downto 0);
-                                               signal read_bram_enb         : out std_logic;
-                                               signal output_reg_out_tvalid : out std_logic;
-                                               signal load_output_reg       : out std_logic;
-                                               signal last_word_out_reg     : out std_logic
+        signal idx_bram              : out unsigned(10 downto 0);
+        signal read_bram_enb         : out std_logic;
+        signal output_reg_out_tvalid : out std_logic;
+        signal load_output_reg       : out std_logic;
+        signal last_word_out_reg     : out std_logic
     ) is
     begin
         idx                   <= (others => '0');
@@ -1129,8 +1129,8 @@ architecture RTL of input_buffer is
 
     procedure bram_pointer_position_calc (
         signal write_done            : in    std_logic;
-                                             signal read_size             : in    unsigned(9 downto 0);
-                                             signal bram_pointer_position : inout std_logic_vector(31 downto 0)
+        signal read_size             : in    unsigned(9 downto 0);
+        signal bram_pointer_position : inout std_logic_vector(31 downto 0)
     ) is
     begin
         if (write_done = '1') then
@@ -1141,7 +1141,7 @@ architecture RTL of input_buffer is
 
     procedure bram_pointer_position_rst (
         constant CH_BASE_ADDRESS     : in  std_logic_vector(31 downto 0);
-                                            signal bram_pointer_position : out std_logic_vector(31 downto 0)
+        signal bram_pointer_position : out std_logic_vector(31 downto 0)
     ) is
     begin
         bram_pointer_position <= CH_BASE_ADDRESS;
@@ -1150,13 +1150,13 @@ architecture RTL of input_buffer is
 
     procedure load_output_reg (
         constant OUTPUT_REG_DEFAULT_VALUE : in  std_logic_vector(63 downto 0);
-                                  signal output_reg_out_tvalid      : in  std_logic;
-                                  signal idx                        : in  unsigned(10 downto 0);
-                                  signal bram_to_buffer             : in  std_logic_vector(63 downto 0);
-                                  signal load_output_reg            : in  std_logic;
-                                  signal output_reg                 : out output_reg;
-                                  signal out_reg_underflow_error    : out std_logic;
-                                  signal out_reg_overflow_error     : out std_logic
+        signal output_reg_out_tvalid      : in  std_logic;
+        signal idx                        : in  unsigned(10 downto 0);
+        signal bram_to_buffer             : in  std_logic_vector(63 downto 0);
+        signal load_output_reg            : in  std_logic;
+        signal output_reg                 : out output_reg;
+        signal out_reg_underflow_error    : out std_logic;
+        signal out_reg_overflow_error     : out std_logic
     ) is
     begin
         if (output_reg_out_tvalid = '1') then
@@ -1177,9 +1177,9 @@ architecture RTL of input_buffer is
 
     procedure load_output_reg_rst (
         constant OUTPUT_REG_DEFAULT_VALUE : in  std_logic_vector(63 downto 0);
-                                      signal output_reg                 : out output_reg;
-                                      signal out_reg_underflow_error    : out std_logic;
-                                      signal out_reg_overflow_error     : out std_logic
+        signal output_reg                 : out output_reg;
+        signal out_reg_underflow_error    : out std_logic;
+        signal out_reg_overflow_error     : out std_logic
     ) is
     begin
         output_reg              <= (others => OUTPUT_REG_DEFAULT_VALUE);
@@ -1558,13 +1558,13 @@ end core_fsm;
 
 architecture RTL of core_fsm is
 
-                             type fsm_states is (
-                                                IDLE,
-                                                REQ_S2MM,
-                                                WAIT_S2MM,
-                                                REQ_MM2S,
-                                                WAIT_MM2S
-                             );
+    type fsm_states is (
+                       IDLE,
+                       REQ_S2MM,
+                       WAIT_S2MM,
+                       REQ_MM2S,
+                       WAIT_MM2S
+    );
     signal state : fsm_states;
 
     signal s2mm_write_ptr      : std_logic_vector(31 downto 0);
@@ -1786,15 +1786,15 @@ architecture RTL of core_converter is
     end;
 
 
-                                   type fsm_state is (
-                                                     IDLE,
-                                                     WRITE_BURST_SIZE_CALC,
-                                                     WRITE_INITIATE,
-                                                     WRITING_TO_MEM,
-                                                     READ_BURST_SIZE_CALC,
-                                                     READ_INITIATE,
-                                                     READING_FROM_MEM
-                                   );
+    type fsm_state is (
+                      IDLE,
+                      WRITE_BURST_SIZE_CALC,
+                      WRITE_INITIATE,
+                      WRITING_TO_MEM,
+                      READ_BURST_SIZE_CALC,
+                      READ_INITIATE,
+                      READING_FROM_MEM
+    );
 
     signal state : fsm_state;
 
