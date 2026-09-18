@@ -194,8 +194,8 @@ package body std_logic_1164 is
     -- and
     -------------------------------------------------------------------
     function "and" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                       alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
-                                                                       alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         if (l'length /= r'length) then
@@ -214,8 +214,8 @@ package body std_logic_1164 is
     -- nand
     -------------------------------------------------------------------
     function "nand" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
-                                                                        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         if (l'length /= r'length) then
@@ -234,8 +234,8 @@ package body std_logic_1164 is
     -- or
     -------------------------------------------------------------------
     function "or" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                      alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
-                                                                      alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         if (l'length /= r'length) then
@@ -254,8 +254,8 @@ package body std_logic_1164 is
     -- nor
     -------------------------------------------------------------------
     function "nor" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                       alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
-                                                                       alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         if (l'length /= r'length) then
@@ -274,8 +274,8 @@ package body std_logic_1164 is
     -- xor
     -------------------------------------------------------------------
     function "xor" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                       alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
-                                                                       alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         if (l'length /= r'length) then
@@ -294,8 +294,8 @@ package body std_logic_1164 is
     -- xnor
     -------------------------------------------------------------------
     function "xnor" (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
-                                                                        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         if (l'length /= r'length) then
@@ -314,7 +314,7 @@ package body std_logic_1164 is
     -- not
     -------------------------------------------------------------------
     function "not" (l : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => 'X');
     begin
         for i in result'range loop
@@ -329,7 +329,7 @@ package body std_logic_1164 is
     function "and" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         for i in result'range loop
@@ -341,7 +341,7 @@ package body std_logic_1164 is
     function "and" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
         for i in result'range loop
@@ -356,7 +356,7 @@ package body std_logic_1164 is
     function "nand" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         for i in result'range loop
@@ -368,7 +368,7 @@ package body std_logic_1164 is
     function "nand" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
         for i in result'range loop
@@ -383,7 +383,7 @@ package body std_logic_1164 is
     function "or" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         for i in result'range loop
@@ -395,7 +395,7 @@ package body std_logic_1164 is
     function "or" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
         for i in result'range loop
@@ -410,7 +410,7 @@ package body std_logic_1164 is
     function "nor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         for i in result'range loop
@@ -422,7 +422,7 @@ package body std_logic_1164 is
     function "nor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
         for i in result'range loop
@@ -437,7 +437,7 @@ package body std_logic_1164 is
     function "xor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         for i in result'range loop
@@ -449,7 +449,7 @@ package body std_logic_1164 is
     function "xor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
         for i in result'range loop
@@ -464,7 +464,7 @@ package body std_logic_1164 is
     function "xnor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
         for i in result'range loop
@@ -476,7 +476,7 @@ package body std_logic_1164 is
     function "xnor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
+        alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
         for i in result'range loop
@@ -567,7 +567,7 @@ package body std_logic_1164 is
     function "sll" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => '0');
     begin
         if r >= 0 then
@@ -584,7 +584,7 @@ package body std_logic_1164 is
     function "srl" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => '0');
     begin
         if r >= 0 then
@@ -601,7 +601,7 @@ package body std_logic_1164 is
     function "rol" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
         constant rm     : INTEGER := r mod l'length;
     begin
@@ -620,7 +620,7 @@ package body std_logic_1164 is
     function "ror" (l : STD_ULOGIC_VECTOR; r : INTEGER)
     return STD_ULOGIC_VECTOR
     is
-    alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
+        alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => '0');
         constant rm     : INTEGER := r mod l'length;
     begin
@@ -723,7 +723,7 @@ package body std_logic_1164 is
     function To_bitvector (s : STD_ULOGIC_VECTOR; xmap : BIT := '0')
     return BIT_VECTOR
     is
-    alias sv        : STD_ULOGIC_VECTOR (s'length-1 downto 0) is s;
+        alias sv        : STD_ULOGIC_VECTOR (s'length-1 downto 0) is s;
         variable result : BIT_VECTOR (s'length-1 downto 0);
     begin
         for i in result'range loop
@@ -747,7 +747,7 @@ package body std_logic_1164 is
     function To_StdLogicVector (b : BIT_VECTOR)
     return STD_LOGIC_VECTOR
     is
-    alias bv        : BIT_VECTOR (b'length-1 downto 0) is b;
+        alias bv        : BIT_VECTOR (b'length-1 downto 0) is b;
         variable result : STD_LOGIC_VECTOR (b'length-1 downto 0);
     begin
         for i in result'range loop
@@ -762,7 +762,7 @@ package body std_logic_1164 is
     function To_StdLogicVector (s : STD_ULOGIC_VECTOR)
     return STD_LOGIC_VECTOR
     is
-    alias sv        : STD_ULOGIC_VECTOR (s'length-1 downto 0) is s;
+        alias sv        : STD_ULOGIC_VECTOR (s'length-1 downto 0) is s;
         variable result : STD_LOGIC_VECTOR (s'length-1 downto 0);
     begin
         for i in result'range loop
@@ -774,7 +774,7 @@ package body std_logic_1164 is
     function To_StdULogicVector (b : BIT_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias bv        : BIT_VECTOR (b'length-1 downto 0) is b;
+        alias bv        : BIT_VECTOR (b'length-1 downto 0) is b;
         variable result : STD_ULOGIC_VECTOR (b'length-1 downto 0);
     begin
         for i in result'range loop
@@ -789,7 +789,7 @@ package body std_logic_1164 is
     function To_StdULogicVector (s : STD_LOGIC_VECTOR)
     return STD_ULOGIC_VECTOR
     is
-    alias sv        : STD_LOGIC_VECTOR (s'length-1 downto 0) is s;
+        alias sv        : STD_LOGIC_VECTOR (s'length-1 downto 0) is s;
         variable result : STD_ULOGIC_VECTOR (s'length-1 downto 0);
     begin
         for i in result'range loop
@@ -808,7 +808,7 @@ package body std_logic_1164 is
     is
         variable RESULT      : STD_ULOGIC_VECTOR(s'length-1 downto 0);
         variable BAD_ELEMENT : BOOLEAN := false;
-    alias XS             : STD_ULOGIC_VECTOR(s'length-1 downto 0) is s;
+        alias XS             : STD_ULOGIC_VECTOR(s'length-1 downto 0) is s;
     begin
         for I in RESULT'range loop
             case XS(I) is
@@ -838,7 +838,7 @@ package body std_logic_1164 is
     return STD_ULOGIC_VECTOR
     is
         variable RESULT : STD_ULOGIC_VECTOR(s'length-1 downto 0);
-    alias XS        : BIT_VECTOR(s'length-1 downto 0) is s;
+        alias XS        : BIT_VECTOR(s'length-1 downto 0) is s;
     begin
         for I in RESULT'range loop
             case XS(I) is
@@ -860,7 +860,7 @@ package body std_logic_1164 is
     -- to_x01
     -------------------------------------------------------------------
     function To_X01 (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                     alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
+        alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
         variable result : STD_ULOGIC_VECTOR (1 to s'length);
     begin
         for i in result'range loop
@@ -875,7 +875,7 @@ package body std_logic_1164 is
     end function To_X01;
     --------------------------------------------------------------------
     function To_X01 (b : BIT_VECTOR) return STD_ULOGIC_VECTOR is
-                                                              alias bv        : BIT_VECTOR (1 to b'length) is b;
+        alias bv        : BIT_VECTOR (1 to b'length) is b;
         variable result : STD_ULOGIC_VECTOR (1 to b'length);
     begin
         for i in result'range loop
@@ -898,7 +898,7 @@ package body std_logic_1164 is
     -- to_x01z
     -------------------------------------------------------------------
     function To_X01Z (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                      alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
+        alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
         variable result : STD_ULOGIC_VECTOR (1 to s'length);
     begin
         for i in result'range loop
@@ -913,7 +913,7 @@ package body std_logic_1164 is
     end function To_X01Z;
     --------------------------------------------------------------------
     function To_X01Z (b : BIT_VECTOR) return STD_ULOGIC_VECTOR is
-                                                               alias bv        : BIT_VECTOR (1 to b'length) is b;
+        alias bv        : BIT_VECTOR (1 to b'length) is b;
         variable result : STD_ULOGIC_VECTOR (1 to b'length);
     begin
         for i in result'range loop
@@ -936,7 +936,7 @@ package body std_logic_1164 is
     -- to_ux01
     -------------------------------------------------------------------
     function To_UX01 (s : STD_ULOGIC_VECTOR) return STD_ULOGIC_VECTOR is
-                                                                      alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
+        alias sv        : STD_ULOGIC_VECTOR (1 to s'length) is s;
         variable result : STD_ULOGIC_VECTOR (1 to s'length);
     begin
         for i in result'range loop
@@ -951,7 +951,7 @@ package body std_logic_1164 is
     end function To_UX01;
     --------------------------------------------------------------------
     function To_UX01 (b : BIT_VECTOR) return STD_ULOGIC_VECTOR is
-                                                               alias bv        : BIT_VECTOR (1 to b'length) is b;
+        alias bv        : BIT_VECTOR (1 to b'length) is b;
         variable result : STD_ULOGIC_VECTOR (1 to b'length);
     begin
         for i in result'range loop
@@ -1270,7 +1270,7 @@ package body std_logic_1164 is
     procedure WRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
                         JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0) is
         variable s : STRING(1 to VALUE'length);
-                                                                                alias m    : STD_ULOGIC_VECTOR(1 to VALUE'length) is VALUE;
+        alias m    : STD_ULOGIC_VECTOR(1 to VALUE'length) is VALUE;
     begin
         for i in 1 to VALUE'length loop
             s(i) := MVL9_to_char(m(i));

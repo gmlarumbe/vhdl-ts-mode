@@ -168,30 +168,30 @@ package std_logic_1164 is
     function To_StdULogicVector (b : BIT_VECTOR) return STD_ULOGIC_VECTOR;
     function To_StdULogicVector (s : STD_LOGIC_VECTOR) return STD_ULOGIC_VECTOR;
 
-                       alias To_Bit_Vector is
-                       To_bitvector[STD_ULOGIC_VECTOR, BIT return BIT_VECTOR];
-                       alias To_BV is
-                       To_bitvector[STD_ULOGIC_VECTOR, BIT return BIT_VECTOR];
+    alias To_Bit_Vector is
+    To_bitvector[STD_ULOGIC_VECTOR, BIT return BIT_VECTOR];
+    alias To_BV is
+    To_bitvector[STD_ULOGIC_VECTOR, BIT return BIT_VECTOR];
 
-                       alias To_Std_Logic_Vector is
-                       To_StdLogicVector[BIT_VECTOR return STD_LOGIC_VECTOR];
-                       alias To_SLV is
-                       To_StdLogicVector[BIT_VECTOR return STD_LOGIC_VECTOR];
+    alias To_Std_Logic_Vector is
+    To_StdLogicVector[BIT_VECTOR return STD_LOGIC_VECTOR];
+    alias To_SLV is
+    To_StdLogicVector[BIT_VECTOR return STD_LOGIC_VECTOR];
 
-                       alias To_Std_Logic_Vector is
-                       To_StdLogicVector[STD_ULOGIC_VECTOR return STD_LOGIC_VECTOR];
-                       alias To_SLV is
-                       To_StdLogicVector[STD_ULOGIC_VECTOR return STD_LOGIC_VECTOR];
+    alias To_Std_Logic_Vector is
+    To_StdLogicVector[STD_ULOGIC_VECTOR return STD_LOGIC_VECTOR];
+    alias To_SLV is
+    To_StdLogicVector[STD_ULOGIC_VECTOR return STD_LOGIC_VECTOR];
 
-                       alias To_Std_ULogic_Vector is
-                       To_StdULogicVector[BIT_VECTOR return STD_ULOGIC_VECTOR];
-                       alias To_SULV is
-                       To_StdULogicVector[BIT_VECTOR return STD_ULOGIC_VECTOR];
+    alias To_Std_ULogic_Vector is
+    To_StdULogicVector[BIT_VECTOR return STD_ULOGIC_VECTOR];
+    alias To_SULV is
+    To_StdULogicVector[BIT_VECTOR return STD_ULOGIC_VECTOR];
 
-                       alias To_Std_ULogic_Vector is
-                       To_StdULogicVector[STD_LOGIC_VECTOR return STD_ULOGIC_VECTOR];
-                       alias To_SULV is
-                       To_StdULogicVector[STD_LOGIC_VECTOR return STD_ULOGIC_VECTOR];
+    alias To_Std_ULogic_Vector is
+    To_StdULogicVector[STD_LOGIC_VECTOR return STD_ULOGIC_VECTOR];
+    alias To_SULV is
+    To_StdULogicVector[STD_LOGIC_VECTOR return STD_ULOGIC_VECTOR];
 
     -------------------------------------------------------------------
     -- strength strippers and type convertors
@@ -261,12 +261,12 @@ package std_logic_1164 is
 
     -- explicitly defined operations
 
-                       alias TO_BSTRING is TO_STRING [STD_ULOGIC_VECTOR return STRING];
-                       alias TO_BINARY_STRING is TO_STRING [STD_ULOGIC_VECTOR return STRING];
+    alias TO_BSTRING is TO_STRING [STD_ULOGIC_VECTOR return STRING];
+    alias TO_BINARY_STRING is TO_STRING [STD_ULOGIC_VECTOR return STRING];
     function TO_OSTRING (VALUE : STD_ULOGIC_VECTOR) return STRING;
-                       alias TO_OCTAL_STRING is TO_OSTRING [STD_ULOGIC_VECTOR return STRING];
+    alias TO_OCTAL_STRING is TO_OSTRING [STD_ULOGIC_VECTOR return STRING];
     function TO_HSTRING (VALUE : STD_ULOGIC_VECTOR) return STRING;
-                       alias TO_HEX_STRING is TO_HSTRING [STD_ULOGIC_VECTOR return STRING];
+    alias TO_HEX_STRING is TO_HSTRING [STD_ULOGIC_VECTOR return STRING];
 
     procedure READ (L : inout LINE; VALUE : out STD_ULOGIC; GOOD : out BOOLEAN);
     procedure READ (L : inout LINE; VALUE : out STD_ULOGIC);
@@ -280,30 +280,30 @@ package std_logic_1164 is
     procedure WRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
                         JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
 
-                       alias BREAD is READ [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
-                       alias BREAD is READ [LINE, STD_ULOGIC_VECTOR];
-                       alias BINARY_READ is READ [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
-                       alias BINARY_READ is READ [LINE, STD_ULOGIC_VECTOR];
+    alias BREAD is READ [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
+    alias BREAD is READ [LINE, STD_ULOGIC_VECTOR];
+    alias BINARY_READ is READ [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
+    alias BINARY_READ is READ [LINE, STD_ULOGIC_VECTOR];
 
     procedure OREAD (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR; GOOD : out BOOLEAN);
     procedure OREAD (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
-                       alias OCTAL_READ is OREAD [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
-                       alias OCTAL_READ is OREAD [LINE, STD_ULOGIC_VECTOR];
+    alias OCTAL_READ is OREAD [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
+    alias OCTAL_READ is OREAD [LINE, STD_ULOGIC_VECTOR];
 
     procedure HREAD (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR; GOOD : out BOOLEAN);
     procedure HREAD (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
-                       alias HEX_READ is HREAD [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
-                       alias HEX_READ is HREAD [LINE, STD_ULOGIC_VECTOR];
+    alias HEX_READ is HREAD [LINE, STD_ULOGIC_VECTOR, BOOLEAN];
+    alias HEX_READ is HREAD [LINE, STD_ULOGIC_VECTOR];
 
-                       alias BWRITE is WRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
-                       alias BINARY_WRITE is WRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
+    alias BWRITE is WRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
+    alias BINARY_WRITE is WRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
 
     procedure OWRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
                          JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
-                       alias OCTAL_WRITE is OWRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
+    alias OCTAL_WRITE is OWRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
 
     procedure HWRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
                          JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0);
-                       alias HEX_WRITE is HWRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
+    alias HEX_WRITE is HWRITE [LINE, STD_ULOGIC_VECTOR, SIDE, WIDTH];
 
 end package std_logic_1164;

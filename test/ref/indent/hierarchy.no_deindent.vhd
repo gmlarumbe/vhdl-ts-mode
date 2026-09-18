@@ -1222,12 +1222,12 @@ architecture RTL of input_buffer is
     signal idx_r      : unsigned(10 downto 0);
     signal idx_r_bram : unsigned(10 downto 0);
 
-                                 attribute keep                      : string;
-                                 attribute keep of output_reg_l      : signal is "true";
-                                 attribute keep of output_reg_r      : signal is "true";
-                                 attribute ram_style                 : string;
-                                 attribute ram_style of output_reg_l : signal is "distributed";
-                                 attribute ram_style of output_reg_r : signal is "distributed";
+    attribute keep                      : string;
+    attribute keep of output_reg_l      : signal is "true";
+    attribute keep of output_reg_r      : signal is "true";
+    attribute ram_style                 : string;
+    attribute ram_style of output_reg_l : signal is "distributed";
+    attribute ram_style of output_reg_r : signal is "distributed";
 
 begin
 
@@ -2597,44 +2597,44 @@ architecture RTL of axi_lite_regs is
     signal count_rch_reg            : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal pattern_count_rch_reg    : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
 
-                                  attribute keep                             : boolean;
-                                  attribute keep of control_reg              : signal is true;
-                                  attribute keep of status_reg               : signal is true;
-                                  attribute keep of version_reg              : signal is true;
-                                  attribute keep of converter_setup_reg      : signal is true;
-                                  attribute keep of mm2s_size_reg            : signal is true;
-                                  attribute keep of master_lite_wr_setup_reg : signal is true;
-                                  attribute keep of master_lite_wr_add_reg   : signal is true;
-                                  attribute keep of master_lite_wr_data_reg  : signal is true;
-                                  attribute keep of master_lite_rd_setup_reg : signal is true;
-                                  attribute keep of master_lite_rd_add_reg   : signal is true;
-                                  attribute keep of master_lite_rd_data_reg  : signal is true;
-                                  attribute keep of count_lch_reg            : signal is true;
-                                  attribute keep of pattern_count_lch_reg    : signal is true;
-                                  attribute keep of count_rch_reg            : signal is true;
-                                  attribute keep of pattern_count_rch_reg    : signal is true;
+    attribute keep                             : boolean;
+    attribute keep of control_reg              : signal is true;
+    attribute keep of status_reg               : signal is true;
+    attribute keep of version_reg              : signal is true;
+    attribute keep of converter_setup_reg      : signal is true;
+    attribute keep of mm2s_size_reg            : signal is true;
+    attribute keep of master_lite_wr_setup_reg : signal is true;
+    attribute keep of master_lite_wr_add_reg   : signal is true;
+    attribute keep of master_lite_wr_data_reg  : signal is true;
+    attribute keep of master_lite_rd_setup_reg : signal is true;
+    attribute keep of master_lite_rd_add_reg   : signal is true;
+    attribute keep of master_lite_rd_data_reg  : signal is true;
+    attribute keep of count_lch_reg            : signal is true;
+    attribute keep of pattern_count_lch_reg    : signal is true;
+    attribute keep of count_rch_reg            : signal is true;
+    attribute keep of pattern_count_rch_reg    : signal is true;
 
     -- Bit aliases
-                                  alias BIT_ENABLE     : std_logic is control_reg(0);
-                                  alias BIT_SOFT_RESET : std_logic is control_reg(31);
+    alias BIT_ENABLE     : std_logic is control_reg(0);
+    alias BIT_SOFT_RESET : std_logic is control_reg(31);
 
-                                  alias BIT_RUNNING                 : std_logic is status_reg(0);
-                                  alias BIT_AXI_LITE_MASTER_ERR     : std_logic is status_reg(26);
-                                  alias BIT_BRAM_OVERFLOW_ERR       : std_logic is status_reg(27);
-                                  alias BIT_OUT_REG_UNDERFLOW_ERR_L : std_logic is status_reg(28);
-                                  alias BIT_OUT_REG_OVERFLOW_ERR_L  : std_logic is status_reg(29);
-                                  alias BIT_OUT_REG_UNDERFLOW_ERR_R : std_logic is status_reg(30);
-                                  alias BIT_OUT_REG_OVERFLOW_ERR_R  : std_logic is status_reg(31);
+    alias BIT_RUNNING                 : std_logic is status_reg(0);
+    alias BIT_AXI_LITE_MASTER_ERR     : std_logic is status_reg(26);
+    alias BIT_BRAM_OVERFLOW_ERR       : std_logic is status_reg(27);
+    alias BIT_OUT_REG_UNDERFLOW_ERR_L : std_logic is status_reg(28);
+    alias BIT_OUT_REG_OVERFLOW_ERR_L  : std_logic is status_reg(29);
+    alias BIT_OUT_REG_UNDERFLOW_ERR_R : std_logic is status_reg(30);
+    alias BIT_OUT_REG_OVERFLOW_ERR_R  : std_logic is status_reg(31);
 
     constant IP_VERSION : std_logic_vector(31 downto 0) := x"DEAD_BEEF";
 
-                                  alias BIT_CONV_OP_L : std_logic is converter_setup_reg(0);
-                                  alias BIT_CONV_OP_R : std_logic is converter_setup_reg(1);
+    alias BIT_CONV_OP_L : std_logic is converter_setup_reg(0);
+    alias BIT_CONV_OP_R : std_logic is converter_setup_reg(1);
 
-                                  alias BIT_WRITE_REQUEST   : std_logic is master_lite_wr_setup_reg(0);
-                                  alias BIT_WRITE_DONE      : std_logic is master_lite_wr_setup_reg(31);
-                                  alias BIT_READ_REQUEST    : std_logic is master_lite_rd_setup_reg(0);
-                                  alias BIT_READ_DATA_VALID : std_logic is master_lite_rd_setup_reg(31);
+    alias BIT_WRITE_REQUEST   : std_logic is master_lite_wr_setup_reg(0);
+    alias BIT_WRITE_DONE      : std_logic is master_lite_wr_setup_reg(31);
+    alias BIT_READ_REQUEST    : std_logic is master_lite_rd_setup_reg(0);
+    alias BIT_READ_DATA_VALID : std_logic is master_lite_rd_setup_reg(31);
 
 
     -- Procedures
