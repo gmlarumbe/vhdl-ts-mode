@@ -43,7 +43,7 @@ architecture RTL of instances is
 
 begin  -- architecture RTL
 
--- Component instantiation
+    -- Component instantiation
     I_BLOCK0_0 : block0
         port map (
             Port0 => Port0,
@@ -66,7 +66,7 @@ begin  -- architecture RTL
           Port1 => Port1,
           Port2 => Port2);
 
--- Entity instantiation
+    -- Entity instantiation
     I_BLOCK1_0 : entity work.block1
         port map (
             Port0 => Port0,
@@ -101,7 +101,7 @@ begin  -- architecture RTL
               Port2 => Port2
         );
 
--- Generate
+    -- Generate
 GEN_BLOCK1 :
 for I in 0 to 3 generate
                 I_BLOCK1_GEN : entity work.block1 port map

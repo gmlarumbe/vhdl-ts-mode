@@ -20,7 +20,7 @@ architecture TB of tb_axi_if_converter is
     constant C_S_AXI_DATA_WIDTH : integer := 32;
     constant C_S_AXI_ADDR_WIDTH : integer := 7;
 
-                                       -- component ports
+    -- component ports
     signal clk        : std_logic := '1';
     signal resetn     : std_logic := '0';
     signal clk_fs_ext : std_logic := '1';
@@ -193,25 +193,25 @@ architecture TB of tb_axi_if_converter is
     signal m_axi_conf_rvalid  : std_logic;
     signal m_axi_conf_rready  : std_logic;
 
-                                       -- BFMs
-                                       -- Axi lite slave
+    -- BFMs
+    -- Axi lite slave
     signal s_bfm_in_r  : s_common_response_r_in;
     signal s_bfm_out_r : s_common_response_r_out;
     signal s_bfm_in_w  : s_common_response_w_in;
     signal s_bfm_out_w : s_common_response_w_out;
 
-                                       -- Axi lite master
+    -- Axi lite master
     signal m_bfm_in_r  : m_common_response_r_type_in;
     signal m_bfm_out_r : m_common_response_r_type_out;
     signal m_bfm_in_w  : m_common_response_w_type_in;
     signal m_bfm_out_w : m_common_response_w_type_out;
 
-                                       -- TB aux signals
+    -- TB aux signals
     signal stop_clock : std_logic := '0';
 
 begin
 
--- component instantiation
+    -- component instantiation
     DUT : entity xil_defaultlib.axi_if_converter
         port map (
             clk        => clk,
@@ -492,10 +492,10 @@ begin
 
 
 
--- clock generation
+    -- clock generation
     clk <= (not clk and not stop_clock) after AXI_CLK_T/2;
 
--- Clock & Reset connections
+    -- Clock & Reset connections
     s_axi_aclk      <= clk;
     m_axi_conf_aclk <= clk;
     s_axis_lch_aclk <= clk;
@@ -514,7 +514,7 @@ begin
     m_axis_lch_aresetn  <= resetn;
     m_axis_rch_aresetn  <= resetn;
 
--- BFM signal connections
+    -- BFM signal connections
     s_bfm_in_r                                                                                        <= (s_axi_aclk, s_axi_arready, s_axi_rready, s_axi_rvalid);
     (s_axi_araddr, s_axi_arvalid, s_axi_rready)                                                       <= s_bfm_out_r;
     s_bfm_in_w                                                                                        <= (s_axi_aclk, s_axi_awready, s_axi_wready, s_axi_bvalid);
@@ -526,7 +526,7 @@ begin
     (m_axi_conf_awready, m_axi_conf_wready, m_axi_conf_bvalid) <= m_bfm_out_w;
 
 
--- Stimuli
+    -- Stimuli
     main : process
         procedure init_values is
         begin

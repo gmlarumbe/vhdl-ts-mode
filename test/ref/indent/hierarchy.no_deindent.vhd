@@ -213,10 +213,10 @@ end entity axi_if_converter;
 
 architecture RTL of axi_if_converter is
 
-                                     -- Global signals
+    -- Global signals
     signal soft_reset : std_logic;
 
-                                     -- Input buffer <-> Converter AXI signals
+    -- Input buffer <-> Converter AXI signals
     signal m_axis_lch_inbuf_aclk    : std_logic;
     signal m_axis_lch_inbuf_aresetn : std_logic;
     signal m_axis_lch_inbuf_tdata   : std_logic_vector(63 downto 0);
@@ -233,7 +233,7 @@ architecture RTL of axi_if_converter is
     signal m_axis_rch_inbuf_tlast   : std_logic;
     signal m_axis_rch_inbuf_tready  : std_logic;
 
-                                     -- Input_buffer <-> Converters Feedback signals
+    -- Input_buffer <-> Converters Feedback signals
     signal fb_wr_burst_start_lch : std_logic;
     signal fb_bw_counter_lch     : std_logic_vector(7 downto 0);
     signal fb_wlast_lch          : std_logic;
@@ -250,14 +250,14 @@ architecture RTL of axi_if_converter is
     signal fb_burst_done_rch     : std_logic;
     signal fb_send_size_r        : unsigned(9 downto 0);
 
-                                     -- Input buffer <-> Register interface signals
+    -- Input buffer <-> Register interface signals
     signal bram_overflow_error       : std_logic;
     signal out_reg_underflow_error_l : std_logic;
     signal out_reg_overflow_error_l  : std_logic;
     signal out_reg_underflow_error_r : std_logic;
     signal out_reg_overflow_error_r  : std_logic;
 
-                                     -- AXI Lite Master <-> Register interface signals
+    -- AXI Lite Master <-> Register interface signals
     signal transaction_error : std_logic;
 
     signal write_request : std_logic;
@@ -270,13 +270,13 @@ architecture RTL of axi_if_converter is
     signal read_data       : std_logic_vector (31 downto 0);
     signal read_data_valid : std_logic;
 
-                                     -- Pattern counters <-> Register interface
+    -- Pattern counters <-> Register interface
     signal count_lch         : unsigned(31 downto 0);
     signal pattern_count_lch : unsigned(31 downto 0);
     signal count_rch         : unsigned(31 downto 0);
     signal pattern_count_rch : unsigned(31 downto 0);
 
-                                     -- Registers <-> FSM signals
+    -- Registers <-> FSM signals
     signal system_enable      : std_logic;
     signal system_running     : std_logic;
     signal system_running_lch : std_logic;
@@ -287,7 +287,7 @@ architecture RTL of axi_if_converter is
     signal read_size_r        : unsigned(15 downto 0);
 
 
-                                     -- Converters <-> FSM signals
+    -- Converters <-> FSM signals
     signal conv_req_lch         : conversion_req_t;
     signal conv_rsp_lch         : conversion_rsp_t;
     signal internal_error_lch   : std_logic;
@@ -304,25 +304,25 @@ architecture RTL of axi_if_converter is
     signal pattern_finished_rch : std_logic;
     signal pattern_tlast_rch    : std_logic;
 
-                                     -- Input Buffer <-> FSM signals
+    -- Input Buffer <-> FSM signals
     signal buffer_size_l : unsigned(10 downto 0);
     signal bram_ptr_l    : std_logic_vector(31 downto 0);
     signal buffer_size_r : unsigned(10 downto 0);
     signal bram_ptr_r    : std_logic_vector(31 downto 0);
 
-                                     -- FS clock divider
+    -- FS clock divider
     signal clk_fs      : std_logic;
     signal clk_fs_sync : std_logic;
 
 
 begin
 
--- Comb logic
+    -- Comb logic
     fb_send_size_l <= b"00" & unsigned(fb_awlen_lch);
     fb_send_size_r <= b"00" & unsigned(fb_awlen_rch);
     system_running <= system_running_lch or system_running_rch;
 
--- Instances
+    -- Instances
     I_AXI_LITE_REGS : entity xil_defaultlib.axi_lite_regs
         generic map (
             C_S_AXI_DATA_WIDTH => C_S_AXI_DATA_WIDTH,
@@ -1266,9 +1266,9 @@ begin
         );
 
 
-----------------
--- COMB LOGIC --
-----------------
+    ----------------
+    -- COMB LOGIC --
+    ----------------
     outputs.buffer_size_l <= bram_pointer_l.tail - bram_pointer_l.head;
     outputs.bram_ptr_l    <= bram_ptr_pos_l;
     m_axis_lch_tdata      <= output_reg_l(to_integer(unsigned(inputs.bw_counter_l)));
@@ -1279,17 +1279,17 @@ begin
     m_axis_rch_tdata      <= output_reg_r(to_integer(unsigned(inputs.bw_counter_r)));
     m_axis_rch_tvalid     <= output_reg_out_tvalid_r and output_reg_out_tvalid_r_d;
 
--- BRAMs Address read/write management
+    -- BRAMs Address read/write management
     bram_a_addrb <= std_logic_vector(idx_l_bram);
     bram_b_addrb <= std_logic_vector(idx_r_bram);
 
--- Overflow management
+    -- Overflow management
     bram_overflow_error <= bram_overflow_error_l or bram_overflow_error_r;
 
 
---------------------
--- Undriven Signals --
---------------------
+    --------------------
+    -- Undriven Signals --
+    --------------------
     s_axis_lch_tready <= '1';
     s_axis_rch_tready <= '1';
     m_axis_lch_tkeep  <= (others => '0');
@@ -1297,9 +1297,9 @@ begin
     m_axis_rch_tkeep  <= (others => '0');
     m_axis_rch_tlast  <= '0';
 
----------------
--- SEQ LOGIC --
----------------
+    ---------------
+    -- SEQ LOGIC --
+    ---------------
     axi_bram_logic_l : process(s_axis_lch_aclk)
     begin
         if (rising_edge(s_axis_lch_aclk)) then
@@ -1854,7 +1854,7 @@ architecture RTL of core_converter is
 
 begin
 
--- Write fixed signals
+    -- Write fixed signals
     m_axi_awid    <= (others => '0');
     m_axi_awburst <= "01";
     m_axi_awlock  <= '0';
@@ -1862,7 +1862,7 @@ begin
     m_axi_awprot  <= "000";
     m_axi_awqos   <= x"0";
     m_axi_wuser   <= (others => '0');
--- Read fixed signals
+    -- Read fixed signals
     m_axi_arid    <= (others => '0');
     m_axi_aruser  <= (others => '1');
     m_axi_arburst <= "01";
@@ -1870,7 +1870,7 @@ begin
     m_axi_arcache <= "0010";
     m_axi_arprot  <= "000";
     m_axi_arqos   <= x"0";
--- Read/write logic
+    -- Read/write logic
     m_axi_awaddr  <= burst_wr_addr;
     m_axi_awlen   <= std_logic_vector(unsigned(axi_awlen) -1);
     m_axi_awsize  <= std_logic_vector(to_unsigned(clogb2((C_M_AXI_DATA_WIDTH/8)-1), 3));
@@ -1886,9 +1886,9 @@ begin
     m_axi_arvalid <= axi_arvalid;
     m_axi_rready  <= axi_rready;
 
-----------------------------
--- Master stream interface -
-----------------------------
+    ----------------------------
+    -- Master stream interface -
+    ----------------------------
     m_axis_tdata <= (others => '0') when pattern_req = '1' else
                                                            m_axi_rdata when (axi_rready = '1' and m_axi_rvalid = '1' and (unsigned(transaction_rd_size)-1) >= unsigned(transaction_rd_counter)) else
                                                                                                                                                                                                 (others => '0');
@@ -1909,9 +1909,9 @@ begin
     m_axis_tkeep <= x"FF";
 
 
-----------------------------
--- Slave stream interface --
-----------------------------
+    ----------------------------
+    -- Slave stream interface --
+    ----------------------------
     axi_wdata <= s_axis_tdata when ((axi_wvalid = '1') and ((unsigned(transaction_wr_size)-1) >= unsigned(transaction_wr_counter))) else
                                                                                                                                     (others => '0');
 
@@ -1924,7 +1924,7 @@ begin
                                                                                                                                           '0';
 
 
--- Feedback to input buffer
+    -- Feedback to input buffer
     fb_wr_burst_start <= wr_burst_start;
     fb_bw_counter     <= burst_write_counter;
     fb_wlast          <= axi_wlast;
@@ -1932,19 +1932,19 @@ begin
     fb_awlen          <= strobe_len when (strobe_burst = '1')     else axi_awlen;
     fb_burst_done     <= write_done when (state = WRITING_TO_MEM) else '0';
 
--- Other signals
+    -- Other signals
     pattern_finished <= pattern_finished_i;
     internal_error   <= (axi_rready and m_axi_rvalid and m_axi_rresp(1)) or
                         (axi_bready and m_axi_bvalid and m_axi_bresp(1));
 
--- Internal signals comb logic
+    -- Internal signals comb logic
     axi_wlast <= (axi_wlast_i) and (m_axi_wready);
     req_pulse <= '1' when req_dd = '0' and req_d = '1' else '0';
 
 
----------
--- FSM --
----------
+    ---------
+    -- FSM --
+    ---------
     fsm_proc : process (m_axi_aclk) is
     begin
         if (rising_edge(m_axi_aclk)) then
@@ -2580,7 +2580,7 @@ architecture RTL of axi_lite_regs is
     signal soft_reset_cnt      : integer;
     constant SOFT_RESET_CYCLES : integer := 50;
 
-                                  -- Actual registers
+    -- Actual registers
     signal control_reg              : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal status_reg               : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
     signal version_reg              : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0);
@@ -2614,7 +2614,7 @@ architecture RTL of axi_lite_regs is
                                   attribute keep of count_rch_reg            : signal is true;
                                   attribute keep of pattern_count_rch_reg    : signal is true;
 
-                                  -- Bit aliases
+    -- Bit aliases
                                   alias BIT_ENABLE     : std_logic is control_reg(0);
                                   alias BIT_SOFT_RESET : std_logic is control_reg(31);
 
@@ -2637,7 +2637,7 @@ architecture RTL of axi_lite_regs is
                                   alias BIT_READ_DATA_VALID : std_logic is master_lite_rd_setup_reg(31);
 
 
-                                  -- Procedures
+    -- Procedures
     procedure add_bit (signal sigH : in std_logic; signal bitpos : out std_logic) is
     begin
         if (sigH) then bitpos <= '1';
@@ -2661,10 +2661,10 @@ begin
     slv_reg_rden <= axi_arready and s_axi_arvalid and (not axi_rvalid);
 
 
--- Implement axi_awready generation
--- axi_awready is asserted for one S_AXI_ACLK clock cycle when both
--- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
--- de-asserted when reset is low.
+    -- Implement axi_awready generation
+    -- axi_awready is asserted for one S_AXI_ACLK clock cycle when both
+    -- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_awready is
+    -- de-asserted when reset is low.
     axi_awready_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2681,9 +2681,9 @@ begin
     end process axi_awready_proc;
 
 
--- Implement axi_awaddr latching
--- This process is used to latch the address when both
--- S_AXI_AWVALID and S_AXI_WVALID are valid.
+    -- Implement axi_awaddr latching
+    -- This process is used to latch the address when both
+    -- S_AXI_AWVALID and S_AXI_WVALID are valid.
     axi_awaddr_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2696,10 +2696,10 @@ begin
     end process axi_awaddr_proc;
 
 
--- Implement axi_wready generation
--- axi_wready is asserted for one S_AXI_ACLK clock cycle when both
--- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_wready is
--- de-asserted when reset is low.
+    -- Implement axi_wready generation
+    -- axi_wready is asserted for one S_AXI_ACLK clock cycle when both
+    -- S_AXI_AWVALID and S_AXI_WVALID are asserted. axi_wready is
+    -- de-asserted when reset is low.
     axi_wready_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2716,11 +2716,11 @@ begin
     end process axi_wready_proc;
 
 
--- Implement write response logic generation
--- The write response and response valid signals are asserted by the slave
--- when axi_wready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted.
--- This marks the acceptance of address and indicates the status of
--- write transaction.
+    -- Implement write response logic generation
+    -- The write response and response valid signals are asserted by the slave
+    -- when axi_wready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted.
+    -- This marks the acceptance of address and indicates the status of
+    -- write transaction.
     axi_bvalid_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2739,12 +2739,12 @@ begin
     end process axi_bvalid_proc;
 
 
--- Implement axi_arready generation
--- axi_arready is asserted for one S_AXI_ACLK clock cycle when
--- S_AXI_ARVALID is asserted. axi_awready is
--- de-asserted when reset (active low) is asserted.
--- The read address is also latched when S_AXI_ARVALID is
--- asserted. axi_araddr is reset to zero on reset assertion.
+    -- Implement axi_arready generation
+    -- axi_arready is asserted for one S_AXI_ACLK clock cycle when
+    -- S_AXI_ARVALID is asserted. axi_awready is
+    -- de-asserted when reset (active low) is asserted.
+    -- The read address is also latched when S_AXI_ARVALID is
+    -- asserted. axi_araddr is reset to zero on reset assertion.
     axi_arready_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2763,14 +2763,14 @@ begin
     end process axi_arready_proc;
 
 
--- Implement axi_arvalid generation
--- axi_rvalid is asserted for one S_AXI_ACLK clock cycle when both
--- S_AXI_ARVALID and axi_arready are asserted. The slave registers
--- data are available on the axi_rdata bus at this instance. The
--- assertion of axi_rvalid marks the validity of read data on the
--- bus and axi_rresp indicates the status of read transaction.axi_rvalid
--- is deasserted on reset (active low). axi_rresp and axi_rdata are
--- cleared to zero on reset (active low).
+    -- Implement axi_arvalid generation
+    -- axi_rvalid is asserted for one S_AXI_ACLK clock cycle when both
+    -- S_AXI_ARVALID and axi_arready are asserted. The slave registers
+    -- data are available on the axi_rdata bus at this instance. The
+    -- assertion of axi_rvalid marks the validity of read data on the
+    -- bus and axi_rresp indicates the status of read transaction.axi_rvalid
+    -- is deasserted on reset (active low). axi_rresp and axi_rdata are
+    -- cleared to zero on reset (active low).
     axi_rvalid_proc : process (s_axi_aclk)
     begin
         if rising_edge(s_axi_aclk) then
@@ -2789,7 +2789,7 @@ begin
     end process axi_rvalid_proc;
 
 
--- Output register or memory read data
+    -- Output register or memory read data
     axi_rdata_proc : process(s_axi_aclk) is
     begin
         if (rising_edge (s_axi_aclk)) then
@@ -2804,7 +2804,7 @@ begin
     end process axi_rdata_proc;
 
 
--- Read address decoding
+    -- Read address decoding
     address_decoding_proc : process (all)
         variable loc_addr : std_logic_vector(OPT_MEM_ADDR_BITS downto 0);
     begin
@@ -2846,13 +2846,13 @@ begin
     end process address_decoding_proc;
 
 
--- Implement memory mapped register select and write logic generation
--- The write data is accepted and written to memory mapped registers when
--- axi_awready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted. Write strobes are used to
--- select byte enables of slave registers while writing.
--- These registers are cleared when reset (active low) is applied.
--- Slave register write enable is asserted when valid address and data are available
--- and the slave is ready to accept the write address and write data.
+    -- Implement memory mapped register select and write logic generation
+    -- The write data is accepted and written to memory mapped registers when
+    -- axi_awready, S_AXI_WVALID, axi_wready and S_AXI_WVALID are asserted. Write strobes are used to
+    -- select byte enables of slave registers while writing.
+    -- These registers are cleared when reset (active low) is applied.
+    -- Slave register write enable is asserted when valid address and data are available
+    -- and the slave is ready to accept the write address and write data.
     read_write_regs_proc : process (s_axi_aclk)
         variable loc_addr : std_logic_vector(OPT_MEM_ADDR_BITS downto 0);
     begin

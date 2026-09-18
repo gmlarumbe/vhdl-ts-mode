@@ -82,7 +82,7 @@ entity X_GATE is
     port (P1, P2, P3 : inout BIT);
 end X_GATE;
 architecture STRUCTURE of X_GATE is
-                                 -- global declarations of signal:
+    -- global declarations of signal:
     signal A, B : BIT;
 begin
 LEVEL1 : block
@@ -120,10 +120,10 @@ end block level1;
 entity block_test is
 end block_test;
 architecture arch of block_test is
-                                -- global declarations of signal:
+    -- global declarations of signal:
     signal A, B : BIT;
 begin
--- Extra statements wrt Example 2
+    -- Extra statements wrt Example 2
     S1 <= PB1 after Delay;
     PB2 <= S1 after GB1, P1 after GB2;
 
@@ -185,7 +185,7 @@ begin  -- architecture rtl
     "010" when YELLOW,
     "---" when others;
 
--- INFO: Not present in #6, added for testing
+    -- INFO: Not present in #6, added for testing
     with state_reg select
                    leds <= "100" when RED,
                            "110" when RED_YELLOW,
@@ -193,7 +193,7 @@ begin  -- architecture rtl
                            "010" when YELLOW,
                            "---" when others;
 
--- INFO: Not present in #6, added for testing
+    -- INFO: Not present in #6, added for testing
     with state_reg select leds <= "100" when RED,
                                   "110" when RED_YELLOW,
                                   "001" when GREEN,
