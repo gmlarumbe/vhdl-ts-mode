@@ -4,7 +4,7 @@
 
 ;; Author: Gonzalo Larumbe <gonzalomlarumbe@gmail.com>
 ;; URL: https://github.com/gmlarumbe/vhdl-ts-mode
-;; Version: 0.3.3
+;; Version: 0.4.0
 ;; Keywords: VHDL, IDE, Tools
 ;; Package-Requires: ((emacs "29.1"))
 
