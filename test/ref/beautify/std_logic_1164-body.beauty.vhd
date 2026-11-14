@@ -62,18 +62,18 @@ package body std_logic_1164 is
     -- resolution function
     -------------------------------------------------------------------
     constant resolution_table : stdlogic_table := (
-                                                    --      ---------------------------------------------------------
-                                                    --      |  U    X    0    1    Z    W    L    H    -        |   |
-                                                    --      ---------------------------------------------------------
-    ('U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U'),  -- | U |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | X |
-    ('U', 'X', '0', 'X', '0', '0', '0', '0', 'X'),  -- | 0 |
-    ('U', 'X', 'X', '1', '1', '1', '1', '1', 'X'),  -- | 1 |
-    ('U', 'X', '0', '1', 'Z', 'W', 'L', 'H', 'X'),  -- | Z |
-    ('U', 'X', '0', '1', 'W', 'W', 'W', 'W', 'X'),  -- | W |
-    ('U', 'X', '0', '1', 'L', 'W', 'L', 'W', 'X'),  -- | L |
-    ('U', 'X', '0', '1', 'H', 'W', 'W', 'H', 'X'),  -- | H |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X')   -- | - |
+        --      ---------------------------------------------------------
+        --      |  U    X    0    1    Z    W    L    H    -        |   |
+        --      ---------------------------------------------------------
+        ('U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U'),  -- | U |
+        ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | X |
+        ('U', 'X', '0', 'X', '0', '0', '0', '0', 'X'),  -- | 0 |
+        ('U', 'X', 'X', '1', '1', '1', '1', '1', 'X'),  -- | 1 |
+        ('U', 'X', '0', '1', 'Z', 'W', 'L', 'H', 'X'),  -- | Z |
+        ('U', 'X', '0', '1', 'W', 'W', 'W', 'W', 'X'),  -- | W |
+        ('U', 'X', '0', '1', 'L', 'W', 'L', 'W', 'X'),  -- | L |
+        ('U', 'X', '0', '1', 'H', 'W', 'W', 'H', 'X'),  -- | H |
+        ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X')   -- | - |
     );
 
     function resolved (s : STD_ULOGIC_VECTOR) return STD_ULOGIC is
@@ -98,50 +98,50 @@ package body std_logic_1164 is
 
     -- truth table for "and" function
     constant and_table : stdlogic_table := (
-                                                    --      ----------------------------------------------------
-                                                    --      |  U    X    0    1    Z    W    L    H    -         |   |
-                                                    --      ----------------------------------------------------
-    ('U', 'U', '0', 'U', 'U', 'U', '0', 'U', 'U'),  -- | U |
-    ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X'),  -- | X |
-    ('0', '0', '0', '0', '0', '0', '0', '0', '0'),  -- | 0 |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | 1 |
-    ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X'),  -- | Z |
-    ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X'),  -- | W |
-    ('0', '0', '0', '0', '0', '0', '0', '0', '0'),  -- | L |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | H |
-    ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X')   -- | - |
+        --      ----------------------------------------------------
+        --      |  U    X    0    1    Z    W    L    H    -         |   |
+        --      ----------------------------------------------------
+        ('U', 'U', '0', 'U', 'U', 'U', '0', 'U', 'U'),  -- | U |
+        ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X'),  -- | X |
+        ('0', '0', '0', '0', '0', '0', '0', '0', '0'),  -- | 0 |
+        ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | 1 |
+        ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X'),  -- | Z |
+        ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X'),  -- | W |
+        ('0', '0', '0', '0', '0', '0', '0', '0', '0'),  -- | L |
+        ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | H |
+        ('U', 'X', '0', 'X', 'X', 'X', '0', 'X', 'X')   -- | - |
     );
 
     -- truth table for "or" function
     constant or_table : stdlogic_table := (
-                                                    --      ----------------------------------------------------
-                                                    --      |  U    X    0    1    Z    W    L    H    -         |   |
-                                                    --      ----------------------------------------------------
-    ('U', 'U', 'U', '1', 'U', 'U', 'U', '1', 'U'),  -- | U |
-    ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X'),  -- | X |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | 0 |
-    ('1', '1', '1', '1', '1', '1', '1', '1', '1'),  -- | 1 |
-    ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X'),  -- | Z |
-    ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X'),  -- | W |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | L |
-    ('1', '1', '1', '1', '1', '1', '1', '1', '1'),  -- | H |
-    ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X')   -- | - |
+        --      ----------------------------------------------------
+        --      |  U    X    0    1    Z    W    L    H    -         |   |
+        --      ----------------------------------------------------
+        ('U', 'U', 'U', '1', 'U', 'U', 'U', '1', 'U'),  -- | U |
+        ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X'),  -- | X |
+        ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | 0 |
+        ('1', '1', '1', '1', '1', '1', '1', '1', '1'),  -- | 1 |
+        ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X'),  -- | Z |
+        ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X'),  -- | W |
+        ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | L |
+        ('1', '1', '1', '1', '1', '1', '1', '1', '1'),  -- | H |
+        ('U', 'X', 'X', '1', 'X', 'X', 'X', '1', 'X')   -- | - |
     );
 
     -- truth table for "xor" function
     constant xor_table : stdlogic_table := (
-                                                    --      ----------------------------------------------------
-                                                    --      |  U    X    0    1    Z    W    L    H    -         |   |
-                                                    --      ----------------------------------------------------
-    ('U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U'),  -- | U |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | X |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | 0 |
-    ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X'),  -- | 1 |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | Z |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | W |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | L |
-    ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X'),  -- | H |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X')   -- | - |
+        --      ----------------------------------------------------
+        --      |  U    X    0    1    Z    W    L    H    -         |   |
+        --      ----------------------------------------------------
+        ('U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', 'U'),  -- | U |
+        ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | X |
+        ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | 0 |
+        ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X'),  -- | 1 |
+        ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | Z |
+        ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'),  -- | W |
+        ('U', 'X', '0', '1', 'X', 'X', '0', '1', 'X'),  -- | L |
+        ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X'),  -- | H |
+        ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X')   -- | - |
     );
 
     -- truth table for "not" function
@@ -149,7 +149,7 @@ package body std_logic_1164 is
         --  -------------------------------------------------
         --  |   U    X    0    1    Z    W    L    H    -   |
         --  -------------------------------------------------
-        ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X');
+                                     ('U', 'X', '1', '0', 'X', 'X', '1', '0', 'X');
 
     -------------------------------------------------------------------
     -- overloaded logical operators ( with optimizing hints )
@@ -200,9 +200,9 @@ package body std_logic_1164 is
     begin
         if (l'length /= r'length) then
             assert false
-                report "STD_LOGIC_1164.""and"": "
-                       & "arguments of overloaded 'and' operator are not of the same length"
-                severity failure;
+            report "STD_LOGIC_1164.""and"": "
+                   & "arguments of overloaded 'and' operator are not of the same length"
+            severity failure;
         else
             for i in result'range loop
                 result(i) := and_table (lv(i), rv(i));
@@ -220,9 +220,9 @@ package body std_logic_1164 is
     begin
         if (l'length /= r'length) then
             assert false
-                report "STD_LOGIC_1164.""nand"": "
-                       & "arguments of overloaded 'nand' operator are not of the same length"
-                severity failure;
+            report "STD_LOGIC_1164.""nand"": "
+                   & "arguments of overloaded 'nand' operator are not of the same length"
+            severity failure;
         else
             for i in result'range loop
                 result(i) := not_table(and_table (lv(i), rv(i)));
@@ -240,9 +240,9 @@ package body std_logic_1164 is
     begin
         if (l'length /= r'length) then
             assert false
-                report "STD_LOGIC_1164.""or"": "
-                       & "arguments of overloaded 'or' operator are not of the same length"
-                severity failure;
+            report "STD_LOGIC_1164.""or"": "
+                   & "arguments of overloaded 'or' operator are not of the same length"
+            severity failure;
         else
             for i in result'range loop
                 result(i) := or_table (lv(i), rv(i));
@@ -260,9 +260,9 @@ package body std_logic_1164 is
     begin
         if (l'length /= r'length) then
             assert false
-                report "STD_LOGIC_1164.""nor"": "
-                       & "arguments of overloaded 'nor' operator are not of the same length"
-                severity failure;
+            report "STD_LOGIC_1164.""nor"": "
+                   & "arguments of overloaded 'nor' operator are not of the same length"
+            severity failure;
         else
             for i in result'range loop
                 result(i) := not_table(or_table (lv(i), rv(i)));
@@ -280,9 +280,9 @@ package body std_logic_1164 is
     begin
         if (l'length /= r'length) then
             assert false
-                report "STD_LOGIC_1164.""xor"": "
-                       & "arguments of overloaded 'xor' operator are not of the same length"
-                severity failure;
+            report "STD_LOGIC_1164.""xor"": "
+                   & "arguments of overloaded 'xor' operator are not of the same length"
+            severity failure;
         else
             for i in result'range loop
                 result(i) := xor_table (lv(i), rv(i));
@@ -300,9 +300,9 @@ package body std_logic_1164 is
     begin
         if (l'length /= r'length) then
             assert false
-                report "STD_LOGIC_1164.""xnor"": "
-                       & "arguments of overloaded 'xnor' operator are not of the same length"
-                severity failure;
+            report "STD_LOGIC_1164.""xnor"": "
+                   & "arguments of overloaded 'xnor' operator are not of the same length"
+            severity failure;
         else
             for i in result'range loop
                 result(i) := not_table(xor_table (lv(i), rv(i)));
@@ -327,8 +327,8 @@ package body std_logic_1164 is
     -- and
     -------------------------------------------------------------------
     function "and" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
@@ -339,8 +339,8 @@ package body std_logic_1164 is
     end function "and";
     -------------------------------------------------------------------
     function "and" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
@@ -354,8 +354,8 @@ package body std_logic_1164 is
     -- nand
     -------------------------------------------------------------------
     function "nand" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
@@ -366,8 +366,8 @@ package body std_logic_1164 is
     end function "nand";
     -------------------------------------------------------------------
     function "nand" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
@@ -381,8 +381,8 @@ package body std_logic_1164 is
     -- or
     -------------------------------------------------------------------
     function "or" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
@@ -393,8 +393,8 @@ package body std_logic_1164 is
     end function "or";
     -------------------------------------------------------------------
     function "or" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
@@ -408,8 +408,8 @@ package body std_logic_1164 is
     -- nor
     -------------------------------------------------------------------
     function "nor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
@@ -420,8 +420,8 @@ package body std_logic_1164 is
     end function "nor";
     -------------------------------------------------------------------
     function "nor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
@@ -435,8 +435,8 @@ package body std_logic_1164 is
     -- xor
     -------------------------------------------------------------------
     function "xor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
@@ -447,8 +447,8 @@ package body std_logic_1164 is
     end function "xor";
     -------------------------------------------------------------------
     function "xor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
@@ -462,8 +462,8 @@ package body std_logic_1164 is
     -- xnor
     -------------------------------------------------------------------
     function "xnor" (l : STD_ULOGIC_VECTOR; r : STD_ULOGIC)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
     begin
@@ -474,8 +474,8 @@ package body std_logic_1164 is
     end function "xnor";
     -------------------------------------------------------------------
     function "xnor" (l : STD_ULOGIC; r : STD_ULOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias rv        : STD_ULOGIC_VECTOR (1 to r'length) is r;
         variable result : STD_ULOGIC_VECTOR (1 to r'length);
     begin
@@ -565,8 +565,8 @@ package body std_logic_1164 is
     -- sll
     -------------------------------------------------------------------
     function "sll" (l : STD_ULOGIC_VECTOR; r : INTEGER)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => '0');
     begin
@@ -582,8 +582,8 @@ package body std_logic_1164 is
     -- srl
     -------------------------------------------------------------------
     function "srl" (l : STD_ULOGIC_VECTOR; r : INTEGER)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => '0');
     begin
@@ -599,8 +599,8 @@ package body std_logic_1164 is
     -- rol
     -------------------------------------------------------------------
     function "rol" (l : STD_ULOGIC_VECTOR; r : INTEGER)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length);
         constant rm     : INTEGER := r mod l'length;
@@ -618,8 +618,8 @@ package body std_logic_1164 is
     -- ror
     -------------------------------------------------------------------
     function "ror" (l : STD_ULOGIC_VECTOR; r : INTEGER)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias lv        : STD_ULOGIC_VECTOR (1 to l'length) is l;
         variable result : STD_ULOGIC_VECTOR (1 to l'length) := (others => '0');
         constant rm     : INTEGER                           := r mod l'length;
@@ -651,15 +651,15 @@ package body std_logic_1164 is
     --
     ----------------------------------------------------------
     constant cvt_to_x01 : logic_x01_table := (
-    'X',                                -- 'U'
-    'X',                                -- 'X'
-    '0',                                -- '0'
-    '1',                                -- '1'
-    'X',                                -- 'Z'
-    'X',                                -- 'W'
-    '0',                                -- 'L'
-    '1',                                -- 'H'
-    'X'                                 -- '-'
+        'X',                            -- 'U'
+        'X',                            -- 'X'
+        '0',                            -- '0'
+        '1',                            -- '1'
+        'X',                            -- 'Z'
+        'X',                            -- 'W'
+        '0',                            -- 'L'
+        '1',                            -- 'H'
+        'X'                             -- '-'
     );
 
     ----------------------------------------------------------
@@ -674,15 +674,15 @@ package body std_logic_1164 is
     --
     ----------------------------------------------------------
     constant cvt_to_x01z : logic_x01z_table := (
-    'X',                                -- 'U'
-    'X',                                -- 'X'
-    '0',                                -- '0'
-    '1',                                -- '1'
-    'Z',                                -- 'Z'
-    'X',                                -- 'W'
-    '0',                                -- 'L'
-    '1',                                -- 'H'
-    'X'                                 -- '-'
+        'X',                            -- 'U'
+        'X',                            -- 'X'
+        '0',                            -- '0'
+        '1',                            -- '1'
+        'Z',                            -- 'Z'
+        'X',                            -- 'W'
+        '0',                            -- 'L'
+        '1',                            -- 'H'
+        'X'                             -- '-'
     );
 
     ----------------------------------------------------------
@@ -697,15 +697,15 @@ package body std_logic_1164 is
     --
     ----------------------------------------------------------
     constant cvt_to_ux01 : logic_ux01_table := (
-    'U',                                -- 'U'
-    'X',                                -- 'X'
-    '0',                                -- '0'
-    '1',                                -- '1'
-    'X',                                -- 'Z'
-    'X',                                -- 'W'
-    '0',                                -- 'L'
-    '1',                                -- 'H'
-    'X'                                 -- '-'
+        'U',                            -- 'U'
+        'X',                            -- 'X'
+        '0',                            -- '0'
+        '1',                            -- '1'
+        'X',                            -- 'Z'
+        'X',                            -- 'W'
+        '0',                            -- 'L'
+        '1',                            -- 'H'
+        'X'                             -- '-'
     );
 
     -------------------------------------------------------------------
@@ -721,8 +721,8 @@ package body std_logic_1164 is
     end function To_bit;
     --------------------------------------------------------------------
     function To_bitvector (s : STD_ULOGIC_VECTOR; xmap : BIT := '0')
-        return BIT_VECTOR
-        is
+    return BIT_VECTOR
+    is
         alias sv        : STD_ULOGIC_VECTOR (s'length-1 downto 0) is s;
         variable result : BIT_VECTOR (s'length-1 downto 0);
     begin
@@ -745,8 +745,8 @@ package body std_logic_1164 is
     end function To_StdULogic;
     --------------------------------------------------------------------
     function To_StdLogicVector (b : BIT_VECTOR)
-        return STD_LOGIC_VECTOR
-        is
+    return STD_LOGIC_VECTOR
+    is
         alias bv        : BIT_VECTOR (b'length-1 downto 0) is b;
         variable result : STD_LOGIC_VECTOR (b'length-1 downto 0);
     begin
@@ -760,8 +760,8 @@ package body std_logic_1164 is
     end function To_StdLogicVector;
     --------------------------------------------------------------------
     function To_StdLogicVector (s : STD_ULOGIC_VECTOR)
-        return STD_LOGIC_VECTOR
-        is
+    return STD_LOGIC_VECTOR
+    is
         alias sv        : STD_ULOGIC_VECTOR (s'length-1 downto 0) is s;
         variable result : STD_LOGIC_VECTOR (s'length-1 downto 0);
     begin
@@ -772,8 +772,8 @@ package body std_logic_1164 is
     end function To_StdLogicVector;
     --------------------------------------------------------------------
     function To_StdULogicVector (b : BIT_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias bv        : BIT_VECTOR (b'length-1 downto 0) is b;
         variable result : STD_ULOGIC_VECTOR (b'length-1 downto 0);
     begin
@@ -787,8 +787,8 @@ package body std_logic_1164 is
     end function To_StdULogicVector;
     --------------------------------------------------------------------
     function To_StdULogicVector (s : STD_LOGIC_VECTOR)
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         alias sv        : STD_LOGIC_VECTOR (s'length-1 downto 0) is s;
         variable result : STD_ULOGIC_VECTOR (s'length-1 downto 0);
     begin
@@ -804,8 +804,8 @@ package body std_logic_1164 is
     -- to_01
     -------------------------------------------------------------------
     function TO_01 (s : STD_ULOGIC_VECTOR; xmap : STD_ULOGIC := '0')
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         variable RESULT      : STD_ULOGIC_VECTOR(s'length-1 downto 0);
         variable BAD_ELEMENT : BOOLEAN := false;
         alias XS             : STD_ULOGIC_VECTOR(s'length-1 downto 0) is s;
@@ -835,8 +835,8 @@ package body std_logic_1164 is
     end function TO_01;
     -------------------------------------------------------------------
     function TO_01 (s : BIT_VECTOR; xmap : STD_ULOGIC := '0')
-        return STD_ULOGIC_VECTOR
-        is
+    return STD_ULOGIC_VECTOR
+    is
         variable RESULT : STD_ULOGIC_VECTOR(s'length-1 downto 0);
         alias XS        : BIT_VECTOR(s'length-1 downto 0) is s;
     begin
@@ -1096,11 +1096,11 @@ package body std_logic_1164 is
     type MVL9plus_indexed_by_char is array (CHARACTER) of MVL9plus;
     constant MVL9_to_char : char_indexed_by_MVL9 := "UX01ZWLH-";
     constant char_to_MVL9 : MVL9_indexed_by_char :=
-        ('U' => 'U', 'X' => 'X', '0' => '0', '1' => '1', 'Z' => 'Z',
-        'W'  => 'W', 'L' => 'L', 'H' => 'H', '-' => '-', others => 'U');
+                                                 ('U' => 'U', 'X' => 'X', '0' => '0', '1' => '1', 'Z' => 'Z',
+                                                  'W' => 'W', 'L' => 'L', 'H' => 'H', '-' => '-', others => 'U');
     constant char_to_MVL9plus : MVL9plus_indexed_by_char :=
-        ('U' => 'U', 'X' => 'X', '0' => '0', '1' => '1', 'Z' => 'Z',
-        'W'  => 'W', 'L' => 'L', 'H' => 'H', '-' => '-', others => error);
+                                                         ('U' => 'U', 'X' => 'X', '0' => '0', '1' => '1', 'Z' => 'Z',
+                                                          'W' => 'W', 'L' => 'L', 'H' => 'H', '-' => '-', others => error);
 
     constant NBSP : CHARACTER := CHARACTER'val(160);  -- space character
 
@@ -1121,8 +1121,8 @@ package body std_logic_1164 is
         end loop;
     end procedure skip_whitespace;
 
-    procedure READ (L : inout LINE; VALUE : out STD_ULOGIC;
-        GOOD          : out   BOOLEAN) is
+    procedure READ (L    : inout LINE; VALUE : out STD_ULOGIC;
+                    GOOD : out   BOOLEAN) is
         variable c      : CHARACTER;
         variable readOk : BOOLEAN;
     begin
@@ -1141,8 +1141,8 @@ package body std_logic_1164 is
         end if;
     end procedure READ;
 
-    procedure READ (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR;
-        GOOD          : out   BOOLEAN) is
+    procedure READ (L    : inout LINE; VALUE : out STD_ULOGIC_VECTOR;
+                    GOOD : out   BOOLEAN) is
         variable c      : CHARACTER;
         variable mv     : STD_ULOGIC_VECTOR(0 to VALUE'length-1);
         variable readOk : BOOLEAN;
@@ -1198,13 +1198,13 @@ package body std_logic_1164 is
         if not readOk then
             report "STD_LOGIC_1164.READ(STD_ULOGIC) "
                    & "End of string encountered"
-                severity error;
+            severity error;
             return;
         elsif char_to_MVL9plus(c) = error then
             report
             "STD_LOGIC_1164.READ(STD_ULOGIC) Error: Character '" &
             c & "' read, expected STD_ULOGIC literal."
-                severity error;
+            severity error;
         else
             VALUE := char_to_MVL9(c);
         end if;
@@ -1226,7 +1226,7 @@ package body std_logic_1164 is
                 if readOk = false then  -- Bail out if there was a bad read
                     report "STD_LOGIC_1164.READ(STD_ULOGIC_VECTOR) "
                            & "End of string encountered"
-                        severity error;
+                    severity error;
                     return;
                 elsif c = '_' then
                     if i = 0 then
@@ -1236,7 +1236,7 @@ package body std_logic_1164 is
                     elsif lastu then
                         report "STD_LOGIC_1164.READ(STD_ULOGIC_VECTOR) "
                                & "Two underscores detected in input string ""__"""
-                            severity error;
+                        severity error;
                         return;
                     else
                         lastu := true;
@@ -1245,7 +1245,7 @@ package body std_logic_1164 is
                     report
                     "STD_LOGIC_1164.READ(STD_ULOGIC_VECTOR) Error: Character '" &
                     c & "' read, expected STD_ULOGIC literal."
-                        severity error;
+                    severity error;
                     return;
                 else
                     mv(i) := char_to_MVL9(c);
@@ -1261,14 +1261,14 @@ package body std_logic_1164 is
         end if;
     end procedure READ;
 
-    procedure WRITE (L : inout LINE; VALUE : in STD_ULOGIC;
-        JUSTIFIED      : in    SIDE := right; FIELD : in WIDTH := 0) is
+    procedure WRITE (L         : inout LINE; VALUE : in STD_ULOGIC;
+                     JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0) is
     begin
         write(L, MVL9_to_char(VALUE), JUSTIFIED, FIELD);
     end procedure WRITE;
 
-    procedure WRITE (L : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
-        JUSTIFIED      : in    SIDE := right; FIELD : in WIDTH := 0) is
+    procedure WRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
+                     JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0) is
         variable s : STRING(1 to VALUE'length);
         alias m    : STD_ULOGIC_VECTOR(1 to VALUE'length) is VALUE;
     begin
@@ -1278,10 +1278,10 @@ package body std_logic_1164 is
         write(L, s, JUSTIFIED, FIELD);
     end procedure WRITE;
 
-    procedure Char2TriBits (C : in  CHARACTER;
-        RESULT                : out STD_ULOGIC_VECTOR(2 downto 0);
-        GOOD                  : out BOOLEAN;
-        ISSUE_ERROR           : in  BOOLEAN) is
+    procedure Char2TriBits (C           : in  CHARACTER;
+                            RESULT      : out STD_ULOGIC_VECTOR(2 downto 0);
+                            GOOD        : out BOOLEAN;
+                            ISSUE_ERROR : in  BOOLEAN) is
     begin
         case C is
             when '0' => RESULT := o"0"; GOOD := true;
@@ -1296,16 +1296,16 @@ package body std_logic_1164 is
             when 'X' => RESULT := "XXX"; GOOD := true;
             when others =>
                 assert not ISSUE_ERROR
-                    report
+                report
                 "STD_LOGIC_1164.OREAD Error: Read a '" & C &
                 "', expected an Octal character (0-7)."
-                    severity error;
+                severity error;
                 GOOD := false;
         end case;
     end procedure Char2TriBits;
 
-    procedure OREAD (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR;
-        GOOD           : out   BOOLEAN) is
+    procedure OREAD (L    : inout LINE; VALUE : out STD_ULOGIC_VECTOR;
+                     GOOD : out   BOOLEAN) is
         variable ok    : BOOLEAN;
         variable c     : CHARACTER;
         constant ne    : INTEGER := (VALUE'length+2)/3;
@@ -1377,7 +1377,7 @@ package body std_logic_1164 is
                 if not ok then
                     report "STD_LOGIC_1164.OREAD "
                            & "End of string encountered"
-                        severity error;
+                    severity error;
                     return;
                 elsif c = '_' then
                     if i = 0 then
@@ -1387,7 +1387,7 @@ package body std_logic_1164 is
                     elsif lastu then
                         report "STD_LOGIC_1164.OREAD "
                                & "Two underscores detected in input string ""__"""
-                            severity error;
+                        severity error;
                         return;
                     else
                         lastu := true;
@@ -1406,17 +1406,17 @@ package body std_logic_1164 is
             end loop;
             if or (sv (0 to pad-1)) = '1' then
                 report "STD_LOGIC_1164.OREAD Vector truncated"
-                    severity error;
+                severity error;
             else
                 VALUE := sv (pad to sv'high);
             end if;
         end if;
     end procedure OREAD;
 
-    procedure Char2QuadBits (C :     CHARACTER;
-        RESULT                 : out STD_ULOGIC_VECTOR(3 downto 0);
-        GOOD                   : out BOOLEAN;
-        ISSUE_ERROR            : in  BOOLEAN) is
+    procedure Char2QuadBits (C           :     CHARACTER;
+                             RESULT      : out STD_ULOGIC_VECTOR(3 downto 0);
+                             GOOD        : out BOOLEAN;
+                             ISSUE_ERROR : in  BOOLEAN) is
     begin
         case C is
             when '0'       => RESULT := x"0"; GOOD := true;
@@ -1439,16 +1439,16 @@ package body std_logic_1164 is
             when 'X'       => RESULT := "XXXX"; GOOD := true;
             when others =>
                 assert not ISSUE_ERROR
-                    report
+                report
                 "STD_LOGIC_1164.HREAD Error: Read a '" & C &
                 "', expected a Hex character (0-F)."
-                    severity error;
+                severity error;
                 GOOD := false;
         end case;
     end procedure Char2QuadBits;
 
-    procedure HREAD (L : inout LINE; VALUE : out STD_ULOGIC_VECTOR;
-        GOOD           : out   BOOLEAN) is
+    procedure HREAD (L    : inout LINE; VALUE : out STD_ULOGIC_VECTOR;
+                     GOOD : out   BOOLEAN) is
         variable ok    : BOOLEAN;
         variable c     : CHARACTER;
         constant ne    : INTEGER := (VALUE'length+3)/4;
@@ -1520,7 +1520,7 @@ package body std_logic_1164 is
                 if not ok then
                     report "STD_LOGIC_1164.HREAD "
                            & "End of string encountered"
-                        severity error;
+                    severity error;
                     return;
                 end if;
                 if c = '_' then
@@ -1531,7 +1531,7 @@ package body std_logic_1164 is
                     elsif lastu then
                         report "STD_LOGIC_1164.HREAD "
                                & "Two underscores detected in input string ""__"""
-                            severity error;
+                        severity error;
                         return;
                     else
                         lastu := true;
@@ -1550,21 +1550,21 @@ package body std_logic_1164 is
             end loop;
             if or (sv (0 to pad-1)) = '1' then
                 report "STD_LOGIC_1164.HREAD Vector truncated"
-                    severity error;
+                severity error;
             else
                 VALUE := sv (pad to sv'high);
             end if;
         end if;
     end procedure HREAD;
 
-    procedure OWRITE (L : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
-        JUSTIFIED       : in    SIDE := right; FIELD : in WIDTH := 0) is
+    procedure OWRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
+                      JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0) is
     begin
         write (L, TO_OSTRING(VALUE), JUSTIFIED, FIELD);
     end procedure OWRITE;
 
-    procedure HWRITE (L : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
-        JUSTIFIED       : in    SIDE := right; FIELD : in WIDTH := 0) is
+    procedure HWRITE (L         : inout LINE; VALUE : in STD_ULOGIC_VECTOR;
+                      JUSTIFIED : in    SIDE := right; FIELD : in WIDTH := 0) is
     begin
         write (L, TO_HSTRING (VALUE), JUSTIFIED, FIELD);
     end procedure HWRITE;

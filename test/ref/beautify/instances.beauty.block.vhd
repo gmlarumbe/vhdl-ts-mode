@@ -105,7 +105,7 @@ begin  -- architecture RTL
     GEN_BLOCK1 :
     for I in 0 to 3 generate
         I_BLOCK1_GEN : entity work.block1 port map
-            (Port0, Port1, Port2);
+                                          (Port0, Port1, Port2);
     end generate GEN_BLOCK1;
 
 

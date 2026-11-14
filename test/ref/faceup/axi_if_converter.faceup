@@ -8,13 +8,13 @@
 «k:entity» «f:axi_if_converter» «k:is»
 
     «k:port» «:vhdl-ts-font-lock-parenthesis-face:(»
-        «x:-- Non-axi modules clocks and resets»
-        clk        «:vhdl-ts-font-lock-punctuation-face::» «k:in» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+        «x:-- Non-axi modules clocks and resets
+»        clk        «:vhdl-ts-font-lock-punctuation-face::» «k:in» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         resetn     «:vhdl-ts-font-lock-punctuation-face::» «k:in» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         clk_fs_ext «:vhdl-ts-font-lock-punctuation-face::» «k:in» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-        «x:-- Axi lite register interface»
-        s_axi_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+        «x:-- Axi lite register interface
+»        s_axi_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axi_aresetn «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axi_awaddr  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:C_S_AXI_ADDR_WIDTH-1» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axi_awprot  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:2» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -36,8 +36,8 @@
         s_axi_rvalid  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axi_rready  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-        «x:-- To input buffer (input channels)»
-        s_axis_lch_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+        «x:-- To input buffer (input channels)
+»        s_axis_lch_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axis_lch_aresetn «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axis_lch_tdata   «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:63» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axis_lch_tvalid  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -53,8 +53,8 @@
         s_axis_rch_tlast   «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         s_axis_rch_tready  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-        «x:-- Stream Output from converters»
-        m_axis_lch_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+        «x:-- Stream Output from converters
+»        m_axis_lch_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axis_lch_aresetn «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axis_lch_tdata   «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:63» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axis_lch_tvalid  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -72,8 +72,8 @@
         m_axis_rch_tready  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axis_rch_tdest   «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-        «x:-- Axi full R/W interfaces from converter»
-        m_axi_lch_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+        «x:-- Axi full R/W interfaces from converter
+»        m_axi_lch_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_lch_aresetn «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_lch_awid    «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:C_M_AXI_ID_WIDTH-1» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_lch_awaddr  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:C_M_AXI_ADDR_WIDTH-1» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -163,8 +163,8 @@
         m_axi_rch_rvalid  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_rch_rready  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-        «x:-- Axi lite master auxiliary interface (configuration parameters)»
-        m_axi_conf_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+        «x:-- Axi lite master auxiliary interface (configuration parameters)
+»        m_axi_conf_aclk    «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_conf_aresetn «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_conf_awaddr  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:C_M_MEM_AXI_ADDR_WIDTH-1» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_conf_awprot  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:2» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -185,18 +185,18 @@
         m_axi_conf_rresp   «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:1» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_conf_rvalid  «:vhdl-ts-font-lock-punctuation-face::» «k:in»  «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
         m_axi_conf_rready  «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»
-        «:vhdl-ts-font-lock-parenthesis-face:)»;
+        «:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
-«k:end» «k:entity» «f:axi_if_converter»«:vhdl-ts-font-lock-punctuation-face:;»
+«k:end» «k:entity» axi_if_converter«:vhdl-ts-font-lock-punctuation-face:;»
 
 
 «k:architecture» «f:RTL» «k:of» «f:axi_if_converter» «k:is»
 
-    «x:-- Global signals»
-    «k:signal» soft_reset «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Global signals
+»    «k:signal» soft_reset «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Input buffer <-> Converter AXI signals»
-    «k:signal» m_axis_lch_inbuf_aclk    «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Input buffer <-> Converter AXI signals
+»    «k:signal» m_axis_lch_inbuf_aclk    «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_axis_lch_inbuf_aresetn «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_axis_lch_inbuf_tdata   «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:63» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_axis_lch_inbuf_tvalid  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -212,8 +212,8 @@
     «k:signal» m_axis_rch_inbuf_tlast   «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_axis_rch_inbuf_tready  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Input_buffer <-> Converters Feedback signals»
-    «k:signal» fb_wr_burst_start_lch «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Input_buffer <-> Converters Feedback signals
+»    «k:signal» fb_wr_burst_start_lch «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» fb_bw_counter_lch     «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:7» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» fb_wlast_lch          «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» fb_reduced_burst_lch  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -229,15 +229,15 @@
     «k:signal» fb_burst_done_rch     «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» fb_send_size_r        «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:9» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Input buffer <-> Register interface signals»
-    «k:signal» bram_overflow_error       «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Input buffer <-> Register interface signals
+»    «k:signal» bram_overflow_error       «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» out_reg_underflow_error_l «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» out_reg_overflow_error_l  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» out_reg_underflow_error_r «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» out_reg_overflow_error_r  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- AXI Lite Master <-> Register interface signals»
-    «k:signal» transaction_error «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- AXI Lite Master <-> Register interface signals
+»    «k:signal» transaction_error «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
     «k:signal» write_request «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» write_data    «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -249,14 +249,14 @@
     «k:signal» read_data       «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic_vector» «:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» read_data_valid «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Pattern counters <-> Register interface»
-    «k:signal» count_lch         «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Pattern counters <-> Register interface
+»    «k:signal» count_lch         «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» pattern_count_lch «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» count_rch         «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» pattern_count_rch «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Registers <-> FSM signals»
-    «k:signal» system_enable      «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Registers <-> FSM signals
+»    «k:signal» system_enable      «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» system_running     «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» system_running_lch «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» system_running_rch «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -266,8 +266,8 @@
     «k:signal» read_size_r        «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:15» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
 
-    «x:-- Converters <-> FSM signals»
-    «k:signal» conv_req_lch         «:vhdl-ts-font-lock-punctuation-face::» «t:conversion_req_t»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Converters <-> FSM signals
+»    «k:signal» conv_req_lch         «:vhdl-ts-font-lock-punctuation-face::» «t:conversion_req_t»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» conv_rsp_lch         «:vhdl-ts-font-lock-punctuation-face::» «t:conversion_rsp_t»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» internal_error_lch   «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» pattern_req_lch      «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -283,26 +283,26 @@
     «k:signal» pattern_finished_rch «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» pattern_tlast_rch    «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Input Buffer <-> FSM signals»
-    «k:signal» buffer_size_l «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:10» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Input Buffer <-> FSM signals
+»    «k:signal» buffer_size_l «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:10» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» bram_ptr_l    «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» buffer_size_r «:vhdl-ts-font-lock-punctuation-face::» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:10» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» bram_ptr_r    «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:31» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- FS clock divider»
-    «k:signal» clk_fs      «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- FS clock divider
+»    «k:signal» clk_fs      «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» clk_fs_sync «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
 
 «k:begin»
 
-    «x:-- Comb logic»
-    fb_send_size_l «:vhdl-ts-font-lock-punctuation-face:<=» «s:b"00"» «:vhdl-ts-font-lock-operator-face:&» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:fb_awlen_lch»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
-    fb_send_size_r «:vhdl-ts-font-lock-punctuation-face:<=» «s:b"00"» «:vhdl-ts-font-lock-operator-face:&» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:fb_awlen_rch»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Comb logic
+»    fb_send_size_l «:vhdl-ts-font-lock-punctuation-face:<=» «s:b"00"» «:vhdl-ts-font-lock-operator-face:&» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»fb_awlen_lch«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+    fb_send_size_r «:vhdl-ts-font-lock-punctuation-face:<=» «s:b"00"» «:vhdl-ts-font-lock-operator-face:&» «t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»fb_awlen_rch«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     system_running «:vhdl-ts-font-lock-punctuation-face:<=» system_running_lch «k:or» system_running_rch«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Instances»
-    «:vhdl-ts-font-lock-instance-face:I_AXI_LITE_REGS» «:vhdl-ts-font-lock-punctuation-face::» «k:entity» «:vhdl-ts-font-lock-instance-lib-face:xil_defaultlib»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-entity-face:axi_lite_regs»
+    «x:-- Instances
+»    «:vhdl-ts-font-lock-instance-face:I_AXI_LITE_REGS» «:vhdl-ts-font-lock-punctuation-face::» «k:entity» «:vhdl-ts-font-lock-instance-lib-face:xil_defaultlib»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-entity-face:axi_lite_regs»
         «k:generic» «k:map» «:vhdl-ts-font-lock-parenthesis-face:(»
             «:vhdl-ts-font-lock-port-connection-face:C_S_AXI_DATA_WIDTH» «:vhdl-ts-font-lock-punctuation-face:=>» C_S_AXI_DATA_WIDTH«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:C_S_AXI_ADDR_WIDTH» «:vhdl-ts-font-lock-punctuation-face:=>» C_S_AXI_ADDR_WIDTH
@@ -310,16 +310,16 @@
         «k:port» «k:map» «:vhdl-ts-font-lock-parenthesis-face:(»
             «:vhdl-ts-font-lock-port-connection-face:soft_reset» «:vhdl-ts-font-lock-punctuation-face:=>» soft_reset«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- To FSM»
-            «:vhdl-ts-font-lock-port-connection-face:system_enable»  «:vhdl-ts-font-lock-punctuation-face:=>» system_enable«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- To FSM
+»            «:vhdl-ts-font-lock-port-connection-face:system_enable»  «:vhdl-ts-font-lock-punctuation-face:=>» system_enable«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:system_running» «:vhdl-ts-font-lock-punctuation-face:=>» system_running«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:conv_op_lch»    «:vhdl-ts-font-lock-punctuation-face:=>» conv_op_lch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:conv_op_rch»    «:vhdl-ts-font-lock-punctuation-face:=>» conv_op_rch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:read_size_l»    «:vhdl-ts-font-lock-punctuation-face:=>» read_size_l«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:read_size_r»    «:vhdl-ts-font-lock-punctuation-face:=>» read_size_r«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- To axi-lite master»
-            «:vhdl-ts-font-lock-port-connection-face:write_request» «:vhdl-ts-font-lock-punctuation-face:=>» write_request«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- To axi-lite master
+»            «:vhdl-ts-font-lock-port-connection-face:write_request» «:vhdl-ts-font-lock-punctuation-face:=>» write_request«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:write_data»    «:vhdl-ts-font-lock-punctuation-face:=>» write_data«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:write_address» «:vhdl-ts-font-lock-punctuation-face:=>» write_address«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:write_done»    «:vhdl-ts-font-lock-punctuation-face:=>» write_done«:vhdl-ts-font-lock-punctuation-face:,»
@@ -331,14 +331,14 @@
 
             «:vhdl-ts-font-lock-port-connection-face:transaction_error» «:vhdl-ts-font-lock-punctuation-face:=>» transaction_error«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- From pattern counters»
-            «:vhdl-ts-font-lock-port-connection-face:count_lch»         «:vhdl-ts-font-lock-punctuation-face:=>» count_lch«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- From pattern counters
+»            «:vhdl-ts-font-lock-port-connection-face:count_lch»         «:vhdl-ts-font-lock-punctuation-face:=>» count_lch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:pattern_count_lch» «:vhdl-ts-font-lock-punctuation-face:=>» pattern_count_lch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:count_rch»         «:vhdl-ts-font-lock-punctuation-face:=>» count_rch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:pattern_count_rch» «:vhdl-ts-font-lock-punctuation-face:=>» pattern_count_rch«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- Input buffer error checking»
-            «:vhdl-ts-font-lock-port-connection-face:bram_overflow_error»       «:vhdl-ts-font-lock-punctuation-face:=>» bram_overflow_error«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- Input buffer error checking
+»            «:vhdl-ts-font-lock-port-connection-face:bram_overflow_error»       «:vhdl-ts-font-lock-punctuation-face:=>» bram_overflow_error«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:out_reg_underflow_error_l» «:vhdl-ts-font-lock-punctuation-face:=>» out_reg_underflow_error_l«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:out_reg_overflow_error_l»  «:vhdl-ts-font-lock-punctuation-face:=>» out_reg_overflow_error_l«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:out_reg_underflow_error_r» «:vhdl-ts-font-lock-punctuation-face:=>» out_reg_underflow_error_r«:vhdl-ts-font-lock-punctuation-face:,»
@@ -377,8 +377,8 @@
         «k:port» «k:map» «:vhdl-ts-font-lock-parenthesis-face:(»
             «:vhdl-ts-font-lock-port-connection-face:soft_reset» «:vhdl-ts-font-lock-punctuation-face:=>» soft_reset«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- Feedback from converters»
-            «:vhdl-ts-font-lock-instance-lib-face:inputs»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-port-connection-face:start_burst_master_l» «:vhdl-ts-font-lock-punctuation-face:=>» fb_wr_burst_start_lch«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- Feedback from converters
+»            «:vhdl-ts-font-lock-instance-lib-face:inputs»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-port-connection-face:start_burst_master_l» «:vhdl-ts-font-lock-punctuation-face:=>» fb_wr_burst_start_lch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-instance-lib-face:inputs»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-port-connection-face:bw_counter_l»         «:vhdl-ts-font-lock-punctuation-face:=>» fb_bw_counter_lch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-instance-lib-face:inputs»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-port-connection-face:wlast_l»              «:vhdl-ts-font-lock-punctuation-face:=>» fb_wlast_lch«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-instance-lib-face:inputs»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-port-connection-face:short_burst_l»        «:vhdl-ts-font-lock-punctuation-face:=>» fb_reduced_burst_lch«:vhdl-ts-font-lock-punctuation-face:,»
@@ -639,14 +639,14 @@
             «:vhdl-ts-font-lock-port-connection-face:soft_reset»        «:vhdl-ts-font-lock-punctuation-face:=>» soft_reset«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:transaction_error» «:vhdl-ts-font-lock-punctuation-face:=>» transaction_error«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- From register interface»
-            «:vhdl-ts-font-lock-port-connection-face:write_request» «:vhdl-ts-font-lock-punctuation-face:=>» write_request«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- From register interface
+»            «:vhdl-ts-font-lock-port-connection-face:write_request» «:vhdl-ts-font-lock-punctuation-face:=>» write_request«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:write_data»    «:vhdl-ts-font-lock-punctuation-face:=>» write_data«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:write_address» «:vhdl-ts-font-lock-punctuation-face:=>» write_address«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:write_done»    «:vhdl-ts-font-lock-punctuation-face:=>» write_done«:vhdl-ts-font-lock-punctuation-face:,»
 
-            «x:-- From register interface»
-            «:vhdl-ts-font-lock-port-connection-face:read_request»    «:vhdl-ts-font-lock-punctuation-face:=>» read_request«:vhdl-ts-font-lock-punctuation-face:,»
+            «x:-- From register interface
+»            «:vhdl-ts-font-lock-port-connection-face:read_request»    «:vhdl-ts-font-lock-punctuation-face:=>» read_request«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:read_address»    «:vhdl-ts-font-lock-punctuation-face:=>» read_address«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:read_data»       «:vhdl-ts-font-lock-punctuation-face:=>» read_data«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:read_data_valid» «:vhdl-ts-font-lock-punctuation-face:=>» read_data_valid«:vhdl-ts-font-lock-punctuation-face:,»
@@ -786,4 +786,4 @@
 
 
 
-«k:end» «k:architecture» «f:RTL»«:vhdl-ts-font-lock-punctuation-face:;»
+«k:end» «k:architecture» RTL«:vhdl-ts-font-lock-punctuation-face:;»

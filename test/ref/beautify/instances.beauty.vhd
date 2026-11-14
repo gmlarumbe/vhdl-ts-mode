@@ -30,11 +30,11 @@ architecture RTL of instances is
 
     component block0 is
         generic (Generic0 : integer := 0;
-            Generic1      : integer := 0;
-            Generic2      : integer := 0);
+                 Generic1 : integer := 0;
+                 Generic2 : integer := 0);
         port (Port0 : in std_logic;
-            Port1   : in std_logic;
-            Port2   : in std_logic);
+              Port1 : in std_logic;
+              Port2 : in std_logic);
     end component block0;
 
     signal Port0 : std_logic;
@@ -103,9 +103,9 @@ begin  -- architecture RTL
 
     -- Generate
     GEN_BLOCK1 :
-        for I in 0 to 3 generate
+    for I in 0 to 3 generate
         I_BLOCK1_GEN : entity work.block1 port map
-            (Port0, Port1, Port2);
+                                          (Port0, Port1, Port2);
     end generate GEN_BLOCK1;
 
 

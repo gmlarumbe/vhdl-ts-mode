@@ -49,6 +49,24 @@
   (test-hdl-no-messages
     (vhdl-ts-beautify-buffer)))
 
+;; INFO: `vhdl-ts-find-block-fwd' uses `treesit-search-forward-goto' which does not
+;;       perform the expected node search. From the documentation (of `treesit-search-forward'):
+;;
+;;       For a tree like below, where START is marked by S, traverse as
+;;       numbered from 1 to 12:
+;;
+;;                       12
+;;                       |
+;;              S--------3----------11
+;;              |        |          |
+;;         o--o-+--o  1--+--2    6--+-----10
+;;         |  |                  |        |
+;;         o  o                +-+-+   +--+--+
+;;                             |   |   |  |  |
+;;                             4   5   7  8  9
+;;
+;;      Note that this function doesn't traverse the subtree of START, and it
+;;      always traverse leaf nodes first, then upwards.
 (defun vhdl-ts-mode-test-beautify-block-at-point-fn ()
   (test-hdl-no-messages
     (vhdl-ts-mode)

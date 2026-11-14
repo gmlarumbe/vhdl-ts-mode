@@ -33,28 +33,28 @@ package global_sim is
     -- Procedure headers --
     -----------------------
     -- Read
-    procedure read_control_reg (signal bfm_in_r            : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
-    procedure read_status_reg (signal bfm_in_r             : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
-    procedure read_version_reg (signal bfm_in_r            : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
-    procedure read_counters (signal bfm_in_r               : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
+    procedure read_control_reg (signal bfm_in_r : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
+    procedure read_status_reg (signal bfm_in_r : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
+    procedure read_version_reg (signal bfm_in_r : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
+    procedure read_counters (signal bfm_in_r : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
     procedure read_master_lite_rd_data_reg(signal bfm_in_r : in s_common_response_r_in; signal bfm_out_r : out s_common_response_r_out);
 
     -- Write
-    procedure write_control_reg(signal bfm_in_w              : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
-    procedure write_converter_setup_reg(signal bfm_in_w      : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
-    procedure write_mm2s_size_reg(signal bfm_in_w            : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
+    procedure write_control_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
+    procedure write_converter_setup_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
+    procedure write_mm2s_size_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
     procedure write_master_lite_wr_setup_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
-    procedure write_master_lite_wr_add_reg(signal bfm_in_w   : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
-    procedure write_master_lite_wr_data_reg(signal bfm_in_w  : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
+    procedure write_master_lite_wr_add_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
+    procedure write_master_lite_wr_data_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
     procedure write_master_lite_rd_setup_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
-    procedure write_master_lite_rd_add_reg(signal bfm_in_w   : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
+    procedure write_master_lite_rd_add_reg(signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant DATA : in std_logic_vector(31 downto 0));
 
     -- Custom procedures
     procedure write_control_reg_system_enable (signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out);
-    procedure write_control_reg_system_stop (signal bfm_in_w   : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out);
-    procedure write_control_reg_soft_reset (signal bfm_in_w    : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out);
+    procedure write_control_reg_system_stop (signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out);
+    procedure write_control_reg_soft_reset (signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out);
     procedure write_master_lite_write_request (signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant ADDR : in std_logic_vector(31 downto 0); constant DATA : in std_logic_vector(31 downto 0));
-    procedure write_master_lite_read_request (signal bfm_in_w  : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant ADDR : in std_logic_vector(31 downto 0));
+    procedure write_master_lite_read_request (signal bfm_in_w : in s_common_response_w_in; signal bfm_out_w : out s_common_response_w_out; constant ADDR : in std_logic_vector(31 downto 0));
 
     -- Others
     procedure end_test_and_stop_clock(signal stop_clock : out std_logic);

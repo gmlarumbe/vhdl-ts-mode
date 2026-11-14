@@ -46,9 +46,9 @@ package global is
     constant C_M_MEM_AXI_DATA_WIDTH             : integer          := 32;
 
     -- Pattern counters
-    constant PATTERN_COUNTER_DATA_WIDTH : integer := 64;
-    constant PATTERN : std_logic_vector(PATTERN_COUNTER_DATA_WIDTH-1 downto 0) := (others => '0');
-    
+    constant PATTERN_COUNTER_DATA_WIDTH : integer                                                 := 64;
+    constant PATTERN                    : std_logic_vector(PATTERN_COUNTER_DATA_WIDTH-1 downto 0) := (others => '0');
+
     -- Clock divider
     constant DIV_FACTOR : integer := 16;
 

@@ -17,7 +17,7 @@ indentation, `imenu`, `which-func`, navigation and basic beautify and completion
 
 - Emacs 29.1+ with tree-sitter support
 - VHDL tree-sitter grammar
-  - This package relies on the [alemuller/tree-sitter-vhdl](https://github.com/alemuller/tree-sitter-vhdl) grammar
+  - This package relies on the [jpt13653903/tree-sitter-vhdl](https://github.com/jpt13653903/tree-sitter-vhdl) grammar
 
 Before installing/building Emacs make sure that tree-sitter is available:
 

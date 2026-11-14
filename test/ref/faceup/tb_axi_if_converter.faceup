@@ -8,20 +8,20 @@
 «k:use» «f:xil_defaultlib»«:vhdl-ts-font-lock-punctuation-face:.»«f:axil_master_bfm»«:vhdl-ts-font-lock-punctuation-face:.»«k:all»«:vhdl-ts-font-lock-punctuation-face:;»
 «k:use» «f:xil_defaultlib»«:vhdl-ts-font-lock-punctuation-face:.»«f:axif_master_bfm»«:vhdl-ts-font-lock-punctuation-face:.»«k:all»«:vhdl-ts-font-lock-punctuation-face:;»
 
-«x:------------------------------------------------------------------------------------------------------------------------»
-
+«x:------------------------------------------------------------------------------------------------------------------------
+»
 «k:entity» «f:tb_axi_if_converter» «k:is»
-«k:end» «k:entity» «f:tb_axi_if_converter»«:vhdl-ts-font-lock-punctuation-face:;»
+«k:end» «k:entity» tb_axi_if_converter«:vhdl-ts-font-lock-punctuation-face:;»
 
-«x:------------------------------------------------------------------------------------------------------------------------»
-
+«x:------------------------------------------------------------------------------------------------------------------------
+»
 «k:architecture» «f:TB» «k:of» «f:tb_axi_if_converter» «k:is»
 
     «k:constant» «c:C_S_AXI_DATA_WIDTH» «:vhdl-ts-font-lock-punctuation-face::» «t:integer» «:vhdl-ts-font-lock-punctuation-face::=» 32«:vhdl-ts-font-lock-punctuation-face:;»
     «k:constant» «c:C_S_AXI_ADDR_WIDTH» «:vhdl-ts-font-lock-punctuation-face::» «t:integer» «:vhdl-ts-font-lock-punctuation-face::=» 7«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- component ports»
-    «k:signal» clk        «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic» «:vhdl-ts-font-lock-punctuation-face::=» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- component ports
+»    «k:signal» clk        «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic» «:vhdl-ts-font-lock-punctuation-face::=» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» resetn     «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic» «:vhdl-ts-font-lock-punctuation-face::=» «s:'0'»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» clk_fs_ext «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic» «:vhdl-ts-font-lock-punctuation-face::=» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»
 
@@ -193,26 +193,26 @@
     «k:signal» m_axi_conf_rvalid  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_axi_conf_rready  «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- BFMs»
-    «x:-- Axi lite slave»
-    «k:signal» s_bfm_in_r  «:vhdl-ts-font-lock-punctuation-face::» «t:s_common_response_r_in»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- BFMs
+»    «x:-- Axi lite slave
+»    «k:signal» s_bfm_in_r  «:vhdl-ts-font-lock-punctuation-face::» «t:s_common_response_r_in»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» s_bfm_out_r «:vhdl-ts-font-lock-punctuation-face::» «t:s_common_response_r_out»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» s_bfm_in_w  «:vhdl-ts-font-lock-punctuation-face::» «t:s_common_response_w_in»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» s_bfm_out_w «:vhdl-ts-font-lock-punctuation-face::» «t:s_common_response_w_out»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Axi lite master»
-    «k:signal» m_bfm_in_r  «:vhdl-ts-font-lock-punctuation-face::» «t:m_common_response_r_type_in»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Axi lite master
+»    «k:signal» m_bfm_in_r  «:vhdl-ts-font-lock-punctuation-face::» «t:m_common_response_r_type_in»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_bfm_out_r «:vhdl-ts-font-lock-punctuation-face::» «t:m_common_response_r_type_out»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_bfm_in_w  «:vhdl-ts-font-lock-punctuation-face::» «t:m_common_response_w_type_in»«:vhdl-ts-font-lock-punctuation-face:;»
     «k:signal» m_bfm_out_w «:vhdl-ts-font-lock-punctuation-face::» «t:m_common_response_w_type_out»«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- TB aux signals»
-    «k:signal» stop_clock «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic» «:vhdl-ts-font-lock-punctuation-face::=» «s:'0'»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- TB aux signals
+»    «k:signal» stop_clock «:vhdl-ts-font-lock-punctuation-face::» «t:std_logic» «:vhdl-ts-font-lock-punctuation-face::=» «s:'0'»«:vhdl-ts-font-lock-punctuation-face:;»
 
 «k:begin»
 
-    «x:-- component instantiation»
-    «:vhdl-ts-font-lock-instance-face:DUT» «:vhdl-ts-font-lock-punctuation-face::» «k:entity» «:vhdl-ts-font-lock-instance-lib-face:xil_defaultlib»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-entity-face:axi_if_converter»
+    «x:-- component instantiation
+»    «:vhdl-ts-font-lock-instance-face:DUT» «:vhdl-ts-font-lock-punctuation-face::» «k:entity» «:vhdl-ts-font-lock-instance-lib-face:xil_defaultlib»«:vhdl-ts-font-lock-punctuation-face:.»«:vhdl-ts-font-lock-entity-face:axi_if_converter»
         «k:port» «k:map» «:vhdl-ts-font-lock-parenthesis-face:(»
             «:vhdl-ts-font-lock-port-connection-face:clk»        «:vhdl-ts-font-lock-punctuation-face:=>» clk«:vhdl-ts-font-lock-punctuation-face:,»
             «:vhdl-ts-font-lock-port-connection-face:resetn»     «:vhdl-ts-font-lock-punctuation-face:=>» resetn«:vhdl-ts-font-lock-punctuation-face:,»
@@ -492,11 +492,11 @@
 
 
 
-    «x:-- clock generation»
-    clk «:vhdl-ts-font-lock-punctuation-face:<=» «:vhdl-ts-font-lock-parenthesis-face:(»«k:not» clk «k:and» «k:not» stop_clock«:vhdl-ts-font-lock-parenthesis-face:)» «k:after» AXI_CLK_T«:vhdl-ts-font-lock-operator-face:/»2«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- clock generation
+»    clk «:vhdl-ts-font-lock-punctuation-face:<=» «:vhdl-ts-font-lock-parenthesis-face:(»«k:not» clk «k:and» «k:not» stop_clock«:vhdl-ts-font-lock-parenthesis-face:)» «k:after» AXI_CLK_T«:vhdl-ts-font-lock-operator-face:/»2«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- Clock & Reset connections»
-    s_axi_aclk      «:vhdl-ts-font-lock-punctuation-face:<=» clk«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- Clock & Reset connections
+»    s_axi_aclk      «:vhdl-ts-font-lock-punctuation-face:<=» clk«:vhdl-ts-font-lock-punctuation-face:;»
     m_axi_conf_aclk «:vhdl-ts-font-lock-punctuation-face:<=» clk«:vhdl-ts-font-lock-punctuation-face:;»
     s_axis_lch_aclk «:vhdl-ts-font-lock-punctuation-face:<=» clk«:vhdl-ts-font-lock-punctuation-face:;»
     s_axis_rch_aclk «:vhdl-ts-font-lock-punctuation-face:<=» clk«:vhdl-ts-font-lock-punctuation-face:;»
@@ -514,8 +514,8 @@
     m_axis_lch_aresetn  «:vhdl-ts-font-lock-punctuation-face:<=» resetn«:vhdl-ts-font-lock-punctuation-face:;»
     m_axis_rch_aresetn  «:vhdl-ts-font-lock-punctuation-face:<=» resetn«:vhdl-ts-font-lock-punctuation-face:;»
 
-    «x:-- BFM signal connections»
-    s_bfm_in_r                                                                                        «:vhdl-ts-font-lock-punctuation-face:<=» «:vhdl-ts-font-lock-parenthesis-face:(»s_axi_aclk«:vhdl-ts-font-lock-punctuation-face:,» s_axi_arready«:vhdl-ts-font-lock-punctuation-face:,» s_axi_rready«:vhdl-ts-font-lock-punctuation-face:,» s_axi_rvalid«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+    «x:-- BFM signal connections
+»    s_bfm_in_r                                                                                        «:vhdl-ts-font-lock-punctuation-face:<=» «:vhdl-ts-font-lock-parenthesis-face:(»s_axi_aclk«:vhdl-ts-font-lock-punctuation-face:,» s_axi_arready«:vhdl-ts-font-lock-punctuation-face:,» s_axi_rready«:vhdl-ts-font-lock-punctuation-face:,» s_axi_rvalid«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «:vhdl-ts-font-lock-parenthesis-face:(»s_axi_araddr«:vhdl-ts-font-lock-punctuation-face:,» s_axi_arvalid«:vhdl-ts-font-lock-punctuation-face:,» s_axi_rready«:vhdl-ts-font-lock-parenthesis-face:)»                                                       «:vhdl-ts-font-lock-punctuation-face:<=» s_bfm_out_r«:vhdl-ts-font-lock-punctuation-face:;»
     s_bfm_in_w                                                                                        «:vhdl-ts-font-lock-punctuation-face:<=» «:vhdl-ts-font-lock-parenthesis-face:(»s_axi_aclk«:vhdl-ts-font-lock-punctuation-face:,» s_axi_awready«:vhdl-ts-font-lock-punctuation-face:,» s_axi_wready«:vhdl-ts-font-lock-punctuation-face:,» s_axi_bvalid«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
     «:vhdl-ts-font-lock-parenthesis-face:(»s_axi_awaddr«:vhdl-ts-font-lock-punctuation-face:,» s_axi_wdata«:vhdl-ts-font-lock-punctuation-face:,» s_axi_wstrb«:vhdl-ts-font-lock-punctuation-face:,» s_axi_awprot«:vhdl-ts-font-lock-punctuation-face:,» s_axi_awvalid«:vhdl-ts-font-lock-punctuation-face:,» s_axi_wvalid«:vhdl-ts-font-lock-punctuation-face:,» s_axi_bready«:vhdl-ts-font-lock-parenthesis-face:)» «:vhdl-ts-font-lock-punctuation-face:<=» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:;»
@@ -526,8 +526,8 @@
     «:vhdl-ts-font-lock-parenthesis-face:(»m_axi_conf_awready«:vhdl-ts-font-lock-punctuation-face:,» m_axi_conf_wready«:vhdl-ts-font-lock-punctuation-face:,» m_axi_conf_bvalid«:vhdl-ts-font-lock-parenthesis-face:)» «:vhdl-ts-font-lock-punctuation-face:<=» m_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:;»
 
 
-    «x:-- Stimuli»
-    «c:main» «:vhdl-ts-font-lock-punctuation-face::» «k:process»
+    «x:-- Stimuli
+»    «c:main» «:vhdl-ts-font-lock-punctuation-face::» «k:process»
         «k:procedure» «f:init_values» «k:is»
         «k:begin»
             resetn «:vhdl-ts-font-lock-punctuation-face:<=» «s:'0'»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -539,11 +539,11 @@
 
         «k:procedure» «f:rx_data» «:vhdl-ts-font-lock-parenthesis-face:(»«k:signal» tvalid «:vhdl-ts-font-lock-punctuation-face::» «k:out» «t:std_logic»«:vhdl-ts-font-lock-punctuation-face:;» «k:signal» tdata «:vhdl-ts-font-lock-punctuation-face::» «k:inout» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:63» «:vhdl-ts-font-lock-instance-lib-face:downto» «:vhdl-ts-font-lock-brackets-content-face:0»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;» «k:constant» RX_DATA_AMOUNT «:vhdl-ts-font-lock-punctuation-face::» «t:natural» «:vhdl-ts-font-lock-punctuation-face::=» 128«:vhdl-ts-font-lock-parenthesis-face:)» «k:is»
         «k:begin»
-            «k:wait» «k:until» «:vhdl-ts-font-lock-parenthesis-face:(»«b:rising_edge»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:s_axis_lch_aclk»«:vhdl-ts-font-lock-parenthesis-face:))»«:vhdl-ts-font-lock-punctuation-face:;»
+            «k:wait» «k:until» «:vhdl-ts-font-lock-parenthesis-face:(»«b:rising_edge»«:vhdl-ts-font-lock-parenthesis-face:(»s_axis_lch_aclk«:vhdl-ts-font-lock-parenthesis-face:))»«:vhdl-ts-font-lock-punctuation-face:;»
             tvalid «:vhdl-ts-font-lock-punctuation-face:<=» «s:'1'»«:vhdl-ts-font-lock-punctuation-face:;»
             «k:wait» «k:for» AXI_CLK_T«:vhdl-ts-font-lock-punctuation-face:;»
             «k:for» i «k:in» «:vhdl-ts-font-lock-brackets-content-face:1» «:vhdl-ts-font-lock-instance-lib-face:to» «:vhdl-ts-font-lock-brackets-content-face:RX_DATA_AMOUNT» «k:loop»
-                tdata «:vhdl-ts-font-lock-punctuation-face:<=» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:tdata»«:vhdl-ts-font-lock-parenthesis-face:)» «:vhdl-ts-font-lock-operator-face:+» «b:to_unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»«:vhdl-ts-font-lock-brackets-content-face:1»«:vhdl-ts-font-lock-punctuation-face:,» «:vhdl-ts-font-lock-brackets-content-face:64»«:vhdl-ts-font-lock-parenthesis-face:))»«:vhdl-ts-font-lock-punctuation-face:;»
+                tdata «:vhdl-ts-font-lock-punctuation-face:<=» «t:std_logic_vector»«:vhdl-ts-font-lock-parenthesis-face:(»«t:unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»tdata«:vhdl-ts-font-lock-parenthesis-face:)» «:vhdl-ts-font-lock-operator-face:+» «b:to_unsigned»«:vhdl-ts-font-lock-parenthesis-face:(»1«:vhdl-ts-font-lock-punctuation-face:,» 64«:vhdl-ts-font-lock-parenthesis-face:))»«:vhdl-ts-font-lock-punctuation-face:;»
                 «k:wait» «k:for» AXI_CLK_T«:vhdl-ts-font-lock-punctuation-face:;»
             «k:end» «k:loop»«:vhdl-ts-font-lock-punctuation-face:;»
             tvalid «:vhdl-ts-font-lock-punctuation-face:<=» «s:'0'»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -560,14 +560,14 @@
         read_counters«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_r«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_r«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         write_control_reg_system_enable«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
-        write_converter_setup_reg«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_0000"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»  «x:-- Setup as S2MM»
-        rx_data«:vhdl-ts-font-lock-parenthesis-face:(»s_axis_lch_tvalid«:vhdl-ts-font-lock-punctuation-face:,» s_axis_lch_tdata«:vhdl-ts-font-lock-punctuation-face:,» 32«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+        write_converter_setup_reg«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_0000"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»  «x:-- Setup as S2MM
+»        rx_data«:vhdl-ts-font-lock-parenthesis-face:(»s_axis_lch_tvalid«:vhdl-ts-font-lock-punctuation-face:,» s_axis_lch_tdata«:vhdl-ts-font-lock-punctuation-face:,» 32«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         rx_data«:vhdl-ts-font-lock-parenthesis-face:(»s_axis_rch_tvalid«:vhdl-ts-font-lock-punctuation-face:,» s_axis_rch_tdata«:vhdl-ts-font-lock-punctuation-face:,» 128«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         read_counters«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_r«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_r«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
         «k:wait» «k:for» «:vhdl-ts-font-lock-parenthesis-face:(»50«:vhdl-ts-font-lock-operator-face:*»AXI_CLK_T«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
-        write_converter_setup_reg«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_0003"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»  «x:-- Setup as MM2S»
-        write_mm2s_size_reg«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_0020"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
+        write_converter_setup_reg«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_0003"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»  «x:-- Setup as MM2S
+»        write_mm2s_size_reg«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_0020"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
 
         «k:wait» «k:for» «:vhdl-ts-font-lock-parenthesis-face:(»50«:vhdl-ts-font-lock-operator-face:*»AXI_CLK_T«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
         write_master_lite_write_request«:vhdl-ts-font-lock-parenthesis-face:(»s_bfm_in_w«:vhdl-ts-font-lock-punctuation-face:,» s_bfm_out_w«:vhdl-ts-font-lock-punctuation-face:,» «s:x"0000_ADD0"»«:vhdl-ts-font-lock-punctuation-face:,» «s:x"BEBA_CAFE"»«:vhdl-ts-font-lock-parenthesis-face:)»«:vhdl-ts-font-lock-punctuation-face:;»
@@ -583,4 +583,4 @@
 
 
 
-«k:end» «k:architecture» «f:TB»«:vhdl-ts-font-lock-punctuation-face:;»
+«k:end» «k:architecture» TB«:vhdl-ts-font-lock-punctuation-face:;»
